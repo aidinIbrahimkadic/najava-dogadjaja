@@ -1,5 +1,42 @@
 # Aplikacija za najavu događaja - Općina Tešanj
 
+FEATURES:
+
+- AUTHENTICATION
+- DASHBOARD
+- SETTINGS
+- EVENTS
+- ORGANIZATOR
+- KATEGORIJA
+- NEWSLETTER
+- NOTIFIKACIJE
+
+PRIMJERI: https://preporodmostar.ba/najave/ciklus-online-predavanja/
+https://event.ba/
+https://www.entrio.hr/en
+https://www.eventbrite.com/
+
+ZAHTJEVI:
+Forma za registraciju
+Pretraga po nazivu, organizatoru, izvođaču, kategoriji, vremenu i lokaciji, range cijena ili besplatno
+TAB: Ovaj vikend
+Filteri: Kategorija (IKONE KAO NA EVENTBRITE, velike kategorije pa podkategorije u njima) , Vrijeme (Danas, sutra, ovaj vikend, Narednih 7 dana, odaberi datum/e), Besplatno/Placeno
+Sort: Name, Event time, newly published,
+Vrijeme do događaja (odbrojavanje)
+Dodaj u kalendar
+Pravila događaja (18+, samo drzavljani i sl.)
+Lokacija, Vrijeme, datum, cijene, opis, info o organizatoru.
+Vise slicnih događaja
+Popularni događaji (aside)
+Login, Sign up, Moji događaji, moje preference, bokirani događaji,
+Info na događaju da je (uskoro rasprodano, rasprodano, prodaja uskoro zavrsava, prodaje se brzo…)
+Prati organizatora (info o broju pratilaca, kontaktiraj, link na web, email), prati kategoriju događaja (obavijesti u App i na email)
+Galerija
+Ukoliko je događaj ponavljajuci npr kino film 3 dana zaredom treba ostaviti prostor za Raspored projekcija (Dan, datum, vrijeme)
+Predstaviti na listi, gridu i kalendaru
+Modal za newsletter onima koji se nisu registrovali
+Ocjene događaja (zvjezdice)
+
 1. OPIS PROJEKTA Aplikacija "Najava događaja" je digitalna platforma koja omogućava organizatorima iz različitih oblasti da objavljuju događaje, dok građani mogu pregledati, filtrirati i dobijati obavijesti o predstojećim događajima. Aplikacija podržava prijavu i registraciju korisnika, kao i personalizovane podsjetnike putem emaila.
 2. KORISNICI APLIKACIJE
    • Organizatori događaja (oko 20 aktivnih korisnika) – unose i uređuju događaje
