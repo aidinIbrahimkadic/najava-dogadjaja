@@ -16,7 +16,8 @@ const StyledAppLayout = styled.div`
 
 const Main = styled.main`
   grid-area: main;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-grey-50);
+
   overflow-y: auto;
 `;
 
