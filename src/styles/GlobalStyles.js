@@ -80,15 +80,15 @@ const GlobalStyles = createGlobalStyle`
 --image-opacity: 90%;
   }
   
-  /* Indigo */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  /* PLAVA */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb; 
+  --color-brand-700: #1d4ed8;
+  --color-brand-800: #1e40af;
+  --color-brand-900: #1e3a8a;
   
   --border-radius-tiny: 3px;
   --border-radius-sm: 5px;
@@ -116,7 +116,6 @@ html {
 body {
   font-family: "Poppins", sans-serif;
   color: var(--color-grey-700);
-
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
   line-height: 1.5;
