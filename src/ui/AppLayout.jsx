@@ -3,11 +3,15 @@ import styled from 'styled-components';
 
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { useSidebarCollapsed } from '../context/SidebarContext';
 
-const StyledAppLayout = styled.div`
+const StyledAppLayout = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isCollapsed',
+})`
   display: grid;
-  grid-template-columns: 26rem 1fr;
+  grid-template-columns: ${(props) => (props.isCollapsed ? '10rem 1fr' : '28rem 1fr')};
   grid-template-rows: auto 1fr;
+  transition: grid-template-columns 0.3s ease;
   height: 100vh;
   grid-template-areas:
     'sidebar header'
@@ -17,13 +21,13 @@ const StyledAppLayout = styled.div`
 const Main = styled.main`
   grid-area: main;
   background-color: var(--color-grey-50);
-
   overflow-y: auto;
 `;
 
 export default function AppLayout() {
+  const { isCollapsed } = useSidebarCollapsed();
   return (
-    <StyledAppLayout>
+    <StyledAppLayout isCollapsed={isCollapsed}>
       <Header />
       <Sidebar />
       <Main>

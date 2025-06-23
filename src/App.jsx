@@ -13,31 +13,34 @@ import PageNotFound from './pages/PageNotFound';
 import Login from './pages/Login';
 import GlobalStyles from './styles/GlobalStyles';
 import AppLayout from './ui/AppLayout';
+import { SidebarCollapseProvider } from './context/SidebarContext';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <GlobalStyles />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/event/:eventId" element={<Event />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/users" element={<Users />} />
-          </Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <SidebarCollapseProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <GlobalStyles />
+        <BrowserRouter>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/event/:eventId" element={<Event />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/users" element={<Users />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </SidebarCollapseProvider>
   );
 }
 

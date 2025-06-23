@@ -81,15 +81,26 @@ const GlobalStyles = createGlobalStyle`
   }
   
   /* PLAVA */
-  --color-brand-50: #eff6ff;
+  /* --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
   --color-brand-200: #bfdbfe;
   --color-brand-500: #3b82f6;
   --color-brand-600: #2563eb; 
   --color-brand-700: #1d4ed8;
   --color-brand-800: #1e40af;
-  --color-brand-900: #1e3a8a;
-  
+  --color-brand-900: #1e3a8a; */
+
+
+  //Narandžasta
+  --color-brand-50:  #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-500: #f97316;
+  --color-brand-600: #ea580c;
+  --color-brand-700: #c2410c;
+  --color-brand-800: #9a3412;
+  --color-brand-900: #7c2d12;
+    
   --border-radius-tiny: 3px;
   --border-radius-sm: 5px;
   --border-radius-md: 7px;
@@ -148,7 +159,6 @@ input:focus,
 button:focus,
 textarea:focus,
 select:focus {
-  outline: 2px solid var(--color-brand-600);
   outline-offset: -1px;
 }
 
