@@ -14,14 +14,14 @@ const Img = styled.img.withConfig({
   transition: height 0.3s ease;
 `;
 
-const src = '/public/logotip.png';
+const src = '/logotip.png';
 
 export default function Logo() {
   const { isCollapsed } = useSidebarCollapsed();
   return (
     <StyledLogo>
       <Link to="/dashboard">
-        <Img isCollapsed={isCollapsed} src={src} alt="" />
+        <Img isCollapsed={isCollapsed} src={src} alt="Logo" />
       </Link>
     </StyledLogo>
   );
