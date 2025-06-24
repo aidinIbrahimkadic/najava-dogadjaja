@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { login as loginApi } from '../../services/apiAuth';
+import toast from 'react-hot-toast';
 
 export function useLogin() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export function useLogin() {
     },
     onError: (data) => {
       console.log('ERROR', data.message);
+      toast.error(`${data.message}`);
     },
   });
 

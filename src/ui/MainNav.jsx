@@ -23,7 +23,7 @@ const StyledNavLink = styled(NavLink)`
     display: flex;
     align-items: center;
     gap: 1.2rem;
-    color: var(--color-grey-600);
+    color: var(--color-grey-500);
     font-size: 1.6rem;
     font-weight: 500;
     padding: 1rem 1.2rem;
@@ -50,7 +50,7 @@ const StyledNavLink = styled(NavLink)`
   &:active svg,
   &.active:link svg,
   &.active:visited svg {
-    color: var(--color-brand-600);
+    color: var(--color-brand-500);
   }
 `;
 const IconWrapper = styled.div`

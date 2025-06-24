@@ -30,7 +30,7 @@ const ToggleButton = styled.button`
   z-index: 10;
 
   &:hover {
-    color: var(--color-brand-600);
+    color: var(--color-brand-500);
   }
 
   transition: color 0.3s ease;

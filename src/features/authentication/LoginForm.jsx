@@ -1,7 +1,9 @@
+import CalendarSpinner from '../../ui/CalendarSpinner';
+import Spinner from '../../ui/Spinner';
 import { useLogin } from './useLogin';
 
 export default function Login() {
-  const { login, isError, isPending, error } = useLogin();
+  const { login, isPending } = useLogin();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -12,17 +14,22 @@ export default function Login() {
 
   return (
     <>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Unesi email: </label>
-        <input type="text" id="email" required />
-        <label htmlFor="password">Unesi password:</label>
-        <input type="password" id="password" required />
-        <button type="submit" disabled={isPending}>
-          {isPending ? 'Loging in....' : 'Login'}
-        </button>
-        {isError && <p>Error: {error.message}</p>}
-      </form>
+      {isPending ? (
+        <CalendarSpinner />
+      ) : (
+        <>
+          <h1>Login</h1>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">Unesi email: </label>
+            <input type="text" id="email" required />
+            <label htmlFor="password">Unesi password:</label>
+            <input type="password" id="password" required />
+            <button type="submit" disabled={isPending}>
+              Login
+            </button>
+          </form>
+        </>
+      )}
     </>
   );
 }
