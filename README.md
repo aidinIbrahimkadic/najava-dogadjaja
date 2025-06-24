@@ -3,6 +3,9 @@
 FEATURES:
 
 - AUTHENTICATION
+  -login
+  -logout
+  -getProfile
 - DASHBOARD
 - SETTINGS
 - EVENTS

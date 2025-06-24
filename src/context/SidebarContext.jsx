@@ -4,10 +4,17 @@ import { createContext, useState } from 'react';
 const SidebarCollapseContext = createContext();
 
 function SidebarCollapseProvider({ children }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const stored = localStorage.getItem('isCollapsed');
+    return stored === 'true';
+  });
 
   function toggleCollapsed() {
-    setIsCollapsed((prev) => !prev);
+    setIsCollapsed((prev) => {
+      const newValue = !prev;
+      localStorage.setItem('isCollapsed', JSON.stringify(newValue));
+      return newValue;
+    });
   }
 
   return (

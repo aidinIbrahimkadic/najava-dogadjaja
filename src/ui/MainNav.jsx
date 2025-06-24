@@ -35,7 +35,7 @@ const StyledNavLink = styled(NavLink)`
   &.active:link,
   &.active:visited {
     color: var(--color-grey-900);
-    background-color: var(--color-grey-100);
+    background-color: var(--color-grey-50);
     border-radius: var(--border-radius-sm);
   }
 
@@ -54,8 +54,8 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 const IconWrapper = styled.div`
-  width: 2.8rem;
-  height: 2.8rem;
+  width: 2.4rem;
+  height: 2.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,7 +95,7 @@ export default function MainNav() {
             <IconWrapper>
               <HiOutlineCalendarDays />
             </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Bookings</Label>
+            <Label isCollapsed={isCollapsed}>Events</Label>
           </StyledNavLink>
         </li>
         <li>

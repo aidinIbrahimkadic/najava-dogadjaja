@@ -9,7 +9,7 @@ const StyledAppLayout = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isCollapsed',
 })`
   display: grid;
-  grid-template-columns: ${(props) => (props.isCollapsed ? '10rem 1fr' : '28rem 1fr')};
+  grid-template-columns: ${(props) => (props.isCollapsed ? '6rem 1fr' : '28rem 1fr')};
   grid-template-rows: auto 1fr;
   transition: grid-template-columns 0.3s ease;
   height: 100vh;

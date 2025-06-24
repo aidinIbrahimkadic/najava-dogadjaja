@@ -12,12 +12,5 @@ export async function login({ email, password }) {
 
 export async function getUserProfile() {
   const response = await axiosInstance.get(`/auth/profile`);
-
   return response.data;
-}
-
-export function logout({ queryClient, navigate }) {
-  localStorage.removeItem('eventsToken');
-  queryClient.clear();
-  navigate('/login');
 }
