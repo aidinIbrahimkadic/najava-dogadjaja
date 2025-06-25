@@ -11,6 +11,7 @@ export function usePostEvent() {
   const { mutate: postEvent, isPending } = useMutation({
     mutationFn: postEventApi,
     onSuccess: () => {
+      toast.success('Uspješno dodan novi event!');
       navigate('/events', { replace: true });
     },
     onError: (data) => {

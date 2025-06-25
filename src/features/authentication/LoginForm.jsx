@@ -1,5 +1,4 @@
 import CalendarSpinner from '../../ui/CalendarSpinner';
-import Spinner from '../../ui/Spinner';
 import { useLogin } from './useLogin';
 
 export default function Login() {
