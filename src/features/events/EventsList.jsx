@@ -1,13 +1,19 @@
-import { useGetEvents } from './useGetEvents';
+import { useGetEvents } from './useEvents';
 import { usePostEvent } from './usePostEvent';
 import CalendarSpinner from '../../ui/CalendarSpinner';
+import Empty from '../../ui/Empty';
+import { useDeleteEvent } from './useDeleteEvent';
+import Table from '../../ui/Table';
+import Pagination from '../../ui/Pagination';
+import EventRow from './EventRow';
 
-export default function EventsTable() {
-  const { isLoading, events } = useGetEvents();
+export default function EventsList() {
+  const { events, isLoading, error } = useGetEvents();
   const { isPending, postEvent } = usePostEvent();
+  const { mutate: deleteEvent } = useDeleteEvent();
 
-  console.log(events);
   if (isLoading) return <CalendarSpinner />;
+  if (error) return <Empty />;
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -21,28 +27,40 @@ export default function EventsTable() {
     postEvent({ title, description, start_date, end_date, is_public, location, category_idguid });
   }
 
+  function handleDelete(id) {
+    deleteEvent(id);
+  }
+
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Location</th>
-            <th>Start date</th>
-            <th>End date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {events.data.map((event) => (
-            <tr key={event.id}>
-              <td>{event.title}</td>
-              <td>{event.location}</td>
-              <td>{event.start_date}</td>
-              <td>{event.end_date}</td>
-            </tr>
+      <Table columns="0.6fr 2fr 2.4fr 1.4fr  3.2rem">
+        <Table.Header>
+          <div>Title</div>
+          <div>Location</div>
+          <div>Start date</div>
+          <div>End date</div>
+          <div></div>
+        </Table.Header>
+
+        {/* <Table.Body data={events} render={(event) => <EventRow key={event.id} event={event} />} /> */}
+        <Table.Body>
+          {events?.data.map((event) => (
+            <Table.Row key={event.id}>
+              <div>{event.title}</div>
+              <div>{event.location}</div>
+              <div>{event.start_date}</div>
+              <div>{event.end_date}</div>
+              <button onClick={() => handleDelete(event.idguid)}>Delete</button>
+              <div></div>
+            </Table.Row>
           ))}
-        </tbody>
-      </table>
+        </Table.Body>
+
+        <Table.Footer>
+          <Pagination count={15} />
+        </Table.Footer>
+      </Table>
+
       <form onSubmit={handleSubmit}>
         <label htmlFor="title">Unesi title: </label>
         <input type="text" id="title" required />
@@ -56,7 +74,7 @@ export default function EventsTable() {
         <input type="date" id="end_date" />
 
         <button type="submit" disabled={isPending}>
-          Post
+          {isPending ? 'Posting...' : 'Post'}
         </button>
       </form>
     </>

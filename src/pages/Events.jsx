@@ -1,5 +1,5 @@
-import EventsTable from '../features/events/EventsTable';
+import EventsList from '../features/events/EventsList';
 
 export default function Events() {
-  return <EventsTable />;
+  return <EventsList />;
 }

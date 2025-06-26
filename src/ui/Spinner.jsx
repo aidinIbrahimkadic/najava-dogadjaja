@@ -8,13 +8,13 @@ const spin = keyframes`
 
 const SpinnerWrapper = styled.div`
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  /* padding: 2rem; */
 `;
 
-const StyledSpinner = styled.div`
+const StyledSpinner = styled.span`
   width: 4rem;
   height: 4rem;
   border: 4px solid var(--color-grey-200);
@@ -24,9 +24,5 @@ const StyledSpinner = styled.div`
 `;
 
 export default function Spinner() {
-  return (
-    <SpinnerWrapper>
-      <StyledSpinner />
-    </SpinnerWrapper>
-  );
+  return <StyledSpinner />;
 }

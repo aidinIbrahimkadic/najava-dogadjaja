@@ -4,6 +4,7 @@ export async function getEvents() {
   const response = await axiosInstance.get(`/events/events`);
   return response.data;
 }
+
 export async function postEvent({
   title,
   description,
@@ -24,4 +25,9 @@ export async function postEvent({
     user_idguid: 'bd64f803-b938-4d66-959c-0e14dfb99052',
   });
   return response.data;
+}
+
+export async function deleteEvent(id) {
+  await axiosInstance.delete(`/events/events/${id}`);
+  return id;
 }
