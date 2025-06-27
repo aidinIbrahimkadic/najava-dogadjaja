@@ -10,7 +10,7 @@ import formater from '../../utils/dateFormatter';
 import { useNavigate } from 'react-router-dom';
 import { useDeleteEvent } from '../events/useDeleteEvent';
 
-import { HiEye, HiTrash } from 'react-icons/hi2';
+import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
 
 const Cell = styled.div`
   font-weight: 400;
@@ -53,7 +53,7 @@ function EventRow({
               <Menus.Button icon={<HiEye />} onClick={() => navigate(`/events/${idguid}`)}>
                 Više detalja
               </Menus.Button>
-
+              <Menus.Button icon={<HiPencilSquare />}>Edit event</Menus.Button>
               <Modal.Open opens="delete">
                 <Menus.Button icon={<HiTrash />}>Delete event</Menus.Button>
               </Modal.Open>

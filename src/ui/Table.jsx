@@ -21,7 +21,7 @@ const CommonRow = styled.div.withConfig({
 `;
 
 const StyledHeader = styled(CommonRow)`
-  padding: 0.8rem 2.4rem;
+  padding: 1rem 2.4rem;
   cursor: pointer;
   background-color: var(--color-grey-50);
   border-bottom: 1px solid var(--color-grey-200);
@@ -31,10 +31,10 @@ const StyledHeader = styled(CommonRow)`
   color: var(--color-grey-600);
 `;
 const StyledRow = styled(CommonRow)`
-  padding: 0.6rem 2.4rem;
+  padding: 0.4rem 2.4rem;
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-200);
+    border-bottom: 1px solid var(--color-grey-100);
   }
 
   &:hover {
@@ -49,7 +49,7 @@ const Footer = styled.footer`
   display: flex;
   justify-content: center;
   padding: 1.2rem;
-  border-top: 1px solid var(--color-grey-200);
+  border-top: 1px solid var(--color-grey-100);
   &:not(:has(*)) {
     display: none;
   }
