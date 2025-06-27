@@ -16,6 +16,34 @@ FEATURES:
 
 9171211asd
 
+PODACI:
+
+Redni broj
+Naslov
+Lokacija
+Kategorija
+Datum i vrijeme početka
+Cijena
+
+const data = [
+{
+category_idguid: '4a5b1adb-516a-4f90-a90a-b6af65659545',
+createdAt: '2025-06-26T14:15:05.091Z',
+description: 'sadasd',
+end_date: '2025-06-27T00:00:00.000Z',
+id: 36,
+idguid: '6c3509b7-23a4-46e7-ae13-98f3c68ff6c9',
+image_url: '',
+is_public: true,
+location: 'aaaaa',
+operater: 'bd64f803-b938-4d66-959c-0e14dfb99052',
+start_date: '2025-06-27T00:00:00.000Z',
+title: 'f',
+updatedAt: '2025-06-26T14:15:05.091Z',
+user_idguid: 'bd64f803-b938-4d66-959c-0e14dfb99052',
+},
+];
+
 https://events-opcina.poruci.ba/api/auth/login
 
 PRIMJERI: https://preporodmostar.ba/najave/ciklus-online-predavanja/

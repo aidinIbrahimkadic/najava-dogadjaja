@@ -4,18 +4,20 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5177",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@date-fns/upgrade": "^1.0.3",
     "@mui/styled-engine": "^7.1.1",
     "@tanstack/react-query": "^5.80.10",
     "@tanstack/react-query-devtools": "^5.80.10",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.10.0",
+    "date-fns": "^4.1.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",

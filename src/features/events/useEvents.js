@@ -4,24 +4,23 @@ import toast from 'react-hot-toast';
 import { getEvents } from '../../services/apiEvents';
 
 export function useGetEvents() {
-  const {
-    isLoading,
-    data: events,
-    error,
-  } = useQuery({
+  const { isLoading, data, error } = useQuery({
     queryKey: ['events'],
     queryFn: getEvents,
+    // Mozda visak
     retry: 0,
     onSuccess: () => {
       toast.success(`Events loaded`);
     },
   });
-
   useEffect(() => {
     if (error) {
       toast.error(`${error.response.data.message}`);
     }
   }, [error]);
 
-  return { isLoading, events, error };
+  const events = data?.data;
+  const count = data?.total;
+
+  return { isLoading, events, error, count };
 }

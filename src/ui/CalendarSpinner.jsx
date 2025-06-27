@@ -40,7 +40,7 @@ export default function CalendarSpinner() {
     <SpinnerWrapper>
       <CalendarGrid>
         {[...Array(9)].map((_, i) => (
-          <CalendarSquare key={i} index={i} />
+          <CalendarSquare key={i} />
         ))}
       </CalendarGrid>
     </SpinnerWrapper>
