@@ -49,7 +49,7 @@ function CategoryRow({ category: { idguid, naziv, operater, opis }, index }) {
 
           <Modal.Window name="delete">
             <ConfirmDelete
-              resourceName="event"
+              resourceName="categories"
               disabled={isPending}
               onConfirm={() => handleDelete(idguid)}
             />

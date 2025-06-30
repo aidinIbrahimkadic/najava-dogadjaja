@@ -12,7 +12,7 @@ export async function getCategory() {
   return response.data;
 }
 
-export async function deleteEvent(id) {
+export async function deleteCategory(id) {
   await axiosInstance.delete(`/events/kategorije/${id}`);
   return id;
 }
