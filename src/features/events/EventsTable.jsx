@@ -8,7 +8,7 @@ import Pagination from '../../ui/Pagination';
 import Menus from '../../ui/Menus';
 
 export default function EventsTable() {
-  const { events, isLoading, error } = useGetEvents();
+  const { events, isLoading, error, count } = useGetEvents();
   const { isPending, postEvent } = usePostEvent();
 
   if (isLoading) return <CalendarSpinner />;
@@ -46,7 +46,7 @@ export default function EventsTable() {
           render={(event, i) => <EventRow index={i} key={event.idguid} event={event} />}
         />
         <Table.Footer>
-          <Pagination />
+          <Pagination count={count} />
         </Table.Footer>
       </Table>
       <form onSubmit={handleSubmit}>

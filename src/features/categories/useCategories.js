@@ -4,11 +4,7 @@ import toast from 'react-hot-toast';
 import { getCategories } from '../../services/apiCategories';
 
 export function useGetCategories() {
-  const {
-    isLoading,
-    data: categories,
-    error,
-  } = useQuery({
+  const { isLoading, data, error } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
     // Mozda visak
@@ -23,5 +19,7 @@ export function useGetCategories() {
     }
   }, [error]);
 
-  return { isLoading, categories, error };
+  const categories = data?.data;
+  const count = data?.total;
+  return { isLoading, categories, error, count };
 }

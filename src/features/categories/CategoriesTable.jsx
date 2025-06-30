@@ -1,12 +1,37 @@
 import CalendarSpinner from '../../ui/CalendarSpinner';
-import { useGetCategory } from './useCategory';
+import Empty from '../../ui/Empty';
+import Menus from '../../ui/Menus';
+import Pagination from '../../ui/Pagination';
+import Table from '../../ui/Table';
+import CategoryRow from './CategoryRow';
+import { useGetCategories } from './useCategories';
 
 export default function CategoriesTable() {
-  const { isLoading, category } = useGetCategory();
+  const { isLoading, categories, error, count } = useGetCategories();
 
-  {
-    isLoading && <CalendarSpinner />;
-  }
-  console.log(category);
-  return <h1>Categories</h1>;
+  if (isLoading) return <CalendarSpinner />;
+  if (error) return <Empty />;
+
+  return (
+    <Menus>
+      <Table columns=".2fr 2fr 2fr 2fr .2fr">
+        <Table.Header>
+          <div>#</div>
+          <div>Naziv</div>
+          <div>Operater</div>
+          <div>Opis</div>
+          <div></div>
+        </Table.Header>
+        <Table.Body
+          data={categories}
+          render={(category, i) => (
+            <CategoryRow index={i} key={category.idguid} category={category} />
+          )}
+        />
+        <Table.Footer>
+          <Pagination count={count} />
+        </Table.Footer>
+      </Table>
+    </Menus>
+  );
 }

@@ -23,7 +23,7 @@ const CommonRow = styled.div.withConfig({
 const StyledHeader = styled(CommonRow)`
   padding: 1rem 2.4rem;
   cursor: pointer;
-  background-color: var(--color-grey-50);
+  background-color: var(--color-grey-100);
   border-bottom: 1px solid var(--color-grey-200);
   letter-spacing: 0.4px;
   font-weight: 600;
@@ -31,24 +31,24 @@ const StyledHeader = styled(CommonRow)`
   color: var(--color-grey-600);
 `;
 const StyledRow = styled(CommonRow)`
-  padding: 0.4rem 2.4rem;
+  padding: 0.2rem 2.4rem;
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
+    border-bottom: 1px solid var(--color-grey-200);
   }
 
   &:hover {
-    background-color: var(--color-grey-50);
+    background-color: var(--color-hover-50);
   }
 `;
 
 const StyledBody = styled.section``;
 
 const Footer = styled.footer`
-  background-color: var(--color-grey-50);
+  background-color: var(--color-grey-100);
   display: flex;
   justify-content: center;
-  padding: 1.2rem;
+  padding: 1rem;
   border-top: 1px solid var(--color-grey-100);
   &:not(:has(*)) {
     display: none;

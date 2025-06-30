@@ -44,6 +44,30 @@ user_idguid: 'bd64f803-b938-4d66-959c-0e14dfb99052',
 },
 ];
 
+category_data:{
+createdAt
+:
+"2025-06-24T16:59:48.616Z"
+id
+:
+1
+idguid
+:
+"4a5b1adb-516a-4f90-a90a-b6af65659545"
+naziv
+:
+"Tag 1"
+operater
+:
+"bd64f803-b938-4d66-959c-0e14dfb99052"
+opis
+:
+""
+updatedAt
+:
+"2025-06-24T16:59:48.616Z"
+}
+
 https://events-opcina.poruci.ba/api/auth/login
 
 PRIMJERI: https://preporodmostar.ba/najave/ciklus-online-predavanja/

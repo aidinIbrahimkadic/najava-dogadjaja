@@ -7,6 +7,7 @@ const StyledPagination = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+
   justify-content: space-between;
 `;
 
@@ -21,24 +22,28 @@ const P = styled.p`
 
 const Buttons = styled.div`
   display: flex;
-  gap: 0.6rem;
+  gap: 1rem;
+  background-color: var(--color-hover-100);
 `;
 
 const PaginationButton = styled.button`
   background-color: ${(props) =>
-    props.active ? ' var(--color-brand-600)' : 'var(--color-grey-50)'};
+    props.disabled ? ' var(--color-grey-50)' : 'var(--color-grey-100)'};
+  border: ${(props) =>
+    props.disabled ? '1px solid var(--color-grey-200)' : '1px solid var(--color-grey-300)'};
   color: ${(props) => (props.active ? ' var(--color-brand-50)' : 'inherit')};
-  border: none;
+  /* border: 1px solid var(--color-grey-200); */
   border-radius: var(--border-radius-sm);
   font-weight: 500;
-  font-size: 1.4rem;
-
+  font-size: 1rem;
+  width: 3.2rem;
+  height: 3.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
 
-  padding: 0.4rem 1.2rem;
+  /* padding: 0.4rem 1.2rem; */
   transition: all 0.3s;
 
   &:has(span:last-child) {
@@ -50,13 +55,22 @@ const PaginationButton = styled.button`
   }
 
   & svg {
-    height: 1.8rem;
-    width: 1.8rem;
+    height: 1.2rem;
+    width: 1.2rem;
+    color: ${(props) =>
+      props.disabled ? '1px solid var(--color-grey-50)' : '1px solid var(--color-grey-700)'};
+    /* color: var(--color-grey-700); */
   }
-
+  &:hover {
+    border: ${(props) =>
+      props.disabled ? '1px solid var(--color-grey-200)' : '1px solid var(--color-grey-400)'};
+    background-color: ${(props) =>
+      props.disabled ? ' var(--color-grey-50)' : 'var(--color-grey-200)'};
+  }
   &:hover:not(:disabled) {
-    background-color: var(--color-brand-600);
-    color: var(--color-brand-50);
+    /* background-color: var(--color-brand-600);
+    outline: 1px solid var(--color-grey-100);
+    color: var(--color-brand-50); */
   }
 `;
 
@@ -92,11 +106,10 @@ function Pagination({ count }) {
 
       <Buttons>
         <PaginationButton onClick={prevPage} disabled={currentPage === 1}>
-          <HiChevronLeft /> <span>Previous</span>
+          <HiChevronLeft />
         </PaginationButton>
 
         <PaginationButton onClick={nextPage} disabled={currentPage === pageCount}>
-          <span>Next</span>
           <HiChevronRight />
         </PaginationButton>
       </Buttons>
