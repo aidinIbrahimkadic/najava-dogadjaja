@@ -10,7 +10,7 @@ import FormRow from '../../ui/FormRow';
 import { usePostCategory } from './usePostCategory';
 import { useUpdateCategory } from './useUpdateCategory';
 
-function CreateCabinForm({ categoryToEdit = {}, onCloseModal }) {
+function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
   const { isCreating, postCategory } = usePostCategory();
   const { isEditing, updateCategory } = useUpdateCategory();
   const isWorking = isCreating || isEditing;
@@ -88,4 +88,4 @@ function CreateCabinForm({ categoryToEdit = {}, onCloseModal }) {
   );
 }
 
-export default CreateCabinForm;
+export default CreateCategoryForm;
