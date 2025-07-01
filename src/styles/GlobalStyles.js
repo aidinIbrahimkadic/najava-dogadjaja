@@ -114,7 +114,15 @@ const GlobalStyles = createGlobalStyle`
   --color-brand-700: #c2410c;
   --color-brand-800: #9a3412;
   --color-brand-900: #7c2d12;
-    
+  
+  --color-button-primary: #FF8C42;  /* Prijatna narandžasta */
+--color-button-primary-hover: #E67A35;  /* Tamnija na hover */
+--color-button-primary-active: #CC6A2D;  /* Još tamnija na klik */
+
+--color-button-success: #4CAF7D;  
+--color-button-success-hover: #3D996B;  
+--color-button-success-active: #2E7D59; 
+
   --border-radius-tiny: 3px;
   --border-radius-sm: 5px;
   --border-radius-md: 7px;

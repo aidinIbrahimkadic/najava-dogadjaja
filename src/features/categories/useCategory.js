@@ -3,16 +3,17 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getCategory } from '../../services/apiCategories';
 
-export function useGetCategory() {
+export function useGetCategory(id) {
   const {
     isLoading,
     data: category,
     error,
   } = useQuery({
-    queryKey: ['category'],
-    queryFn: getCategory,
+    queryKey: ['category', id],
+    queryFn: () => getCategory(id),
     // Mozda visak
     retry: 0,
+    enabled: !!id,
     onSuccess: () => {
       toast.success(`Category loaded`);
     },

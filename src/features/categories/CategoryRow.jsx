@@ -4,6 +4,7 @@ import Table from '../../ui/Table';
 import Modal from '../../ui/Modal';
 import Menus from '../../ui/Menus';
 import ConfirmDelete from '../../ui/ConfirmDelete';
+import CreateCategoryForm from './CreateCategoryForm';
 
 // import { useGetCategory } from './useCategory';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +18,7 @@ const Cell = styled.div`
   font-family: 'Sono';
 `;
 
-function CategoryRow({ category: { idguid, naziv, operater, opis }, index }) {
+function CategoryRow({ category, index }) {
   const navigate = useNavigate();
 
   const { mutate: deleteCategory, isPending } = useDeleteCategory();
@@ -25,7 +26,7 @@ function CategoryRow({ category: { idguid, naziv, operater, opis }, index }) {
   function handleDelete(id) {
     deleteCategory(id);
   }
-
+  const { idguid, naziv, operater, opis } = category;
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
@@ -40,13 +41,18 @@ function CategoryRow({ category: { idguid, naziv, operater, opis }, index }) {
               <Menus.Button icon={<HiEye />} onClick={() => navigate(`/category/${idguid}`)}>
                 Više detalja
               </Menus.Button>
-              <Menus.Button icon={<HiPencilSquare />}>Edit event</Menus.Button>
+              <Modal.Open opens="edit">
+                <Menus.Button icon={<HiPencilSquare />}>Edit</Menus.Button>
+              </Modal.Open>
               <Modal.Open opens="delete">
                 <Menus.Button icon={<HiTrash />}>Delete event</Menus.Button>
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
 
+          <Modal.Window name="edit">
+            <CreateCategoryForm categoryToEdit={category} />
+          </Modal.Window>
           <Modal.Window name="delete">
             <ConfirmDelete
               resourceName="categories"

@@ -23,6 +23,12 @@ const Main = styled.main`
   background-color: var(--color-grey-0);
   overflow-y: auto;
 `;
+const Container = styled.div`
+  margin: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 3.2rem;
+`;
 
 export default function AppLayout() {
   const { isCollapsed } = useSidebarCollapsed();
@@ -31,7 +37,9 @@ export default function AppLayout() {
       <Header />
       <Sidebar />
       <Main>
-        <Outlet />
+        <Container>
+          <Outlet />
+        </Container>
       </Main>
     </StyledAppLayout>
   );

@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDeleteEvent } from '../events/useDeleteEvent';
 
 import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
+import CreateEventForm from './CreateEventForm';
 
 const Cell = styled.div`
   font-weight: 400;
@@ -18,20 +19,30 @@ const Cell = styled.div`
   font-family: 'Sono';
 `;
 
-function EventRow({
-  event: { idguid, title, location, description, image_url, is_public, start_date, end_date },
-  index,
-}) {
+function EventRow({ event, index }) {
   const navigate = useNavigate();
-
   const { mutate: deleteEvent, isPending } = useDeleteEvent();
+
+  const {
+    idguid,
+    category_idguid,
+    title,
+    location,
+    description,
+    image_url,
+    is_public,
+    start_date,
+    end_date,
+  } = event;
 
   function handleDelete(id) {
     deleteEvent(id);
   }
 
+  //EDIT
+
   //POPRAVITI
-  const { category } = useGetCategory();
+  const { category } = useGetCategory(category_idguid);
   const naziv = category?.naziv;
 
   return (
@@ -53,13 +64,17 @@ function EventRow({
               <Menus.Button icon={<HiEye />} onClick={() => navigate(`/events/${idguid}`)}>
                 Više detalja
               </Menus.Button>
-              <Menus.Button icon={<HiPencilSquare />}>Edit event</Menus.Button>
+              <Modal.Open opens="edit">
+                <Menus.Button icon={<HiPencilSquare />}>Edit event</Menus.Button>
+              </Modal.Open>
               <Modal.Open opens="delete">
                 <Menus.Button icon={<HiTrash />}>Delete event</Menus.Button>
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
-
+          <Modal.Window name="edit">
+            <CreateEventForm eventToEdit={event} />
+          </Modal.Window>
           <Modal.Window name="delete">
             <ConfirmDelete
               resourceName="event"

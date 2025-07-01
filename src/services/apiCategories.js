@@ -1,45 +1,66 @@
 import axiosInstance from './axiosInstance';
 
 export async function getCategories() {
-  const response = await axiosInstance.get(`/events/kategorije`);
-  return response.data;
+  try {
+    const response = await axiosInstance.get(`/events/kategorije`);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
 
-export async function getCategory() {
-  const response = await axiosInstance.get(
-    `/events/kategorije/4a5b1adb-516a-4f90-a90a-b6af65659545`
-  );
-  return response.data;
+export async function getCategory(id) {
+  if (!id) throw new Error('Category ID is required');
+
+  try {
+    const response = await axiosInstance.get(`/events/kategorije/${id}`);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
 
 export async function deleteCategory(id) {
-  await axiosInstance.delete(`/events/kategorije/${id}`);
-  return id;
+  if (!id) throw new Error('Category ID is required');
+
+  try {
+    await axiosInstance.delete(`/events/kategorije/${id}`);
+    return id;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
 
-// export async function postEvent({
-//   title,
-//   description,
-//   location,
-//   start_date,
-//   end_date,
-//   is_public,
-//   category_idguid,
-// }) {
-//   const response = await axiosInstance.post(`/events/events`, {
-//     title,
-//     description,
-//     location,
-//     is_public,
-//     end_date,
-//     start_date,
-//     category_idguid,
-//     user_idguid: 'bd64f803-b938-4d66-959c-0e14dfb99052',
-//   });
-//   return response.data;
-// }
+export async function postCategory({ naziv, opis }) {
+  if (!naziv) throw new Error('Naziv kategorije je obavezan');
 
-// export async function deleteEvent(id) {
-//   await axiosInstance.delete(`/events/events/${id}`);
-//   return id;
-// }
+  try {
+    const response = await axiosInstance.post(`/events/kategorije`, {
+      naziv,
+      opis,
+    });
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function updateCategory({ data: { naziv, opis }, editId: id }) {
+  if (!id) throw new Error('Category ID is required');
+  if (!naziv) throw new Error('Naziv kategorije je obavezan');
+
+  try {
+    const response = await axiosInstance.put(`/events/kategorije/${id}`, {
+      naziv,
+      opis,
+    });
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}

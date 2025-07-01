@@ -9,7 +9,7 @@ export function usePostEvent() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { mutate: postEvent, isPending } = useMutation({
+  const { mutate: postEvent, isPending: isCreating } = useMutation({
     mutationFn: postEventApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events'] });
@@ -21,5 +21,5 @@ export function usePostEvent() {
     },
   });
 
-  return { postEvent, isPending };
+  return { postEvent, isCreating };
 }
