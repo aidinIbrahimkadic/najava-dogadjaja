@@ -4,7 +4,7 @@ import Input from '../../ui/Input';
 import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 // import FileInput from '../../ui/FileInput';
-import Textarea from '../../ui/Textarea';
+import TextArea from '../../ui/TextArea';
 import FormRow from '../../ui/FormRow';
 
 import { usePostCategory } from './usePostCategory';
@@ -64,7 +64,7 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
       </FormRow>
 
       <FormRow label="Category Description" error={errors?.opis?.message}>
-        <Textarea
+        <TextArea
           type="text"
           id="opis"
           defaultValue=""

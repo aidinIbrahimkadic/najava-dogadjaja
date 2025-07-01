@@ -4,7 +4,7 @@ import Input from '../../ui/Input';
 import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 // import FileInput from '../../ui/FileInput';
-import Textarea from '../../ui/Textarea';
+import TextArea from '../../ui/TextArea';
 import FormRow from '../../ui/FormRow';
 
 import { usePostEvent } from './usePostEvent';
@@ -84,7 +84,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
       </FormRow>
 
       <FormRow label="Event Description" error={errors?.description?.message}>
-        <Textarea
+        <TextArea
           type="text"
           id="description"
           defaultValue=""
