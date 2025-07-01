@@ -34,7 +34,7 @@ export default function EventsTable() {
           <div>Location</div>
           <div>Category</div>
           <div>Description</div>
-          <div>Image_url</div>
+          <div>Image url</div>
           <div>Public</div>
           <div>Start Date</div>
           <div>End Date</div>
