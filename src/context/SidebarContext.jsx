@@ -1,13 +1,14 @@
-import { useContext } from 'react';
-import { createContext, useState } from 'react';
+import { useContext, useEffect, useState, createContext } from 'react';
 
 const SidebarCollapseContext = createContext();
 
 function SidebarCollapseProvider({ children }) {
-  const [isCollapsed, setIsCollapsed] = useState(() => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
     const stored = localStorage.getItem('isCollapsed');
-    return stored === 'true';
-  });
+    setIsCollapsed(stored === 'true');
+  }, []);
 
   function toggleCollapsed() {
     setIsCollapsed((prev) => {
@@ -31,4 +32,5 @@ function useSidebarCollapsed() {
   return context;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { SidebarCollapseProvider, useSidebarCollapsed };
