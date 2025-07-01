@@ -54,18 +54,21 @@ export async function deleteEvent(id) {
 }
 
 export async function updateEvent({
-  id,
-  title,
-  description,
-  location,
-  is_public,
-  end_date,
-  start_date,
-  category_idguid,
-  user_idguid,
+  data: {
+    title,
+    description,
+    start_date,
+    end_date,
+    location,
+    user_idguid,
+    category_idguid,
+    is_public,
+  },
+  editId: id,
+  // Image url
 }) {
   if (!id) throw new Error('Event ID is required');
-  if (!title || start_date || category_idguid || user_idguid)
+  if (!title || !start_date)
     throw new Error('Nedostaju neki od obaveznih podataka: title, start date, category, user');
 
   try {
@@ -73,10 +76,10 @@ export async function updateEvent({
       title,
       description,
       location,
-      is_public,
       end_date,
       start_date,
       category_idguid,
+      is_public,
       user_idguid,
     });
     return response.data;

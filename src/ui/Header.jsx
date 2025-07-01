@@ -40,7 +40,7 @@ export default function Header() {
   const { isCollapsed, toggleCollapsed } = useSidebarCollapsed();
   const logout = useLogout();
 
-  const { data: user, isLoading } = useUserProfile();
+  const { user, isLoading } = useUserProfile();
   return (
     <StyledHeader>
       <ToggleButton onClick={toggleCollapsed}>

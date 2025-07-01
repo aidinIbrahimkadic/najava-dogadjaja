@@ -12,11 +12,10 @@ const pulse = keyframes`
 `;
 
 const SpinnerWrapper = styled.div`
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  padding: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const CalendarGrid = styled.div`

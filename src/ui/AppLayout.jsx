@@ -19,6 +19,7 @@ const StyledAppLayout = styled.div.withConfig({
 `;
 
 const Main = styled.main`
+  position: relative;
   grid-area: main;
   background-color: var(--color-grey-0);
   overflow-y: auto;

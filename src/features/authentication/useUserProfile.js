@@ -6,7 +6,7 @@ import { getUserProfile } from '../../services/apiAuth';
 export function useUserProfile() {
   const navigate = useNavigate();
 
-  return useQuery({
+  const { isLoading, data: user } = useQuery({
     queryKey: ['userProfile'],
     queryFn: getUserProfile,
     enabled: !!localStorage.getItem('eventsToken'),
@@ -20,4 +20,6 @@ export function useUserProfile() {
       navigate('/login', { replace: true });
     },
   });
+
+  return { isLoading, user };
 }

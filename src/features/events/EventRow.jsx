@@ -53,7 +53,14 @@ function EventRow({ event, index }) {
       <Cell>{naziv}</Cell>
       <Cell>{description}</Cell>
       <Cell>{image_url}</Cell>
-      <Cell>{is_public}</Cell>
+      {/* POPRAVITI dodati komponentu */}
+      <Cell>
+        {is_public ? (
+          <span style={{ color: 'green', fontWeight: 'bold' }}>Public</span>
+        ) : (
+          <span style={{ color: 'red', fontWeight: 'bold' }}>Private</span>
+        )}
+      </Cell>
       <Cell>{formater(start_date)}</Cell>
       <Cell>{formater(end_date)}</Cell>
       <Cell>
