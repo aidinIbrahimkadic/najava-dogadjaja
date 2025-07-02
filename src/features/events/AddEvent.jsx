@@ -1,22 +1,23 @@
+import CreateEventForm from './CreateEventForm';
+
 import Button from '../../ui/Button';
-import CreateCabinForm from './CreateCategoryForm';
 import Modal from '../../ui/Modal';
 
-function AddCategory() {
+function AddEvent() {
   return (
     <div>
       <Modal>
-        <Modal.Open opens="category-form">
+        <Modal.Open opens="event-form">
           <Button variation="primary" size="medium">
-            Add new category
+            Add new event
           </Button>
         </Modal.Open>
-        <Modal.Window name="category-form">
-          <CreateCabinForm />
+        <Modal.Window name="event-form">
+          <CreateEventForm />
         </Modal.Window>
       </Modal>
     </div>
   );
 }
 
-export default AddCategory;
+export default AddEvent;

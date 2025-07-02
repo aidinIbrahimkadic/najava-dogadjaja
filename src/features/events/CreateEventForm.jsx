@@ -24,15 +24,20 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   const isWorking = isCreating || isEditing;
 
-  const formatedValues = {
-    ...eventToEdit,
-    start_date: format(new Date(eventToEdit.start_date), 'yyyy-MM-dd'),
-    end_date: format(new Date(eventToEdit.end_date), 'yyyy-MM-dd'),
-    user_idguid: user.idguid,
-  };
+  let formatedValues = {};
 
+  const { idguid: editIdd } = eventToEdit;
+  const isEditSession = Boolean(editIdd);
+
+  if (isEditSession) {
+    formatedValues = {
+      ...eventToEdit,
+      start_date: format(new Date(eventToEdit.start_date), 'yyyy-MM-dd'),
+      end_date: format(new Date(eventToEdit.end_date), 'yyyy-MM-dd'),
+      user_idguid: user.idguid,
+    };
+  }
   const { idguid: editId, ...editValues } = formatedValues;
-  const isEditSession = Boolean(editId);
 
   const { register, handleSubmit, reset, watch, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
@@ -54,7 +59,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           },
         }
       );
-    else
+    else {
       postEvent(
         { ...data },
         {
@@ -64,6 +69,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           },
         }
       );
+    }
   }
 
   function onError() {
@@ -115,6 +121,9 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             required: 'This field is required',
           })}
         >
+          <option value="" disabled>
+            Select a category
+          </option>
           {categories.map((category) => (
             <option key={category.idguid} value={category.idguid}>
               {category.naziv}

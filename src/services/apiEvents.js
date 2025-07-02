@@ -20,7 +20,7 @@ export async function postEvent({
   category_idguid,
   user_idguid,
 }) {
-  if (!title || start_date || category_idguid || user_idguid)
+  if (!title || !start_date || !category_idguid || !user_idguid)
     throw new Error('Nedostaje neki od obaveznih podataka title, start date ili kategorija');
 
   try {
