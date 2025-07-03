@@ -24,5 +24,9 @@ const StyledSpinner = styled.span`
 `;
 
 export default function Spinner() {
-  return <StyledSpinner />;
+  return (
+    <SpinnerWrapper>
+      <StyledSpinner />
+    </SpinnerWrapper>
+  );
 }

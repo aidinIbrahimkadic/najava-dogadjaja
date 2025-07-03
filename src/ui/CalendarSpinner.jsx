@@ -22,6 +22,7 @@ const CalendarGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.6rem;
+  background-color: transparent;
 `;
 
 const CalendarSquare = styled.div`

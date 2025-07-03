@@ -4,16 +4,15 @@ import { HiXMark } from 'react-icons/hi2';
 import styled from 'styled-components';
 import { useOutsideClick } from '../hooks/useOutsideClick';
 
-// POPRAVITI overflow i maxHeight
 const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
+  overflow: hidden;
   transform: translate(-50%, -50%);
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
-  padding: 3.2rem 4rem;
   transition: all 0.5s;
 `;
 
@@ -27,6 +26,42 @@ const Overlay = styled.div`
   backdrop-filter: blur(2px);
   z-index: 1000;
   transition: all 0.5s;
+`;
+
+const ModalHeader = styled.div`
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  padding: 0 4rem;
+  background-color: var(--color-grey-200);
+`;
+
+const ModalHeading = styled.h2`
+  font-size: 2.4rem;
+  font-weight: 500;
+`;
+
+const ModalContent = styled.div`
+  padding: 3.2rem 4rem;
+  max-height: 90dvh;
+  scrollbar-gutter: stable;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-top-right-radius: var(--border-radius-lg);
+    border-bottom-right-radius: var(--border-radius-lg);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-grey-300);
+    border-radius: 20px;
+    border: 3px solid var(--color-grey-0);
+  }
 `;
 
 const Button = styled.button`
@@ -48,7 +83,7 @@ const Button = styled.button`
     width: 2.4rem;
     height: 2.4rem;
 
-    color: var(--color-grey-500);
+    color: var(--color-grey-900);
   }
 `;
 
@@ -80,11 +115,15 @@ function Window({ children, name }) {
   return createPortal(
     <Overlay>
       <StyledModal ref={ref}>
-        <Button onClick={close}>
-          <HiXMark />
-        </Button>
-
-        <div>{cloneElement(children, { onCloseModal: close })}</div>
+        <ModalHeader>
+          <ModalHeading>{name}</ModalHeading>
+          <Button onClick={close}>
+            <HiXMark />
+          </Button>
+        </ModalHeader>
+        <ModalContent>
+          <div>{cloneElement(children, { onCloseModal: close })}</div>
+        </ModalContent>
       </StyledModal>
     </Overlay>,
     document.body

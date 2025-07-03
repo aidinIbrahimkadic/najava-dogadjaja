@@ -6,12 +6,12 @@ function AddCategory() {
   return (
     <div>
       <Modal>
-        <Modal.Open opens="category-form">
+        <Modal.Open opens="Create new Category">
           <Button variation="primary" size="medium">
-            Add new category
+            Create new Category
           </Button>
         </Modal.Open>
-        <Modal.Window name="category-form">
+        <Modal.Window name="Create new Category">
           <CreateCabinForm />
         </Modal.Window>
       </Modal>

@@ -23,7 +23,7 @@ const StyledConfirmDelete = styled.div`
 function ConfirmDelete({ resourceName, onConfirm, disabled, onCloseModal }) {
   return (
     <StyledConfirmDelete>
-      <Heading as="h3">Delete {resourceName}</Heading>
+      {/* <Heading as="h3">Delete {resourceName}</Heading> */}
       <p>
         Da li ste sigurni da želite obrisati trajno ovaj {resourceName}? Jednom obrisana ova stavka
         se više ne može vratiti.

@@ -71,18 +71,18 @@ function EventRow({ event, index }) {
               <Menus.Button icon={<HiEye />} onClick={() => navigate(`/events/${idguid}`)}>
                 Više detalja
               </Menus.Button>
-              <Modal.Open opens="edit">
+              <Modal.Open opens="Edit event">
                 <Menus.Button icon={<HiPencilSquare />}>Edit event</Menus.Button>
               </Modal.Open>
-              <Modal.Open opens="delete">
+              <Modal.Open opens="Delete event">
                 <Menus.Button icon={<HiTrash />}>Delete event</Menus.Button>
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
-          <Modal.Window name="edit">
+          <Modal.Window name="Edit event">
             <CreateEventForm eventToEdit={event} />
           </Modal.Window>
-          <Modal.Window name="delete">
+          <Modal.Window name="Delete event">
             <ConfirmDelete
               resourceName="event"
               disabled={isPending}

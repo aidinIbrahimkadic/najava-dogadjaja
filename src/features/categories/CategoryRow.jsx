@@ -41,19 +41,19 @@ function CategoryRow({ category, index }) {
               <Menus.Button icon={<HiEye />} onClick={() => navigate(`/category/${idguid}`)}>
                 Više detalja
               </Menus.Button>
-              <Modal.Open opens="edit">
+              <Modal.Open opens="Edit Category">
                 <Menus.Button icon={<HiPencilSquare />}>Edit</Menus.Button>
               </Modal.Open>
-              <Modal.Open opens="delete">
+              <Modal.Open opens="Delete Category">
                 <Menus.Button icon={<HiTrash />}>Delete event</Menus.Button>
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
 
-          <Modal.Window name="edit">
+          <Modal.Window name="Edit Category">
             <CreateCategoryForm categoryToEdit={category} />
           </Modal.Window>
-          <Modal.Window name="delete">
+          <Modal.Window name="Delete Category">
             <ConfirmDelete
               resourceName="categories"
               disabled={isPending}

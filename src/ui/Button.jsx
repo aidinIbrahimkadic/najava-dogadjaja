@@ -3,30 +3,30 @@ import styled, { css } from 'styled-components';
 const sizes = {
   small: css`
     font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
+    padding: 0.6rem 1.2rem;
     text-transform: uppercase;
     font-weight: 600;
     text-align: center;
   `,
   medium: css`
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     padding: 1.2rem 1.6rem;
     font-weight: 500;
   `,
   large: css`
-    font-size: 1.6rem;
+    font-size: 2rem;
     padding: 1.2rem 2.4rem;
-    font-weight: 500;
+    font-weight: 700;
   `,
 };
 
 const variations = {
   primary: css`
     color: var(--color-brand-50);
-    background-color: var(--color-brand-500);
+    background-color: var(--color-brand-600);
 
     &:hover {
-      background-color: var(--color-brand-600);
+      background-color: var(--color-brand-700);
     }
   `,
   secondary: css`
