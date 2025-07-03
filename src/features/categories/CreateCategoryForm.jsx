@@ -9,6 +9,15 @@ import FormRow from '../../ui/FormRow';
 
 import { usePostCategory } from './usePostCategory';
 import { useUpdateCategory } from './useUpdateCategory';
+import styled from 'styled-components';
+
+const ButtonsRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+  margin-top: 1rem;
+`;
 
 function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
   const { isCreating, postCategory } = usePostCategory();
@@ -69,21 +78,19 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
           id="opis"
           defaultValue=""
           disabled={isWorking}
-          {...register('opis', {
-            required: 'This field is required',
-          })}
+          {...register('opis')}
         />
       </FormRow>
 
-      <FormRow>
-        {/* type is an HTML attribute! */}
+      {/* type is an HTML attribute! */}
+      <ButtonsRow>
         <Button variation="secondary" type="reset" size="small" onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
         <Button size="small" variation="primary" disabled={isWorking}>
           {isEditSession ? 'Edit category' : 'Create new category'}
         </Button>
-      </FormRow>
+      </ButtonsRow>
     </Form>
   );
 }

@@ -17,9 +17,11 @@ export function usePostCategory() {
       navigate('/categories', { replace: true });
     },
     onError: (err) => {
-      toast.error(`${err.message}`);
+      toast.error(`${err.response?.data?.message}`);
     },
   });
+
+  // const categoryError = error?.response?.data?.message;
 
   return { postCategory, isCreating };
 }

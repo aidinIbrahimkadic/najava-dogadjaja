@@ -37,16 +37,11 @@ export async function deleteCategory(id) {
 export async function postCategory({ naziv, opis }) {
   if (!naziv) throw new Error('Naziv kategorije je obavezan');
 
-  try {
-    const response = await axiosInstance.post(`/events/kategorije`, {
-      naziv,
-      opis,
-    });
-    return response.data;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+  const response = await axiosInstance.post(`/events/kategorije`, {
+    naziv,
+    opis,
+  });
+  return response.data;
 }
 
 export async function updateCategory({ data: { naziv, opis }, editId: id }) {

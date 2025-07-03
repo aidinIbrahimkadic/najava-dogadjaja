@@ -13,3 +13,21 @@ const Input = styled.input`
 `;
 
 export default Input;
+
+// const InputContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+// `;
+
+// const ErrorMessage = styled.span`
+//   color: red;
+// `;
+
+// export default function Input({ error }) {
+//   return (
+//     <InputContainer>
+//       <StyledInput />
+//       {error && <ErrorMessage>{error}</ErrorMessage>}
+//     </InputContainer>
+//   );
+// }
