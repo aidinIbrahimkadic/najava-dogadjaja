@@ -157,6 +157,14 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
+const ArrowIcon = styled.span`
+  display: inline-block;
+  margin-left: 1rem;
+  transition: transform 0.2s ease-in-out;
+  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+  color: var(--color-grey-500);
+`;
+
 const StyledSelect = styled.div`
   padding: 0.8rem 1.2rem;
   border: 1px solid var(--color-grey-300);
@@ -174,11 +182,11 @@ const StyledSelect = styled.div`
     border-color: var(--color-brand-500);
   }
 
-  &::after {
+  /* &::after {
     content: '▼';
     font-size: 0.8rem;
     margin-left: 1rem;
-  }
+  } */
 
   &.disabled {
     background-color: var(--color-grey-200);
@@ -265,7 +273,8 @@ const Select = ({
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
         tabIndex={0}
       >
-        {selectedLabel || placeholder}
+        <span>{selectedLabel || placeholder}</span>
+        <ArrowIcon $isOpen={isOpen}>▼</ArrowIcon>
       </StyledSelect>
       {isOpen && !disabled && (
         <OptionsList>
