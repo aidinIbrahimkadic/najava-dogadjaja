@@ -34,6 +34,7 @@ const ModalHeader = styled.div`
   align-items: center;
   padding: 0 4rem;
   background-color: var(--color-grey-200);
+  border-bottom: 1px solid var(--color-grey-300);
 `;
 
 const ModalHeading = styled.h2`

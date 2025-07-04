@@ -1,63 +1,12 @@
-// import styled from 'styled-components';
-
-// const StyledFormRow = styled.div`
-//   display: grid;
-//   align-items: center;
-//   grid-template-columns: 24rem 1fr 1.2fr;
-//   gap: 2.4rem;
-
-//   padding: 1.2rem 0;
-
-//   &:first-child {
-//     padding-top: 0;
-//   }
-
-//   &:last-child {
-//     padding-bottom: 0;
-//   }
-
-//   &:not(:last-child) {
-//     border-bottom: 1px solid var(--color-grey-100);
-//   }
-
-//   &:has(button) {
-//     display: flex;
-//     justify-content: flex-end;
-//     gap: 1.2rem;
-//   }
-// `;
-
-// const Label = styled.label`
-//   font-weight: 500;
-// `;
-
-// const Error = styled.span`
-//   font-size: 1.4rem;
-//   color: var(--color-red-700);
-// `;
-
-// function FormRow({ label, error, children }) {
-//   const childId = children?.props?.id || undefined;
-//   return (
-//     <StyledFormRow>
-//       {label && <Label htmlFor={childId}>{label}</Label>}
-//       {children}
-//       {error && <Error>{error}</Error>}
-//     </StyledFormRow>
-//   );
-// }
-
-// export default FormRow;
-
 import styled from 'styled-components';
 
 const StyledFormRow = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 15rem 1fr;
-  gap: 2.4rem;
+  grid-template-columns: ${(props) => props.$columns || '1fr'};
+  gap: 1.4rem;
 
-  padding: 1.2rem 0;
+  padding: 0.5rem;
 
   &:first-child {
     padding-top: 0;
@@ -68,7 +17,7 @@ const StyledFormRow = styled.div`
   }
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
+    /* border-bottom: 1px solid var(--color-grey-200); */
   }
 
   &:has(button) {
@@ -78,35 +27,8 @@ const StyledFormRow = styled.div`
   }
 `;
 
-const Label = styled.label`
-  font-weight: 500;
-`;
-
-const Error = styled.span`
-  font-size: 1.4rem;
-  color: var(--color-red-700);
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const ErrorMessage = styled.span`
-  color: red;
-`;
-
-function FormRow({ label, error, children }) {
-  const childId = children?.props?.id || undefined;
-  return (
-    <StyledFormRow>
-      {label && <Label htmlFor={childId}>{label}</Label>}
-      <Container>
-        {children}
-        {error && <Error>{error}</Error>}
-      </Container>
-    </StyledFormRow>
-  );
+function FormRow({ columns = '1fr', children }) {
+  return <StyledFormRow $columns={columns}>{children}</StyledFormRow>;
 }
 
 export default FormRow;

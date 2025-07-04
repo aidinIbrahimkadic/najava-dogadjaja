@@ -6,18 +6,10 @@ import Button from '../../ui/Button';
 // import FileInput from '../../ui/FileInput';
 import TextArea from '../../ui/TextArea';
 import FormRow from '../../ui/FormRow';
+import FormField from '../../ui/FormField';
 
 import { usePostCategory } from './usePostCategory';
 import { useUpdateCategory } from './useUpdateCategory';
-import styled from 'styled-components';
-
-const ButtonsRow = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  gap: 2rem;
-  margin-top: 1rem;
-`;
 
 function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
   const { isCreating, postCategory } = usePostCategory();
@@ -61,36 +53,39 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
-      <FormRow label="Category name" error={errors?.naziv?.message}>
-        <Input
-          type="text"
-          id="naziv"
-          disabled={isWorking}
-          {...register('naziv', {
-            required: 'This field is required',
-          })}
-        />
+      <FormRow>
+        <FormField label="Category name" error={errors?.naziv?.message} required>
+          <Input
+            type="text"
+            id="naziv"
+            disabled={isWorking}
+            {...register('naziv', {
+              required: 'This field is required',
+            })}
+          />
+        </FormField>
       </FormRow>
 
-      <FormRow label="Category Description" error={errors?.opis?.message}>
-        <TextArea
-          type="text"
-          id="opis"
-          defaultValue=""
-          disabled={isWorking}
-          {...register('opis')}
-        />
+      <FormRow>
+        <FormField label="Category Description" error={errors?.opis?.message}>
+          <TextArea
+            type="text"
+            id="opis"
+            defaultValue=""
+            disabled={isWorking}
+            {...register('opis')}
+          />
+        </FormField>
       </FormRow>
 
-      {/* type is an HTML attribute! */}
-      <ButtonsRow>
+      <FormRow>
         <Button variation="secondary" type="reset" size="small" onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
         <Button size="small" variation="primary" disabled={isWorking}>
           {isEditSession ? 'Edit category' : 'Create new category'}
         </Button>
-      </ButtonsRow>
+      </FormRow>
     </Form>
   );
 }

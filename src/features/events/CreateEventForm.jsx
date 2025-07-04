@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { format } from 'date-fns';
 
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
@@ -6,14 +7,15 @@ import Button from '../../ui/Button';
 // import FileInput from '../../ui/FileInput';
 import TextArea from '../../ui/TextArea';
 import FormRow from '../../ui/FormRow';
+import FormField from '../../ui/FormField';
+import Spinner from '../../ui/Spinner';
+import Select from '../../ui/Select';
 
 import { usePostEvent } from './usePostEvent';
 import { useUpdateEvent } from './useUpdateEvent';
-import { format } from 'date-fns';
 import { useGetCategories } from '../categories/useCategories';
-// import CalendarSpinner from '../../ui/CalendarSpinner';
 import { useUserProfile } from '../authentication/useUserProfile';
-import Spinner from '../../ui/Spinner';
+import Checkbox from '../../ui/Checkbox';
 
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const { isCreating, postEvent } = usePostEvent();
@@ -40,7 +42,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   }
   const { idguid: editId, ...editValues } = formatedValues;
 
-  const { register, handleSubmit, reset, watch, formState } = useForm({
+  const { register, handleSubmit, reset, watch, setValue, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
 
@@ -77,121 +79,122 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   return (
     <>
       <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
-        <FormRow label="Title" error={errors?.title?.message}>
-          <Input
-            type="text"
-            id="title"
-            disabled={isWorking}
-            {...register('title', {
-              required: 'This field is required',
-            })}
-          />
-        </FormRow>
-
-        <FormRow label="Event Description" error={errors?.description?.message}>
-          <TextArea
-            type="text"
-            id="description"
-            defaultValue=""
-            disabled={isWorking}
-            {...register('description', {
-              required: 'This field is required',
-            })}
-          />
-        </FormRow>
-        <FormRow label="Event Location" error={errors?.location?.message}>
-          <Input
-            type="text"
-            id="location"
-            defaultValue=""
-            disabled={isWorking}
-            {...register('location', {
-              required: 'This field is required',
-            })}
-          />
-        </FormRow>
-        <FormRow label="Category" error={errors?.category_idguid?.message}>
-          {/* POPRAVITI style komponenta nova */}
-
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <select
-              id="category_idguid"
-              defaultValue={eventToEdit.category_idguid || ''}
+        <FormRow columns="1fr 1fr">
+          <FormField label="Title" error={errors?.title?.message} required>
+            <Input
+              type="text"
+              id="title"
               disabled={isWorking}
-              {...register('category_idguid', {
+              {...register('title', {
                 required: 'This field is required',
               })}
-            >
-              <option value="" disabled>
-                Select a category
-              </option>
-              {categories?.map((category) => (
-                <option key={category.idguid} value={category.idguid}>
-                  {category.naziv}
-                </option>
-              ))}
-            </select>
-          )}
+            />
+          </FormField>
+          <FormField label="Category" required error={errors?.category_idguid?.message}>
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <Select
+                id="category_idguid"
+                name="category_idguid"
+                options={categories.map((c) => ({
+                  value: c.idguid,
+                  label: c.naziv,
+                }))}
+                disabled={isWorking}
+                register={register}
+                setValue={setValue}
+                watch={watch}
+                validation={{
+                  required: 'Please select a category',
+                }}
+              />
+            )}
+          </FormField>
+        </FormRow>
+        <FormRow columns="1fr 1fr">
+          <FormField label="Event Location" required error={errors?.location?.message}>
+            <Input
+              type="text"
+              id="location"
+              defaultValue=""
+              disabled={isWorking}
+              {...register('location', {
+                required: 'This field is required',
+              })}
+            />
+          </FormField>
+          <FormField label="User" error={errors?.user_idguid?.message}>
+            <Input
+              type="text"
+              id="user_display"
+              value={`${user.first_name} ${user.last_name}`}
+              disabled
+            />
+            <input
+              type="hidden"
+              id="user_idguid"
+              value={user.idguid}
+              {...register('user_idguid', {
+                required: 'This field is required',
+              })}
+            />
+          </FormField>
         </FormRow>
 
-        <FormRow label="User" error={errors?.user_idguid?.message}>
-          <Input
-            type="text"
-            id="user_display"
-            value={`${user.first_name} ${user.last_name}`}
-            disabled
-          />
-          <input
-            type="hidden"
-            id="user_idguid"
-            value={user.idguid}
-            {...register('user_idguid', {
-              required: 'This field is required',
-            })}
-          />
+        <FormRow>
+          <FormField label="Event Description" error={errors?.description?.message}>
+            <TextArea
+              type="text"
+              id="description"
+              defaultValue=""
+              disabled={isWorking}
+              {...register('description')}
+            />
+          </FormField>
         </FormRow>
-        <FormRow label="Event Start Date" error={errors?.start_date?.message}>
-          <Input
-            type="date"
-            id="start_date"
-            defaultValue=""
-            disabled={isWorking}
-            {...register('start_date', {
-              required: 'This field is required',
-            })}
-          />
-        </FormRow>
-        <FormRow label="Event End Date" error={errors?.end_date?.message}>
-          <Input
-            type="date"
-            id="end_date"
-            defaultValue=""
-            disabled={isWorking}
-            {...register('end_date', {
-              required: 'This field is required',
-            })}
-          />
-        </FormRow>
-        <FormRow label="Is Public" error={errors?.is_public?.message}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <input type="checkbox" id="is_public" disabled={isWorking} {...register('is_public')} />
-            {/* Prati vrijednost kroz watch da dinamički prikazuje labelu */}
-            <label
-              htmlFor="is_public"
-              style={{
-                color: watch('is_public') ? 'green' : 'red',
-                fontWeight: 'bold',
-                userSelect: 'none',
-              }}
-            >
-              {watch('is_public') ? 'Public Event' : 'Private Event'}
-            </label>
-          </div>
+
+        <FormRow columns="1fr 1fr">
+          <FormField label="Event Start Date" error={errors?.start_date?.message} required>
+            <Input
+              type="date"
+              id="start_date"
+              defaultValue=""
+              disabled={isWorking}
+              {...register('start_date', {
+                required: 'This field is required',
+              })}
+            />
+          </FormField>
+
+          <FormField label="Event End Date" error={errors?.end_date?.message}>
+            <Input
+              type="date"
+              id="end_date"
+              defaultValue=""
+              disabled={isWorking}
+              {...register('end_date')}
+            />
+          </FormField>
         </FormRow>
         <FormRow>
-          {/* type is an HTML attribute! */}
+          <FormField error={errors?.is_public?.message}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <label
+                htmlFor="is_public"
+                style={{
+                  fontWeight: 'bold',
+                  userSelect: 'none',
+                }}
+              >
+                Public Event
+              </label>
+              <Checkbox id="is_public" disabled={isWorking} {...register('is_public')} />
+            </div>
+          </FormField>
+        </FormRow>
+
+        <FormRow>
           <Button variation="secondary" type="reset" size="small" onClick={() => onCloseModal?.()}>
             Cancel
           </Button>
@@ -205,3 +208,37 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 }
 
 export default CreateEventForm;
+
+// <Select
+//   id="category_idguid"
+//   name="category_idguid"
+//   register={register}
+//   options={categories}
+//   defaultValue={eventToEdit?.category_idguid || ''}
+//   disabled={isWorking}
+//   required
+//   validation={{
+//     required: 'This field is required',
+//   }}
+//   placeholder="Select a category"
+// />
+
+/* 
+                  <select
+                    id="category_idguid"
+                    defaultValue={eventToEdit.category_idguid || ''}
+                    disabled={isWorking}
+                    {...register('category_idguid', {
+                      required: 'This field is required',
+                    })}
+                  >
+                    <option value="" disabled>
+                      Select a category
+                    </option>
+                    {categories?.map((category) => (
+                      <option key={category.idguid} value={category.idguid}>
+                        {category.naziv}
+                      </option>
+                    ))}
+                  </select>
+                 */
