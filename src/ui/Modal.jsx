@@ -14,6 +14,8 @@ const StyledModal = styled.div`
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   transition: all 0.5s;
+
+  width: ${(props) => (props.size == 'small' ? '30%' : props.size == 'medium' ? '40%' : '55%')};
 `;
 
 const Overlay = styled.div`
@@ -43,10 +45,15 @@ const ModalHeading = styled.h2`
 `;
 
 const ModalContent = styled.div`
-  padding: 3.2rem 4rem;
+  padding: ${(props) =>
+    props.size === 'large' ? '3.2rem 4rem 3.2rem 46px' : '2.4rem 3rem 2.4rem 36px'};
   max-height: 90dvh;
   scrollbar-gutter: stable;
   overflow-y: auto;
+
+  display: flex;
+  justify-content: center;
+  width: 100%;
 
   &::-webkit-scrollbar {
     width: 12px;
@@ -63,6 +70,10 @@ const ModalContent = styled.div`
     border-radius: 20px;
     border: 3px solid var(--color-grey-0);
   }
+`;
+
+const ModalContentDiv = styled.div`
+  width: 100%;
 `;
 
 const Button = styled.button`
@@ -107,7 +118,7 @@ function Open({ children, opens: opensWindowName }) {
   return cloneElement(children, { onClick: () => open(opensWindowName) });
 }
 
-function Window({ children, name }) {
+function Window({ children, name, size = 'large' }) {
   const { openName, close } = useContext(ModalContext);
   const ref = useOutsideClick(close);
 
@@ -115,15 +126,15 @@ function Window({ children, name }) {
 
   return createPortal(
     <Overlay>
-      <StyledModal ref={ref}>
+      <StyledModal size={size} ref={ref}>
         <ModalHeader>
           <ModalHeading>{name}</ModalHeading>
           <Button onClick={close}>
             <HiXMark />
           </Button>
         </ModalHeader>
-        <ModalContent>
-          <div>{cloneElement(children, { onCloseModal: close })}</div>
+        <ModalContent size={size}>
+          <ModalContentDiv>{cloneElement(children, { onCloseModal: close })}</ModalContentDiv>
         </ModalContent>
       </StyledModal>
     </Overlay>,

@@ -50,10 +50,10 @@ function CategoryRow({ category, index }) {
             </Menus.List>
           </Menus.Menu>
 
-          <Modal.Window name="Edit Category">
+          <Modal.Window name="Edit Category" size="medium">
             <CreateCategoryForm categoryToEdit={category} />
           </Modal.Window>
-          <Modal.Window name="Delete Category">
+          <Modal.Window name="Delete Category" size="small">
             <ConfirmDelete
               resourceName="categories"
               disabled={isPending}

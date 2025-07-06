@@ -79,10 +79,10 @@ function EventRow({ event, index }) {
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
-          <Modal.Window name="Edit event">
+          <Modal.Window name="Edit event" size="large">
             <CreateEventForm eventToEdit={event} />
           </Modal.Window>
-          <Modal.Window name="Delete event">
+          <Modal.Window name="Delete event" size="small">
             <ConfirmDelete
               resourceName="event"
               disabled={isPending}

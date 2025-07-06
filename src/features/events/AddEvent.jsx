@@ -12,7 +12,7 @@ function AddEvent() {
             Create new event
           </Button>
         </Modal.Open>
-        <Modal.Window name="Create new event">
+        <Modal.Window name="Create new event" size="large">
           <CreateEventForm />
         </Modal.Window>
       </Modal>

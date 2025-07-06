@@ -11,7 +11,7 @@ function AddCategory() {
             Create new Category
           </Button>
         </Modal.Open>
-        <Modal.Window name="Create new Category">
+        <Modal.Window name="Create new Category" size="medium">
           <CreateCabinForm />
         </Modal.Window>
       </Modal>
