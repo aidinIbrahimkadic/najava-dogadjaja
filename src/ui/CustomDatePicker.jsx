@@ -1,9 +1,7 @@
-// components/StyledDatePicker.jsx
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import React from 'react';
 import styled from 'styled-components';
-// import locale from 'antd/es/date-picker/locale/en_US';
 import hrHR from 'antd/es/date-picker/locale/hr_HR';
 
 const disabledHours = () => {
@@ -86,6 +84,15 @@ const StyledPicker = styled(DatePicker)`
 
   .ant-picker-cell-inner:hover {
     background-color: var(--color-grey-500) !important;
+  }
+  .ant-picker-input.ant-picker-input-placeholder > input {
+    color: var(--color-grey-600) !important;
+    opacity: 1 !important;
+  }
+
+  &:hover .ant-picker-input.ant-picker-input-placeholder > input {
+    color: var(--color-grey-600) !important;
+    opacity: 1 !important;
   }
 
   /* OK Button */
