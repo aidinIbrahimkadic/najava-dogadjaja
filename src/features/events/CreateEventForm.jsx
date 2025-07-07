@@ -35,8 +35,8 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   if (isEditSession) {
     formatedValues = {
       ...eventToEdit,
-      start_date: format(new Date(eventToEdit.start_date), 'yyyy-MM-dd'),
-      end_date: format(new Date(eventToEdit.end_date), 'yyyy-MM-dd'),
+      start_date: format(new Date(eventToEdit.start_date), "yyyy-MM-dd'T'HH:mm"),
+      end_date: format(new Date(eventToEdit.end_date), "yyyy-MM-dd'T'HH:mm"),
       user_idguid: user.idguid,
     };
   }
@@ -157,7 +157,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
         <FormRow columns="1fr 1fr">
           <FormField label="Event Start Date" error={errors?.start_date?.message} required>
             <Input
-              type="date"
+              type="datetime-local"
               id="start_date"
               defaultValue=""
               disabled={isWorking}
@@ -169,7 +169,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
           <FormField label="Event End Date" error={errors?.end_date?.message}>
             <Input
-              type="date"
+              type="datetime-local"
               id="end_date"
               defaultValue=""
               disabled={isWorking}
