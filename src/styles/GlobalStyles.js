@@ -219,6 +219,64 @@ img {
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
 }
 
+  .ant-picker-cell-selected .ant-picker-cell-inner,
+  .ant-picker-cell-range-start .ant-picker-cell-inner,
+  .ant-picker-cell-range-end .ant-picker-cell-inner {
+    background-color: var(--color-brand-500) !important;
+    color: var(--color-grey-0) !important;
+  }
+
+
+  /* Today's date border */
+  .ant-picker-cell-today .ant-picker-cell-inner::before {
+    border: 1px solid var(--color-brand-500)  !important;
+  }
+
+  /* OK Button */
+  .ant-picker-ok button {
+    background-color: var(--color-brand-500) !important;
+    border-color: var(--color-brand-500) !important;
+    color: var(--color-grey-0) !important;
+  }
+
+  .ant-picker-ok button:hover {
+    background-color: var(--color-brand-600) !important;
+    border-color: var(--color-brand-600) !important;
+  }
+
+  /* Hovered cell */
+
+  .ant-picker-cell-inner:hover:not(.ant-picker-cell-selected .ant-picker-cell-inner:hover,){
+    background-color: var(--color-grey-100) !important;
+    color: var(--color-grey-700) 
+  }
+
+/* Time picker selected item */
+.ant-picker-time-panel .ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+  background-color: var(--color-brand-500) !important;
+  color: white !important;
+}
+
+
+/* Scrollbar indicator colors */
+.ant-picker-time-panel-column {
+  scrollbar-color: var(--color-brand-500) transparent;
+}
+
+.ant-picker-time-panel-column::-webkit-scrollbar-thumb {
+  background-color: var(--color-brand-500) !important;
+}
+/* Hide scrollbar in time picker panel (minutes) */
+
+
+.ant-picker-time-panel-column {
+  overflow: none;
+}
+
+.ant-picker-time-panel-column::after{
+display:none !important;
+}
+
 `;
 
 export default GlobalStyles;

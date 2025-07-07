@@ -6,6 +6,11 @@ export function useOutsideClick(handler, listenCapturing = true) {
   useEffect(
     function () {
       function handleClick(e) {
+        const isAntdPopup = e.target.closest(
+          '.ant-picker-dropdown, .ant-select-dropdown, .ant-popover-content'
+        );
+        if (isAntdPopup) return;
+
         if (ref.current && !ref.current.contains(e.target)) {
           handler();
         }

@@ -1,5 +1,8 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { format } from 'date-fns';
+
+import dayjs from 'dayjs';
+import CustomDatePicker from '../../ui/CustomDatePicker';
 
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
@@ -42,7 +45,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   }
   const { idguid: editId, ...editValues } = formatedValues;
 
-  const { register, handleSubmit, reset, watch, setValue, formState } = useForm({
+  const { register, handleSubmit, reset, watch, setValue, formState, control } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
 
@@ -128,7 +131,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             <Input
               type="text"
               id="user_display"
-              value={`${user.first_name} ${user.last_name}`}
+              value={`${user?.first_name} ${user?.last_name}`}
               disabled
             />
             <input
@@ -156,24 +159,35 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
         <FormRow columns="1fr 1fr">
           <FormField label="Event Start Date" error={errors?.start_date?.message} required>
-            <Input
-              type="datetime-local"
-              id="start_date"
-              defaultValue=""
-              disabled={isWorking}
-              {...register('start_date', {
-                required: 'This field is required',
-              })}
+            <Controller
+              control={control}
+              name="start_date"
+              rules={{ required: 'This field is required' }}
+              render={({ field }) => (
+                <CustomDatePicker
+                  {...field}
+                  id="start_date"
+                  disabled={isWorking}
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(date) => field.onChange(date ? date.format('YYYY-MM-DDTHH:mm') : '')}
+                />
+              )}
             />
           </FormField>
-
           <FormField label="Event End Date" error={errors?.end_date?.message}>
-            <Input
-              type="datetime-local"
-              id="end_date"
-              defaultValue=""
-              disabled={isWorking}
-              {...register('end_date')}
+            <Controller
+              control={control}
+              name="end_date"
+              // rules={{ required: 'This field is required' }}
+              render={({ field }) => (
+                <CustomDatePicker
+                  {...field}
+                  id="end_date"
+                  disabled={isWorking}
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(date) => field.onChange(date ? date.format('YYYY-MM-DDTHH:mm') : '')}
+                />
+              )}
             />
           </FormField>
         </FormRow>
