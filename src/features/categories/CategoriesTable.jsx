@@ -19,7 +19,7 @@ export default function CategoriesTable() {
           <div>#</div>
           <div>Naziv</div>
           <div>Operater</div>
-          <div>Opis</div>
+          <div>Opis (trenutno boja)</div>
           <div></div>
         </Table.Header>
         <Table.Body

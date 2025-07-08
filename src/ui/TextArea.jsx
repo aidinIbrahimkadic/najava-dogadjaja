@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 
-const Textarea = styled.textarea`
+const StyledTextarea = styled.textarea`
   padding: 0.8rem 1.2rem;
   border: 1px solid var(--color-grey-300);
   border-radius: 5px;
   background-color: var(--color-grey-0);
   max-width: 100%;
-  height: 8rem;
   box-sizing: border-box;
   resize: vertical;
 
@@ -17,4 +16,13 @@ const Textarea = styled.textarea`
   }
 `;
 
-export default Textarea;
+export default function Textarea() {
+  return (
+    <StyledTextarea
+      onInput={(e) => {
+        e.target.style.height = 'auto';
+        e.target.style.height = e.target.scrollHeight + 'px';
+      }}
+    />
+  );
+}

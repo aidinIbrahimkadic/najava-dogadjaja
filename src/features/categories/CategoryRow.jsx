@@ -14,7 +14,10 @@ import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
 
 const Cell = styled.div`
   font-weight: 400;
-  color: var(--color-grey-600);
+  color: ${(props) => (props.color ? 'var(--color-grey-50)' : 'var(--color-grey-600)')};
+  background-color: ${(props) => props.color};
+
+  padding: 0.2rem 2rem;
   font-family: 'Sono';
 `;
 
@@ -23,6 +26,23 @@ function CategoryRow({ category, index }) {
 
   const { mutate: deleteCategory, isPending } = useDeleteCategory();
 
+  //POPRAVITI kada edhem napravi API za provjeru da li se kategorija koristi
+  // const [isPendingCategory, setIsPendingCategory] = useState(false);
+
+  // async function handleConfirmDelete(idguid) {
+  //   setIsPendingCategory(true);
+  //   const isUsed = await checkIfCategoryIsUsed(idguid);
+
+  //   if (isUsed) {
+  //     toast.error('Ne možete obrisati kategoriju jer je vezana za postojeći event.');
+  //     setIsPendingCategory(false);
+  //     return;
+  //   }
+
+  //   deleteCategory(idguid);
+  //   setIsPendingCategory(false);
+  // }
+
   function handleDelete(id) {
     deleteCategory(id);
   }
@@ -30,9 +50,10 @@ function CategoryRow({ category, index }) {
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
+      {/* POPRAVITI boju prebaciti u zasebnu kolonu */}
       <Cell>{naziv}</Cell>
       <Cell>{operater}</Cell>
-      <Cell>{opis}</Cell>
+      <Cell color={opis}>{opis}</Cell>
       <Cell>
         <Modal>
           <Menus.Menu>
@@ -57,6 +78,8 @@ function CategoryRow({ category, index }) {
             <ConfirmDelete
               resourceName="categories"
               disabled={isPending}
+              //POPRAVITI kada edhem napravi API za provjeru da li se kategorija koristi
+              // disabled={isPending || isPendingCategory}
               onConfirm={() => handleDelete(idguid)}
             />
           </Modal.Window>

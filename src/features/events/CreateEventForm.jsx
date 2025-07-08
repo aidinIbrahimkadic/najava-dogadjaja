@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 
 import dayjs from 'dayjs';
 import CustomDatePicker from '../../ui/CustomDatePicker';
+import { DEFAULT_EVENT_DURATION_IN_HOURS } from '../../utils/constants.js';
 
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
@@ -45,13 +46,22 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   }
   const { idguid: editId, ...editValues } = formatedValues;
 
-  const { register, handleSubmit, reset, watch, setValue, formState, control } = useForm({
-    defaultValues: isEditSession ? editValues : {},
-  });
+  const { register, handleSubmit, reset, watch, setValue, getValues, formState, control } = useForm(
+    {
+      defaultValues: isEditSession ? editValues : {},
+    }
+  );
 
   const { errors } = formState;
 
   function onSubmit(data) {
+    const { start_date, end_date } = data;
+
+    if (!end_date && start_date) {
+      const newEnd = dayjs(start_date).add(DEFAULT_EVENT_DURATION_IN_HOURS, 'hour');
+      data.end_date = newEnd.format('YYYY-MM-DDTHH:mm');
+    }
+
     if (isEditSession)
       updateEvent(
         { data, editId },
@@ -178,14 +188,68 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             <Controller
               control={control}
               name="end_date"
-              // rules={{ required: 'This field is required' }}
+              rules={{
+                validate: (value) => {
+                  if (!value) return true;
+
+                  const startRaw = getValues('start_date');
+                  const start = startRaw ? dayjs(startRaw, 'YYYY-MM-DDTHH:mm') : null;
+                  const end = value ? dayjs(value, 'YYYY-MM-DDTHH:mm') : null;
+
+                  if (start && end && end.isBefore(start)) {
+                    return 'End date cannot be before start date';
+                  }
+
+                  return true;
+                },
+              }}
               render={({ field }) => (
                 <CustomDatePicker
                   {...field}
                   id="end_date"
                   disabled={isWorking}
-                  value={field.value ? dayjs(field.value) : null}
+                  value={field.value ? dayjs(field.value, 'YYYY-MM-DDTHH:mm') : null}
                   onChange={(date) => field.onChange(date ? date.format('YYYY-MM-DDTHH:mm') : '')}
+                  disabledDate={(current) => {
+                    const startRaw = getValues('start_date');
+                    const start = startRaw ? dayjs(startRaw, 'YYYY-MM-DDTHH:mm') : null;
+                    return current && start && current.isBefore(start, 'day');
+                  }}
+                  disabledTime={(current) => {
+                    const startRaw = getValues('start_date');
+                    const start = startRaw ? dayjs(startRaw, 'YYYY-MM-DDTHH:mm') : null;
+
+                    if (!current || !start) return {};
+
+                    if (current.isSame(start, 'day')) {
+                      const disabledHours = () =>
+                        Array.from({ length: 24 }, (_, i) => i).filter((h) => h < start.hour());
+
+                      const disabledMinutes = (selectedHour) => {
+                        // Ako je trenutni sat isti kao startov, onda blokiraj minute manje od start.minute()
+                        if (selectedHour === start.hour()) {
+                          return Array.from({ length: 60 }, (_, i) => i).filter(
+                            (i) => ![0, 15, 30, 45].includes(i) || i < start.minute()
+                          );
+                        }
+
+                        // Ako je sat manji od startovog, blokiraj sve minute
+                        if (selectedHour < start.hour()) {
+                          return Array.from({ length: 60 }, (_, i) => i);
+                        }
+
+                        // Ako je sat veći, prikazi samo 0,15,30,45
+                        return Array.from({ length: 60 }, (_, i) => i).filter(
+                          (i) => ![0, 15, 30, 45].includes(i)
+                        );
+                      };
+
+                      return {
+                        disabledHours,
+                        disabledMinutes,
+                      };
+                    }
+                  }}
                 />
               )}
             />

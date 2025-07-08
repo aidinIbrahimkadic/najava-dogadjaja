@@ -12,6 +12,7 @@ import { useDeleteEvent } from '../events/useDeleteEvent';
 
 import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
 import CreateEventForm from './CreateEventForm';
+import Badge from '../../ui/Badge';
 
 const Cell = styled.div`
   font-weight: 400;
@@ -53,13 +54,8 @@ function EventRow({ event, index }) {
       <Cell>{naziv}</Cell>
       <Cell>{description}</Cell>
       <Cell>{image_url}</Cell>
-      {/* POPRAVITI dodati komponentu */}
       <Cell>
-        {is_public ? (
-          <span style={{ color: 'green', fontWeight: 'bold' }}>Public</span>
-        ) : (
-          <span style={{ color: 'red', fontWeight: 'bold' }}>Private</span>
-        )}
+        <Badge is_public={is_public}>{is_public ? 'Public' : 'Private'}</Badge>
       </Cell>
       <Cell>{formater(start_date)}</Cell>
       <Cell>{formater(end_date)}</Cell>

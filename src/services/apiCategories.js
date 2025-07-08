@@ -59,3 +59,9 @@ export async function updateCategory({ data: { naziv, opis }, editId: id }) {
     throw err;
   }
 }
+
+// export async function checkIfCategoryIsUsed(categoryId) {
+//   const res = await fetch(`/events?category=${categoryId}`);
+//   const data = await res.json();
+//   return data.length > 0;
+// }

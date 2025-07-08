@@ -10,6 +10,7 @@ import FormField from '../../ui/FormField';
 
 import { usePostCategory } from './usePostCategory';
 import { useUpdateCategory } from './useUpdateCategory';
+import InputColor from '../../ui/InputColor';
 
 function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
   const { isCreating, postCategory } = usePostCategory();
@@ -68,8 +69,15 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
 
       <FormRow>
         <FormField label="Category Description" error={errors?.opis?.message}>
-          <TextArea
+          {/* <TextArea
             type="text"
+            id="opis"
+            defaultValue=""
+            disabled={isWorking}
+            {...register('opis')}
+          /> */}
+          <InputColor
+            type="color"
             id="opis"
             defaultValue=""
             disabled={isWorking}

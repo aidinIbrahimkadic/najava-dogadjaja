@@ -22,7 +22,7 @@ const disabledMinutes = () => {
   }
   return minutes;
 };
-console.log(hrHR);
+
 const customLocale = {
   ...hrHR,
   lang: {
@@ -43,6 +43,7 @@ const StyledPicker = styled(DatePicker)`
   border-radius: 5px;
   border: 1px solid var(--color-grey-300);
   transition: border-color 0.3s;
+  font-family: 'Poppins', sans-serif;
 
   &.ant-picker-focused {
     border-color: var(--color-brand-500);
