@@ -43,7 +43,10 @@ export default function Header() {
   const { user, isLoading } = useUserProfile();
   return (
     <StyledHeader>
-      <ToggleButton onClick={toggleCollapsed}>
+      <ToggleButton
+        title={isCollapsed ? 'Maksimiziraj bočnu traku' : 'Minimiziraj bočnu traku'}
+        onClick={toggleCollapsed}
+      >
         {isCollapsed ? <TbLayoutSidebarRightCollapse /> : <TbLayoutSidebarLeftCollapse />}
       </ToggleButton>
 

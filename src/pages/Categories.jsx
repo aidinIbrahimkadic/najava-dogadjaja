@@ -7,10 +7,10 @@ export default function Categories() {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">All categories</Heading>
+        <Heading as="h1">Sve kategorije</Heading>
+        <AddCategory />
       </Row>
       <Row type="vertical">
-        <AddCategory />
         <CategoriesTable />
       </Row>
     </>

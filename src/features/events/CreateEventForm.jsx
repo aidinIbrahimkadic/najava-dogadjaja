@@ -8,7 +8,7 @@ import { DEFAULT_EVENT_DURATION_IN_HOURS } from '../../utils/constants.js';
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
 import Button from '../../ui/Button';
-// import FileInput from '../../ui/FileInput';
+import FileInput from '../../ui/FileInput';
 import TextArea from '../../ui/TextArea';
 import FormRow from '../../ui/FormRow';
 import FormField from '../../ui/FormField';
@@ -93,17 +93,17 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
     <>
       <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
         <FormRow columns="1fr 1fr">
-          <FormField label="Title" error={errors?.title?.message} required>
+          <FormField label="Naziv događaja" error={errors?.title?.message} required>
             <Input
               type="text"
               id="title"
               disabled={isWorking}
               {...register('title', {
-                required: 'This field is required',
+                required: 'Ovo polje je obavezno',
               })}
             />
           </FormField>
-          <FormField label="Category" required error={errors?.category_idguid?.message}>
+          <FormField label="Kategorija događaja" required error={errors?.category_idguid?.message}>
             {isLoading ? (
               <Spinner />
             ) : (
@@ -119,25 +119,25 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
                 setValue={setValue}
                 watch={watch}
                 validation={{
-                  required: 'Please select a category',
+                  required: 'Molimo odaberite odgovarajuću kategoriju',
                 }}
               />
             )}
           </FormField>
         </FormRow>
         <FormRow columns="1fr 1fr">
-          <FormField label="Event Location" required error={errors?.location?.message}>
+          <FormField label="Lokacija događaja" required error={errors?.location?.message}>
             <Input
               type="text"
               id="location"
               defaultValue=""
               disabled={isWorking}
               {...register('location', {
-                required: 'This field is required',
+                required: 'Ovo polje je obavezno',
               })}
             />
           </FormField>
-          <FormField label="User" error={errors?.user_idguid?.message}>
+          <FormField label="Korisnik" error={errors?.user_idguid?.message}>
             <Input
               type="text"
               id="user_display"
@@ -149,14 +149,14 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
               id="user_idguid"
               value={user.idguid}
               {...register('user_idguid', {
-                required: 'This field is required',
+                required: 'Ovo polje je obavezno',
               })}
             />
           </FormField>
         </FormRow>
 
         <FormRow>
-          <FormField label="Event Description" error={errors?.description?.message}>
+          <FormField label="Opis događaja" error={errors?.description?.message}>
             <TextArea
               type="text"
               id="description"
@@ -168,11 +168,15 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
         </FormRow>
 
         <FormRow columns="1fr 1fr">
-          <FormField label="Event Start Date" error={errors?.start_date?.message} required>
+          <FormField
+            label="Datum i vrijeme početka događaja"
+            error={errors?.start_date?.message}
+            required
+          >
             <Controller
               control={control}
               name="start_date"
-              rules={{ required: 'This field is required' }}
+              rules={{ required: 'Ovo polje je obavezno' }}
               render={({ field }) => (
                 <CustomDatePicker
                   {...field}
@@ -184,7 +188,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
               )}
             />
           </FormField>
-          <FormField label="Event End Date" error={errors?.end_date?.message}>
+          <FormField label="Datum i vrijeme završetka događaja" error={errors?.end_date?.message}>
             <Controller
               control={control}
               name="end_date"
@@ -197,7 +201,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
                   const end = value ? dayjs(value, 'YYYY-MM-DDTHH:mm') : null;
 
                   if (start && end && end.isBefore(start)) {
-                    return 'End date cannot be before start date';
+                    return 'Datum i vrijeme završetka ne mogu biti raniji od datuma i vremena početka događaja';
                   }
 
                   return true;
@@ -255,7 +259,16 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             />
           </FormField>
         </FormRow>
-        <FormRow>
+        <FormRow columns="1fr 1fr">
+          <FormField error={errors?.image_url?.message}>
+            <FileInput
+              id="image_url"
+              accept="image/*"
+              defaultValue=""
+              disabled={isWorking}
+              {...register('image_url')}
+            />
+          </FormField>
           <FormField error={errors?.is_public?.message}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <label
@@ -265,7 +278,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
                   userSelect: 'none',
                 }}
               >
-                Public Event
+                Javno vidljivo
               </label>
               <Checkbox id="is_public" disabled={isWorking} {...register('is_public')} />
             </div>
@@ -273,11 +286,22 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
         </FormRow>
 
         <FormRow>
-          <Button variation="secondary" type="reset" size="small" onClick={() => onCloseModal?.()}>
-            Cancel
+          <Button
+            variation="secondary"
+            title="Odustani"
+            type="reset"
+            size="small"
+            onClick={() => onCloseModal?.()}
+          >
+            Odustani
           </Button>
-          <Button size="small" variation="primary" disabled={isWorking}>
-            {isEditSession ? 'Edit event' : 'Create new event'}
+          <Button
+            title={isEditSession ? 'Uredi događaj' : 'Dodaj novi događaj'}
+            size="small"
+            variation="primary"
+            disabled={isWorking}
+          >
+            {isEditSession ? 'Uredi događaj' : 'Dodaj novi događaj'}
           </Button>
         </FormRow>
       </Form>
@@ -286,37 +310,3 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 }
 
 export default CreateEventForm;
-
-// <Select
-//   id="category_idguid"
-//   name="category_idguid"
-//   register={register}
-//   options={categories}
-//   defaultValue={eventToEdit?.category_idguid || ''}
-//   disabled={isWorking}
-//   required
-//   validation={{
-//     required: 'This field is required',
-//   }}
-//   placeholder="Select a category"
-// />
-
-/* 
-                  <select
-                    id="category_idguid"
-                    defaultValue={eventToEdit.category_idguid || ''}
-                    disabled={isWorking}
-                    {...register('category_idguid', {
-                      required: 'This field is required',
-                    })}
-                  >
-                    <option value="" disabled>
-                      Select a category
-                    </option>
-                    {categories?.map((category) => (
-                      <option key={category.idguid} value={category.idguid}>
-                        {category.naziv}
-                      </option>
-                    ))}
-                  </select>
-                 */

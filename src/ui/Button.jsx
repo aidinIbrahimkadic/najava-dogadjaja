@@ -48,7 +48,7 @@ const variations = {
   `,
 };
 
-const Button = styled.button.withConfig({
+const StyledButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'variartion' || prop !== 'size',
 })`
   border: none;
@@ -64,4 +64,6 @@ Button.defaultProps = {
   size: 'medium',
 };
 
-export default Button;
+export default function Button({ ...props }) {
+  return <StyledButton {...props} />;
+}

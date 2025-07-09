@@ -7,12 +7,12 @@ function AddEvent() {
   return (
     <div>
       <Modal>
-        <Modal.Open opens="Create new event">
-          <Button variation="primary" size="medium">
-            Create new event
+        <Modal.Open opens="Dodaj novi događaj">
+          <Button title="Dodaj novi događaj" variation="primary" size="medium">
+            Dodaj novi događaj
           </Button>
         </Modal.Open>
-        <Modal.Window name="Create new event" size="large">
+        <Modal.Window name="Dodaj novi događaj" size="large">
           <CreateEventForm />
         </Modal.Window>
       </Modal>

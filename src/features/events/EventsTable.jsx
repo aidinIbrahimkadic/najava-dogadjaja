@@ -14,18 +14,18 @@ export default function EventsTable() {
 
   return (
     <Menus>
-      <Table columns=".2fr 2fr 2fr 2fr 2.5fr 1fr 1fr 1fr 1fr 1fr .2fr">
+      <Table columns=".1fr 2fr 2fr 1fr 2.5fr 1fr 1fr 2fr 2fr .2fr">
         <Table.Header>
           <div>#</div>
-          <div>Title</div>
-          <div>Location</div>
-          <div>Category</div>
-          <div>Description</div>
-          <div>Image url</div>
-          <div>Public</div>
-          <div>Start Date</div>
-          <div>End Date</div>
-          <div></div>
+          <div>Naziv</div>
+          <div>Lokacija</div>
+          <div>Kategorija</div>
+          <div>Opis</div>
+          <div>Fotografija</div>
+          <div>Dostupnost</div>
+          <div>Datum početka</div>
+          <div>Datum završetka</div>
+          <div>Opcije</div>
         </Table.Header>
         <Table.Body
           data={events}

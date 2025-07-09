@@ -7,10 +7,10 @@ export default function Events() {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">All events</Heading>
+        <Heading as="h1">Svi događaji</Heading>
+        <AddEvent />
       </Row>
       <Row type="vertical">
-        <AddEvent />
         <EventsTable />
       </Row>
     </>

@@ -156,6 +156,7 @@ body {
   min-height: 100vh;
   line-height: 1.5;
   font-size: 1.6rem;
+  letter-spacing: .05rem;
 }
 
 input,
@@ -164,6 +165,8 @@ textarea,
 select {
   font: inherit;
   color: inherit;
+  letter-spacing: .04rem;
+
 }
 
 button {

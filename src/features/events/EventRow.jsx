@@ -1,24 +1,18 @@
-import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
+import { useGetCategory } from '../categories/useCategory';
+import { useDeleteEvent } from '../events/useDeleteEvent';
 
 import Table from '../../ui/Table';
 import Modal from '../../ui/Modal';
 import Menus from '../../ui/Menus';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 
-import { useGetCategory } from '../categories/useCategory';
-import formater from '../../utils/dateFormatter';
-import { useNavigate } from 'react-router-dom';
-import { useDeleteEvent } from '../events/useDeleteEvent';
-
 import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
 import CreateEventForm from './CreateEventForm';
 import Badge from '../../ui/Badge';
-
-const Cell = styled.div`
-  font-weight: 400;
-  color: var(--color-grey-600);
-  font-family: 'Sono';
-`;
+import Cell from '../../ui/Cell';
+import TwoRowCell from '../../ui/TwoRowCell';
 
 function EventRow({ event, index }) {
   const navigate = useNavigate();
@@ -44,21 +38,21 @@ function EventRow({ event, index }) {
 
   //POPRAVITI
   const { category } = useGetCategory(category_idguid);
-  const naziv = category?.naziv;
+  const categoryName = category?.naziv;
 
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
-      <Cell>{title}</Cell>
+      <Cell type="textCell">{title}</Cell>
       <Cell>{location}</Cell>
-      <Cell>{naziv}</Cell>
-      <Cell>{description}</Cell>
+      <Cell>{categoryName}</Cell>
+      <Cell type="textCell">{description}</Cell>
       <Cell>{image_url}</Cell>
       <Cell>
-        <Badge is_public={is_public}>{is_public ? 'Public' : 'Private'}</Badge>
+        <Badge is_public={is_public}>{is_public ? 'Javan' : 'Privatan'}</Badge>
       </Cell>
-      <Cell>{formater(start_date)}</Cell>
-      <Cell>{formater(end_date)}</Cell>
+      <TwoRowCell>{start_date}</TwoRowCell>
+      <TwoRowCell>{end_date}</TwoRowCell>
       <Cell>
         <Modal>
           <Menus.Menu>
@@ -67,18 +61,22 @@ function EventRow({ event, index }) {
               <Menus.Button icon={<HiEye />} onClick={() => navigate(`/events/${idguid}`)}>
                 Više detalja
               </Menus.Button>
-              <Modal.Open opens="Edit event">
-                <Menus.Button icon={<HiPencilSquare />}>Edit event</Menus.Button>
+              <Modal.Open opens="Uredi događaj">
+                <Menus.Button title="Uredi događaj" icon={<HiPencilSquare />}>
+                  Uredi
+                </Menus.Button>
               </Modal.Open>
-              <Modal.Open opens="Delete event">
-                <Menus.Button icon={<HiTrash />}>Delete event</Menus.Button>
+              <Modal.Open opens="Izbriši događaj">
+                <Menus.Button title="Izbriši događaj" icon={<HiTrash />}>
+                  Izbriši
+                </Menus.Button>
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
-          <Modal.Window name="Edit event" size="large">
+          <Modal.Window name="Uredi događaj" size="large">
             <CreateEventForm eventToEdit={event} />
           </Modal.Window>
-          <Modal.Window name="Delete event" size="small">
+          <Modal.Window name="Izbriši događaj" size="small">
             <ConfirmDelete
               resourceName="event"
               disabled={isPending}

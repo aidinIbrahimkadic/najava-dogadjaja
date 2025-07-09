@@ -87,7 +87,7 @@ export default function MainNav() {
             <IconWrapper>
               <HiOutlineHome />
             </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Home</Label>
+            <Label isCollapsed={isCollapsed}>Početna</Label>
           </StyledNavLink>
         </li>
         <li>
@@ -95,7 +95,7 @@ export default function MainNav() {
             <IconWrapper>
               <HiOutlineCalendarDays />
             </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Events</Label>
+            <Label isCollapsed={isCollapsed}>Događaji</Label>
           </StyledNavLink>
         </li>
         <li>
@@ -103,7 +103,7 @@ export default function MainNav() {
             <IconWrapper>
               <HiOutlineNumberedList />
             </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Categories</Label>
+            <Label isCollapsed={isCollapsed}>Kategorije</Label>
           </StyledNavLink>
         </li>
         <li>
@@ -111,7 +111,7 @@ export default function MainNav() {
             <IconWrapper>
               <HiOutlineUsers />
             </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Users</Label>
+            <Label isCollapsed={isCollapsed}>Korisnici</Label>
           </StyledNavLink>
         </li>
         <li>
@@ -119,7 +119,7 @@ export default function MainNav() {
             <IconWrapper>
               <HiOutlineCog6Tooth />
             </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Settings</Label>
+            <Label isCollapsed={isCollapsed}>Postavke</Label>
           </StyledNavLink>
         </li>
       </NavList>

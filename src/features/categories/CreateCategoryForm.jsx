@@ -87,11 +87,22 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
       </FormRow>
 
       <FormRow>
-        <Button variation="secondary" type="reset" size="small" onClick={() => onCloseModal?.()}>
-          Cancel
+        <Button
+          title="Odustani"
+          variation="secondary"
+          type="reset"
+          size="small"
+          onClick={() => onCloseModal?.()}
+        >
+          Odustani
         </Button>
-        <Button size="small" variation="primary" disabled={isWorking}>
-          {isEditSession ? 'Edit category' : 'Create new category'}
+        <Button
+          title={isEditSession ? 'Uredi kategoriju' : 'Dodaj novu kategoriju'}
+          size="small"
+          variation="primary"
+          disabled={isWorking}
+        >
+          {isEditSession ? 'Uredi kategoriju' : 'Dodaj novu kategoriju'}
         </Button>
       </FormRow>
     </Form>

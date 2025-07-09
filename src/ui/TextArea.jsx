@@ -8,6 +8,7 @@ const StyledTextarea = styled.textarea`
   max-width: 100%;
   box-sizing: border-box;
   resize: vertical;
+  height: auto;
 
   &:focus,
   &:hover {
@@ -16,9 +17,10 @@ const StyledTextarea = styled.textarea`
   }
 `;
 
-export default function Textarea() {
+export default function Textarea({ ...props }) {
   return (
     <StyledTextarea
+      {...props}
       onInput={(e) => {
         e.target.style.height = 'auto';
         e.target.style.height = e.target.scrollHeight + 'px';

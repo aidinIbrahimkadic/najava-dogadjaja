@@ -3,6 +3,7 @@ import axiosInstance from './axiosInstance';
 export async function getCategories() {
   try {
     const response = await axiosInstance.get(`/events/kategorije`);
+    console.log('Kategorija primjer:', response.data.data[0]);
     return response.data;
   } catch (err) {
     console.log(err);

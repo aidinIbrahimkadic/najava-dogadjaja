@@ -180,13 +180,8 @@ const StyledSelect = styled.div`
   &:hover,
   &:focus {
     border-color: var(--color-brand-500);
+    outline: none;
   }
-
-  /* &::after {
-    content: '▼';
-    font-size: 0.8rem;
-    margin-left: 1rem;
-  } */
 
   &.disabled {
     background-color: var(--color-grey-200);
@@ -228,7 +223,7 @@ const Select = ({
   id,
   name,
   options,
-  placeholder = 'Select an option',
+  placeholder = 'Odaberite kategoriju',
   disabled = false,
   required = false,
   validation = {},
@@ -237,10 +232,53 @@ const Select = ({
   watch,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const wrapperRef = useRef(null);
 
   const selectedValue = watch?.(name); // WATCH current value
   const selectedLabel = options.find((opt) => opt.value === selectedValue)?.label || '';
+
+  const handleKeyDown = (e) => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        setIsOpen(true);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHighlightedIndex((prev) => Math.min(prev + 1, options.length - 1));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setHighlightedIndex((prev) => Math.max(prev - 1, 0));
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        if (highlightedIndex >= 0) {
+          handleSelect(options[highlightedIndex]);
+        }
+        break;
+      case 'Escape':
+        setIsOpen(false);
+        break;
+      default:
+        setIsOpen(false);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      setHighlightedIndex(0);
+    } else {
+      setHighlightedIndex(-1);
+    }
+  }, [isOpen]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -272,14 +310,21 @@ const Select = ({
         className={disabled ? 'disabled' : ''}
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
         tabIndex={0}
+        onKeyDown={handleKeyDown}
       >
         <span>{selectedLabel || placeholder}</span>
         <ArrowIcon $isOpen={isOpen}>▼</ArrowIcon>
       </StyledSelect>
       {isOpen && !disabled && (
         <OptionsList>
-          {options.map((option) => (
-            <OptionItem key={option.value} onClick={() => handleSelect(option)}>
+          {options.map((option, index) => (
+            <OptionItem
+              key={option.value}
+              onClick={() => handleSelect(option)}
+              style={{
+                backgroundColor: index === highlightedIndex ? 'var(--color-grey-200)' : 'inherit',
+              }}
+            >
               {option.label}
             </OptionItem>
           ))}
