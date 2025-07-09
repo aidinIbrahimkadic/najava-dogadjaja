@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 export async function getEvents() {
   try {
     const response = await axiosInstance.get(`/events/events`);
-    console.log('EVENTS: ', response.data);
+    console.log(response.data);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -58,25 +58,6 @@ export async function postEvent({
     console.log(err);
     throw err;
   }
-
-  // try {
-  //   console.log('Image URL: ', image_url);
-  //   const response = await axiosInstance.post(`/events/events`, {
-  //     title,
-  //     description,
-  //     location,
-  //     is_public,
-  //     end_date,
-  //     start_date,
-  //     image_url,
-  //     category_idguid,
-  //     user_idguid,
-  //   });
-  //   return response.data;
-  // } catch (err) {
-  //   console.log(err);
-  //   throw err;
-  // }
 }
 
 export async function deleteEvent(id) {

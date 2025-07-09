@@ -1,13 +1,18 @@
 import styled from 'styled-components';
 
-const StyledBadge = styled.span`
-  background-color: ${(props) =>
-    props.$is_public ? 'var(--color-hover-100)' : 'var(--color-red-100)'};
-  padding: 0.6rem 1.2rem;
+const StyledBadge = styled.div`
+  background-color: ${(props) => props.$bgColor};
+  padding: 0.2rem 0.4rem;
+  text-align: center;
   border-radius: 0.5rem;
-  color: ${(props) => (props.$is_public ? 'var(--color-blue-700)' : 'var(--color-red-700)')};
+  width: 12rem;
+  color: ${(props) => props.color};
 `;
 
-export default function Badge({ is_public, children }) {
-  return <StyledBadge $is_public={is_public}>{children}</StyledBadge>;
+export default function Badge({ bgColor, color = '#fefefe', children }) {
+  return (
+    <StyledBadge color={color} $bgColor={bgColor}>
+      {children}
+    </StyledBadge>
+  );
 }

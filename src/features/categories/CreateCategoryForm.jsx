@@ -55,33 +55,36 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
       <FormRow>
-        <FormField label="Category name" error={errors?.naziv?.message} required>
+        <FormField label="Naziv kategorije" error={errors?.naziv?.message} required>
           <Input
             type="text"
             id="naziv"
             disabled={isWorking}
             {...register('naziv', {
-              required: 'This field is required',
+              required: 'Ovo polje je obavezno',
             })}
           />
         </FormField>
       </FormRow>
-
       <FormRow>
-        <FormField label="Category Description" error={errors?.opis?.message}>
-          {/* <TextArea
+        <FormField label="Opis kategorije" error={errors?.opis?.message}>
+          <TextArea
             type="text"
             id="opis"
             defaultValue=""
             disabled={isWorking}
             {...register('opis')}
-          /> */}
+          />
+        </FormField>
+      </FormRow>
+      <FormRow>
+        <FormField label="Boja kategorije">
           <InputColor
             type="color"
-            id="opis"
+            id="boja"
             defaultValue=""
             disabled={isWorking}
-            {...register('opis')}
+            {...register('boja')}
           />
         </FormField>
       </FormRow>

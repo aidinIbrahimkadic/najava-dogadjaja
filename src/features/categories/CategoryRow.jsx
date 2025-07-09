@@ -11,13 +11,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDeleteCategory } from './useDeleteCategory';
 
 import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
+import Badge from '../../ui/Badge';
 
 const Cell = styled.div`
   font-weight: 400;
   color: ${(props) => (props.color ? 'var(--color-grey-50)' : 'var(--color-grey-600)')};
   background-color: ${(props) => props.color};
 
-  padding: 0.2rem 2rem;
   font-family: 'Sono';
 `;
 
@@ -46,14 +46,17 @@ function CategoryRow({ category, index }) {
   function handleDelete(id) {
     deleteCategory(id);
   }
-  const { idguid, naziv, operater, opis } = category;
+  const { idguid, naziv, operater, opis, boja } = category;
+
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
-      {/* POPRAVITI boju prebaciti u zasebnu kolonu */}
       <Cell>{naziv}</Cell>
+      <Cell type="textCell">{opis}</Cell>
+      <Cell>
+        <Badge bgColor={boja}> {boja}</Badge>
+      </Cell>
       <Cell>{operater}</Cell>
-      <Cell color={opis}>{opis}</Cell>
       <Cell>
         <Modal>
           <Menus.Menu>

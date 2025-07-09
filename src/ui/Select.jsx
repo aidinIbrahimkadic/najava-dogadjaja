@@ -299,7 +299,7 @@ const Select = ({
   const hiddenInputProps =
     register && name
       ? register(name, {
-          required: required ? validation.required || 'This field is required' : false,
+          required: required ? validation.required || 'Ovo polje je obavezno' : false,
           ...validation,
         })
       : {};
@@ -321,6 +321,7 @@ const Select = ({
             <OptionItem
               key={option.value}
               onClick={() => handleSelect(option)}
+              onMouseEnter={() => setHighlightedIndex(index)}
               style={{
                 backgroundColor: index === highlightedIndex ? 'var(--color-grey-200)' : 'inherit',
               }}

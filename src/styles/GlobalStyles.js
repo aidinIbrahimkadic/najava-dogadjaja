@@ -70,6 +70,8 @@ const GlobalStyles = createGlobalStyle`
   --color-dark-hover-300: #475569;  
 
 --color-blue-100: #075985;
+--color-blue-200: #1880b8;
+
 --color-blue-700: #e0f2fe;
 --color-green-100: #166534;
 --color-green-700: #dcfce7;
@@ -261,16 +263,12 @@ img {
 }
 
 
-/* Scrollbar indicator colors */
-.ant-picker-time-panel-column {
-  scrollbar-color: var(--color-brand-500) transparent;
-}
 
-.ant-picker-time-panel-column::-webkit-scrollbar-thumb {
-  background-color: var(--color-brand-500) !important;
-}
 /* Hide scrollbar in time picker panel (minutes) */
-
+.ant-picker-time-panel-column::-webkit-scrollbar {
+  width: 3px !important; 
+  border-radius: 5px;
+}
 
 .ant-picker-time-panel-column {
   overflow: none;

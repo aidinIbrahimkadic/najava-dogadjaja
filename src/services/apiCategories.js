@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 export async function getCategories() {
   try {
     const response = await axiosInstance.get(`/events/kategorije`);
-    console.log('Kategorija primjer:', response.data.data[0]);
+    console.log(response.data);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -35,12 +35,13 @@ export async function deleteCategory(id) {
   }
 }
 
-export async function postCategory({ naziv, opis }) {
+export async function postCategory({ naziv, opis, boja }) {
   if (!naziv) throw new Error('Naziv kategorije je obavezan');
 
   const response = await axiosInstance.post(`/events/kategorije`, {
     naziv,
     opis,
+    boja,
   });
   return response.data;
 }

@@ -70,11 +70,11 @@ const StyledPicker = styled(DatePicker)`
 
   /* Scrollbar indicator colors */
   .ant-picker-time-panel-column {
-    scrollbar-color: var(--color-brand-500) transparent;
+    /* scrollbar-color: var(--color-brand-500) transparent; */
   }
 
   .ant-picker-time-panel-column::-webkit-scrollbar-thumb {
-    background-color: var(--color-brand-500) !important;
+    /* background-color: var(--color-brand-500) !important; */
   }
 
   /* Hovered date */

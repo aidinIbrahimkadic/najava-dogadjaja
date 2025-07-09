@@ -13,22 +13,14 @@ import CreateEventForm from './CreateEventForm';
 import Badge from '../../ui/Badge';
 import Cell from '../../ui/Cell';
 import TwoRowCell from '../../ui/TwoRowCell';
+import Checkbox from '../../ui/Checkbox';
 
 function EventRow({ event, index }) {
   const navigate = useNavigate();
   const { mutate: deleteEvent, isPending } = useDeleteEvent();
 
-  const {
-    idguid,
-    category_idguid,
-    title,
-    location,
-    description,
-    image_url,
-    is_public,
-    start_date,
-    end_date,
-  } = event;
+  const { idguid, category_idguid, title, location, image_url, is_public, start_date, end_date } =
+    event;
 
   function handleDelete(id) {
     deleteEvent(id);
@@ -45,14 +37,15 @@ function EventRow({ event, index }) {
       <Cell>{index + 1}</Cell>
       <Cell type="textCell">{title}</Cell>
       <Cell>{location}</Cell>
-      <Cell>{categoryName}</Cell>
-      <Cell type="textCell">{description}</Cell>
-      <Cell>{image_url}</Cell>
       <Cell>
-        <Badge is_public={is_public}>{is_public ? 'Javan' : 'Privatan'}</Badge>
+        <Badge bgColor={category?.boja}>{categoryName}</Badge>
       </Cell>
+      <Cell>{image_url}</Cell>
       <TwoRowCell>{start_date}</TwoRowCell>
       <TwoRowCell>{end_date}</TwoRowCell>
+      <Cell>
+        <Checkbox checked={is_public} disabled />
+      </Cell>
       <Cell>
         <Modal>
           <Menus.Menu>
