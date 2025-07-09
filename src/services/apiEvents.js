@@ -43,7 +43,7 @@ export async function postEvent({
       console.log('File object:', image_url[0]);
       console.log('File name:', image_url[0]?.name);
 
-      formData.append('image_file', image_url[0]);
+      // formData.append('image_file', image_url[0]);
       formData.append('image_url', image_url[0]?.name);
     }
 
