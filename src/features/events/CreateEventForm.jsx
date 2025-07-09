@@ -95,6 +95,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
         <FormRow columns="1fr 1fr">
           <FormField label="Naziv događaja" error={errors?.title?.message} required>
             <Input
+              autoFocus
               type="text"
               id="title"
               disabled={isWorking}

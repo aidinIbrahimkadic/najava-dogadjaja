@@ -57,6 +57,7 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
       <FormRow>
         <FormField label="Naziv kategorije" error={errors?.naziv?.message} required>
           <Input
+            autoFocus
             type="text"
             id="naziv"
             disabled={isWorking}
