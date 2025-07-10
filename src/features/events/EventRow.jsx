@@ -14,19 +14,18 @@ import Badge from '../../ui/Badge';
 import Cell from '../../ui/Cell';
 import TwoRowCell from '../../ui/TwoRowCell';
 import Checkbox from '../../ui/Checkbox';
+import { ImageCell } from '../../ui/ImageCell';
 
 function EventRow({ event, index }) {
   const navigate = useNavigate();
   const { mutate: deleteEvent, isPending } = useDeleteEvent();
 
-  const { idguid, category_idguid, title, location, image_url, is_public, start_date, end_date } =
+  const { idguid, category_idguid, title, location, slika, is_public, start_date, end_date } =
     event;
 
   function handleDelete(id) {
     deleteEvent(id);
   }
-
-  //EDIT
 
   //POPRAVITI
   const { category } = useGetCategory(category_idguid);
@@ -36,11 +35,13 @@ function EventRow({ event, index }) {
     <Table.Row>
       <Cell>{index + 1}</Cell>
       <Cell type="textCell">{title}</Cell>
+      <Cell>
+        <ImageCell slika={slika} title={title} />
+      </Cell>
       <Cell>{location}</Cell>
       <Cell>
         <Badge bgColor={category?.boja}>{categoryName}</Badge>
       </Cell>
-      <Cell>{image_url}</Cell>
       <TwoRowCell>{start_date}</TwoRowCell>
       <TwoRowCell>{end_date}</TwoRowCell>
       <Cell>

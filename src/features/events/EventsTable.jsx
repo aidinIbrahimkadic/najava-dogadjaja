@@ -18,9 +18,9 @@ export default function EventsTable() {
         <Table.Header>
           <div>#</div>
           <div>Naziv</div>
+          <div>Poster</div>
           <div>Lokacija</div>
           <div>Kategorija</div>
-          <div>Fotografija</div>
           <div>Datum početka</div>
           <div>Datum završetka</div>
           <div>Javno</div>

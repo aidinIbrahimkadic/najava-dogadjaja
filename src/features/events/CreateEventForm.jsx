@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 
 import dayjs from 'dayjs';
 import CustomDatePicker from '../../ui/CustomDatePicker';
-import { DEFAULT_EVENT_DURATION_IN_HOURS } from '../../utils/constants.js';
+import { DEFAULT_EVENT_DURATION_IN_HOURS, FILE_URL } from '../../utils/constants.js';
 
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
@@ -44,6 +44,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
       user_idguid: user.idguid,
     };
   }
+
   const { idguid: editId, ...editValues } = formatedValues;
 
   const { register, handleSubmit, reset, watch, setValue, getValues, formState, control } = useForm(
@@ -261,13 +262,13 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </FormField>
         </FormRow>
         <FormRow columns="1fr 1fr">
-          <FormField error={errors?.image_url?.message}>
+          <FormField error={errors?.slika?.message}>
             <FileInput
-              id="image_url"
+              id="slika"
               accept="image/*"
               defaultValue=""
               disabled={isWorking}
-              {...register('image_url')}
+              {...register('slika')}
             />
           </FormField>
           <FormField error={errors?.is_public?.message}>

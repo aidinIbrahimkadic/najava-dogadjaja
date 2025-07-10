@@ -266,9 +266,10 @@ img {
 
 /* Hide scrollbar in time picker panel (minutes) */
 .ant-picker-time-panel-column::-webkit-scrollbar {
-  width: 3px !important; 
-  border-radius: 5px;
+  width: 1px !important; 
 }
+
+
 
 .ant-picker-time-panel-column {
   overflow: none;
