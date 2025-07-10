@@ -20,8 +20,12 @@ import { useUpdateEvent } from './useUpdateEvent';
 import { useGetCategories } from '../categories/useCategories';
 import { useUserProfile } from '../authentication/useUserProfile';
 import Checkbox from '../../ui/Checkbox';
+import { useEffect, useState } from 'react';
+import ExistingImagePreview from '../../ui/ExistingImagePreview';
 
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
+  const [existingSlika, setExistingSlika] = useState(null);
+
   const { isCreating, postEvent } = usePostEvent();
   const { isEditing, updateEvent } = useUpdateEvent();
   const { isLoading, categories } = useGetCategories();
@@ -35,6 +39,12 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   const { idguid: editIdd } = eventToEdit;
   const isEditSession = Boolean(editIdd);
+
+  useEffect(() => {
+    if (isEditSession && eventToEdit.slika) {
+      setExistingSlika(eventToEdit.slika);
+    }
+  }, [isEditSession, eventToEdit]);
 
   if (isEditSession) {
     formatedValues = {
@@ -262,14 +272,18 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </FormField>
         </FormRow>
         <FormRow columns="1fr 1fr">
-          <FormField error={errors?.slika?.message}>
-            <FileInput
-              id="slika"
-              accept="image/*"
-              defaultValue=""
-              disabled={isWorking}
-              {...register('slika')}
-            />
+          <FormField label="Poster:" error={errors?.slika?.message}>
+            {existingSlika ? (
+              <ExistingImagePreview
+                slikaUrl={`${FILE_URL}${existingSlika}`}
+                onRemove={() => {
+                  setExistingSlika(null);
+                  setValue('slika', null);
+                }}
+              />
+            ) : (
+              <FileInput id="slika" accept="image/*" disabled={isWorking} {...register('slika')} />
+            )}
           </FormField>
           <FormField error={errors?.is_public?.message}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

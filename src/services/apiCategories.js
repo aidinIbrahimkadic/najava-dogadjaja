@@ -46,7 +46,7 @@ export async function postCategory({ naziv, opis, boja }) {
   return response.data;
 }
 
-export async function updateCategory({ data: { naziv, opis }, editId: id }) {
+export async function updateCategory({ data: { naziv, opis, boja }, editId: id }) {
   if (!id) throw new Error('Category ID is required');
   if (!naziv) throw new Error('Naziv kategorije je obavezan');
 
@@ -54,6 +54,7 @@ export async function updateCategory({ data: { naziv, opis }, editId: id }) {
     const response = await axiosInstance.put(`/events/kategorije/${id}`, {
       naziv,
       opis,
+      boja,
     });
     return response.data;
   } catch (err) {

@@ -6,6 +6,10 @@ import { useSidebarCollapsed } from '../context/SidebarContext';
 import { useLogout } from '../features/authentication/useLogout';
 
 import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarRightCollapse } from 'react-icons/tb';
+import { HiOutlineUser } from 'react-icons/hi2';
+
+import Button from './Button';
+import Spinner from './Spinner';
 
 const StyledHeader = styled.header`
   grid-area: header;
@@ -13,12 +17,15 @@ const StyledHeader = styled.header`
   border-bottom: 1px solid var(--color-grey-100);
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: 7rem;
   padding: 1rem;
 `;
 
 const UserMenu = styled.div`
   display: flex;
+  align-items: center;
+  gap: 2rem;
 `;
 
 const ToggleButton = styled.button`
@@ -52,11 +59,18 @@ export default function Header() {
 
       {/* Prebaciti u AUTH FEATURES */}
       <UserMenu>
-        <h2>
-          {isLoading && <span>...</span>}
-          Dobrodošao {user?.first_name} {user?.last_name}
-        </h2>
-        {user ? <button onClick={() => logout()}>Logout</button> : <Link to="/login">Login</Link>}
+        {isLoading && <Spinner />}
+        <HiOutlineUser size={30} />
+
+        {/* Dobrodošao {user?.first_name} {user?.last_name} */}
+
+        {user ? (
+          <Button variation="secondary" size="small" onClick={() => logout()}>
+            Logout
+          </Button>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
       </UserMenu>
     </StyledHeader>
   );

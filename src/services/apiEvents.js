@@ -3,6 +3,7 @@ import axiosInstance from './axiosInstance';
 export async function getEvents() {
   try {
     const response = await axiosInstance.get(`/events/events`);
+    console.log(response.data);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -95,10 +96,15 @@ export async function updateEvent({
     formData.append('category_idguid', category_idguid);
     formData.append('user_idguid', user_idguid);
 
-    // Append the file with field name 'image' or whatever your backend expects
-    if (slika instanceof FileList) {
+    if (slika instanceof FileList && slika.length > 0) {
       formData.append('slika', slika[0]);
     }
+
+    // POPRAVITI Edhem samo jos da napravi provjeru na backendu
+    if (slika === null) {
+      formData.append('remove_slika', 'true');
+    }
+    console.log('UPDATE SLIKE:', slika);
 
     const response = await axiosInstance.put(`/events/events/${id}`, formData, {
       headers: {

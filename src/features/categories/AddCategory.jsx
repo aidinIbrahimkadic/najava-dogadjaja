@@ -1,5 +1,5 @@
 import Button from '../../ui/Button';
-import CreateCabinForm from './CreateCategoryForm';
+import CreateCategoryForm from './CreateCategoryForm';
 import Modal from '../../ui/Modal';
 
 function AddCategory() {
@@ -12,7 +12,7 @@ function AddCategory() {
           </Button>
         </Modal.Open>
         <Modal.Window name="Dodaj novu kategoriju" size="medium">
-          <CreateCabinForm />
+          <CreateCategoryForm />
         </Modal.Window>
       </Modal>
     </div>
