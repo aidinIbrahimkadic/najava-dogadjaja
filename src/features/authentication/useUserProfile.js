@@ -21,5 +21,6 @@ export function useUserProfile() {
     },
   });
 
-  return { isLoading, user };
+  // POPRAVITI isAuthenticated: user?.role === "authenticated"
+  return { isLoading, user, isAuthenticated: user?.email };
 }

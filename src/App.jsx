@@ -9,12 +9,17 @@ import Categories from './pages/Categories';
 import Settings from './pages/Settings';
 import Account from './pages/Account';
 import Users from './pages/Users';
+import Institutions from './pages/Institutions';
+import Locations from './pages/Locations';
 import PageNotFound from './pages/PageNotFound';
 import Login from './pages/Login';
 import GlobalStyles from './styles/GlobalStyles';
 import AppLayout from './ui/AppLayout';
 import { SidebarCollapseProvider } from './context/SidebarContext';
 import { Toaster } from 'react-hot-toast';
+import SignUp from './pages/SignUp';
+import HomePage from './pages/HomePage';
+import ProtectedRoute from './ui/ProtectedRoute';
 
 const queryClient = new QueryClient();
 
@@ -26,17 +31,27 @@ function App() {
         <GlobalStyles />
         <BrowserRouter>
           <Routes>
-            <Route element={<AppLayout />}>
-              <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/events" element={<Events />} />
               <Route path="/event/:eventId" element={<Event />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/institutions" element={<Institutions />} />
+              <Route path="/locations" element={<Locations />} />
               <Route path="/account" element={<Account />} />
               <Route path="/users" element={<Users />} />
             </Route>
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route index path="/" element={<HomePage />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </BrowserRouter>

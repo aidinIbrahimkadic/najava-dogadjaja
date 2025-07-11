@@ -104,7 +104,6 @@ export async function updateEvent({
     if (slika === null) {
       formData.append('remove_slika', 'true');
     }
-    console.log('UPDATE SLIKE:', slika);
 
     const response = await axiosInstance.put(`/events/events/${id}`, formData, {
       headers: {

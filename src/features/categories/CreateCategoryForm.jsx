@@ -83,7 +83,7 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
           <InputColor
             type="color"
             id="boja"
-            defaultValue=""
+            defaultValue="#ffffff"
             disabled={isWorking}
             {...register('boja')}
           />

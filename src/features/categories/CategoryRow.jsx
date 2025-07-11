@@ -7,10 +7,9 @@ import ConfirmDelete from '../../ui/ConfirmDelete';
 import CreateCategoryForm from './CreateCategoryForm';
 
 // import { useGetCategory } from './useCategory';
-import { useNavigate } from 'react-router-dom';
-import { useDeleteCategory } from './useDeleteCategory';
 
-import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
+import { useDeleteCategory } from './useDeleteCategory';
+import { HiTrash, HiPencilSquare } from 'react-icons/hi2';
 import Badge from '../../ui/Badge';
 
 const Cell = styled.div`
@@ -22,8 +21,6 @@ const Cell = styled.div`
 `;
 
 function CategoryRow({ category, index }) {
-  const navigate = useNavigate();
-
   const { mutate: deleteCategory, isPending } = useDeleteCategory();
 
   //POPRAVITI kada edhem napravi API za provjeru da li se kategorija koristi
@@ -54,7 +51,7 @@ function CategoryRow({ category, index }) {
       <Cell>{naziv}</Cell>
       <Cell type="textCell">{opis}</Cell>
       <Cell>
-        <Badge bgColor={boja}> {boja}</Badge>
+        <Badge bgColor={boja} />
       </Cell>
       <Cell>{operater}</Cell>
       <Cell>
@@ -62,13 +59,6 @@ function CategoryRow({ category, index }) {
           <Menus.Menu>
             <Menus.Toggle id={idguid} />
             <Menus.List id={idguid}>
-              <Menus.Button
-                title="Više detalja"
-                icon={<HiEye />}
-                onClick={() => navigate(`/category/${idguid}`)}
-              >
-                Više detalja
-              </Menus.Button>
               <Modal.Open opens="Uredi kategoriju">
                 <Menus.Button title="Uredi kategoriju" icon={<HiPencilSquare />}>
                   Uredi

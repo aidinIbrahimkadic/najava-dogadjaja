@@ -9,6 +9,8 @@ import {
   HiOutlineCalendarDays,
   HiOutlineCog6Tooth,
   HiOutlineUsers,
+  HiOutlineBuildingLibrary,
+  HiOutlineMap,
 } from 'react-icons/hi2';
 
 const NavList = styled.ul`
@@ -112,6 +114,22 @@ export default function MainNav() {
               <HiOutlineUsers />
             </IconWrapper>
             <Label isCollapsed={isCollapsed}>Korisnici</Label>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/locations">
+            <IconWrapper>
+              <HiOutlineMap />
+            </IconWrapper>
+            <Label isCollapsed={isCollapsed}>Lokacije</Label>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/institutions">
+            <IconWrapper>
+              <HiOutlineBuildingLibrary />
+            </IconWrapper>
+            <Label isCollapsed={isCollapsed}>Institucije</Label>
           </StyledNavLink>
         </li>
         <li>
