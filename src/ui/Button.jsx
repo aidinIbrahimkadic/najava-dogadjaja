@@ -46,6 +46,19 @@ const variations = {
       background-color: var(--color-red-800);
     }
   `,
+  link: css`
+    color: var(--color-blue-700);
+    background-color: transparent;
+    text-transform: capitalize;
+    font-size: 1.6rem;
+    font-weight: 100;
+    padding: 0;
+    &:hover {
+      text-decoration: underline;
+
+      color: var(--color-blue-800);
+    }
+  `,
 };
 
 const StyledButton = styled.button.withConfig({

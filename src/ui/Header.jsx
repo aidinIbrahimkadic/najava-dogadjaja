@@ -43,6 +43,17 @@ const ToggleButton = styled.button`
   transition: color 0.3s ease;
 `;
 
+const StyledLink = styled(Link)`
+  display: flex;
+  background-color: var(--color-grey-0);
+  padding: 0.5rem;
+  border-radius: 1rem;
+
+  &:hover {
+    background-color: var(--color-grey-100);
+  }
+`;
+
 export default function Header() {
   const { isCollapsed, toggleCollapsed } = useSidebarCollapsed();
   const logout = useLogout();
@@ -60,7 +71,9 @@ export default function Header() {
       {/* Prebaciti u AUTH FEATURES */}
       <UserMenu>
         {isLoading && <Spinner />}
-        <HiOutlineUser size={30} />
+        <StyledLink to="/me">
+          <HiOutlineUser size={30} />
+        </StyledLink>
 
         {/* Dobrodošao {user?.first_name} {user?.last_name} */}
 
