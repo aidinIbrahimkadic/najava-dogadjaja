@@ -52,6 +52,7 @@ const variations = {
     text-transform: capitalize;
     font-size: 1.6rem;
     font-weight: 100;
+    box-shadow: none;
     padding: 0;
     &:hover {
       text-decoration: underline;
