@@ -9,7 +9,7 @@ export function useLogout() {
     localStorage.removeItem('eventsToken');
     localStorage.removeItem('refreshToken');
     queryClient.clear();
-    navigate('/login');
+    navigate('/');
   }
 
   return logout;
