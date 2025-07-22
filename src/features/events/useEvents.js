@@ -7,8 +7,6 @@ export function useGetEvents() {
   const { isLoading, data, error } = useQuery({
     queryKey: ['events'],
     queryFn: getEvents,
-    // Mozda visak
-    retry: 0,
     onSuccess: () => {
       toast.success(`Events loaded`);
     },

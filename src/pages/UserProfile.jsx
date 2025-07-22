@@ -121,7 +121,7 @@ export default function UserProfile() {
                   Uredi Profil
                 </Button>
               </Modal.Open>
-              <Modal.Window size="small" name="Uredi profil">
+              <Modal.Window size="medium" name="Uredi profil">
                 <div>nesto</div>
               </Modal.Window>
             </Modal>
@@ -147,7 +147,7 @@ export default function UserProfile() {
                   Promijeni Password
                 </Button>
               </Modal.Open>
-              <Modal.Window size="small" name="Promijeni Password">
+              <Modal.Window size="medium" name="Promijeni Password">
                 <div>nesto</div>
               </Modal.Window>
             </Modal>

@@ -11,8 +11,9 @@ export function useGetCategory(id) {
   } = useQuery({
     queryKey: ['category', id],
     queryFn: () => getCategory(id),
-    // Mozda visak
-    retry: 0,
+    retry: 3, // 🔁 Retry 3 times before failing
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 3000), // optional: 1s, 2s, 4s
+    refetchOnWindowFocus: false,
     enabled: !!id,
     onSuccess: () => {
       toast.success(`Category loaded`);

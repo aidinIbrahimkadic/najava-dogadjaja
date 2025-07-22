@@ -7,7 +7,7 @@ export function useLogout() {
 
   function logout() {
     localStorage.removeItem('eventsToken');
-    localStorage.removeItem('eventsRefreshToken');
+    localStorage.removeItem('refreshToken');
     queryClient.clear();
     navigate('/login');
   }

@@ -21,8 +21,16 @@ import SignUp from './pages/SignUp';
 import HomePage from './pages/HomePage';
 import ProtectedRoute from './ui/ProtectedRoute';
 import UserProfile from './pages/UserProfile';
+import AppLayoutFront from './ui/AppLayoutFront';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 3000),
+    },
+  },
+});
 
 function App() {
   return (
@@ -51,10 +59,12 @@ function App() {
               <Route path="/users" element={<Users />} />
               <Route path="/me" element={<UserProfile />} />
             </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route index path="/" element={<HomePage />} />
-            <Route path="*" element={<PageNotFound />} />
+            <Route element={<AppLayoutFront />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route index path="/" element={<HomePage />} />
+              <Route path="*" element={<PageNotFound />} />
+            </Route>
           </Routes>
         </BrowserRouter>
         <Toaster

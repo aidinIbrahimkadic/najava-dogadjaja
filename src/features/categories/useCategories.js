@@ -7,8 +7,9 @@ export function useGetCategories() {
   const { isLoading, data, error } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
-    // Mozda visak
-    retry: 0,
+    retry: 3, // 🔁 Retry 3 times before failing
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 3000), // optional: 1s, 2s, 4s
+    refetchOnWindowFocus: false,
     onSuccess: () => {
       toast.success(`Categories loaded`);
     },

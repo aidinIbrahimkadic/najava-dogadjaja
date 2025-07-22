@@ -17,7 +17,7 @@ export function useLogin() {
     mutationFn: loginApi,
     onSuccess: (data) => {
       localStorage.setItem('eventsToken', data.token);
-      localStorage.setItem('eventsRefreshToken', data.refreshToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
       navigate('/dashboard', { replace: true });
     },
     onError: (data) => {
