@@ -281,6 +281,6 @@ img {
 display:none !important;
 }
 
-`;
 
+`;
 export default GlobalStyles;

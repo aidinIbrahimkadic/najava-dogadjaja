@@ -17,6 +17,7 @@ export function useUserProfile() {
       console.log('Failed to load profile:', error.message);
       // toast.error('Ne postoji korisnik');
       localStorage.removeItem('eventsToken');
+
       navigate('/login', { replace: true });
     },
   });

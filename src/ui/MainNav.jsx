@@ -140,6 +140,15 @@ export default function MainNav() {
             <Label isCollapsed={isCollapsed}>Postavke</Label>
           </StyledNavLink>
         </li>
+        {/* POPRAVITI  Izbaciti iz navigacije*/}
+        <li>
+          <StyledNavLink to="/">
+            <IconWrapper>
+              <HiOutlineCog6Tooth />
+            </IconWrapper>
+            <Label isCollapsed={isCollapsed}>Pocetna front</Label>
+          </StyledNavLink>
+        </li>
       </NavList>
     </nav>
   );

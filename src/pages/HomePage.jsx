@@ -1,13 +1,3 @@
-// export default function HomePage() {
-//   return (
-//     <div>
-//       <h2>Home Page</h2>
-//       <a href="/login">Login</a>
-//       <a href="signup">Sign Up</a>
-//     </div>
-//   );
-// }
-
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import {
@@ -109,8 +99,6 @@ const Header = styled.header`
   backdrop-filter: blur(10px);
   padding: 1rem 2rem;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
   z-index: 1000;
 `;
 
@@ -480,48 +468,6 @@ const PopularEventMeta = styled.div`
   color: #666;
 `;
 
-const Footer = styled.footer`
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 3rem 2rem 1rem;
-  margin-top: 4rem;
-`;
-
-const FooterContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-`;
-
-const FooterSection = styled.div`
-  h3 {
-    color: #667eea;
-    margin-bottom: 1rem;
-  }
-
-  p,
-  a {
-    color: #ccc;
-    text-decoration: none;
-    margin-bottom: 0.5rem;
-    display: block;
-
-    &:hover {
-      color: white;
-    }
-  }
-`;
-
-const FooterBottom = styled.div`
-  text-align: center;
-  padding-top: 2rem;
-  margin-top: 2rem;
-  border-top: 1px solid #333;
-  color: #666;
-`;
-
 const EventsApp = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoggedIn] = useState(true); // Set to true to show logged in state
@@ -829,43 +775,6 @@ const EventsApp = () => {
           </PopularEventsGrid>
         </Section>
       </MainContent>
-
-      <Footer>
-        <FooterContent>
-          <FooterSection>
-            <h3>EventHub</h3>
-            <p>Vaša platforma za sve događaje u gradu.</p>
-            <p>Pronađite, prijavite se i uživajte u najboljim događajima.</p>
-          </FooterSection>
-
-          <FooterSection>
-            <h3>Brzi linkovi</h3>
-            <a href="#events">Događaji</a>
-            <a href="#calendar">Kalendar</a>
-            <a href="#institutions">Institucije</a>
-            <a href="#categories">Kategorije</a>
-          </FooterSection>
-
-          <FooterSection>
-            <h3>Kontakt</h3>
-            <p>Email: info@eventhub.ba</p>
-            <p>Telefon: +387 61 123 456</p>
-            <p>Adresa: Tešanj, BiH</p>
-          </FooterSection>
-
-          <FooterSection>
-            <h3>Pratite nas</h3>
-            <a href="#facebook">Facebook</a>
-            <a href="#instagram">Instagram</a>
-            <a href="#twitter">Twitter</a>
-            <a href="#linkedin">LinkedIn</a>
-          </FooterSection>
-        </FooterContent>
-
-        <FooterBottom>
-          <p>&copy; 2025 EventHub. Sva prava zadržana.</p>
-        </FooterBottom>
-      </Footer>
     </AppContainer>
   );
 };

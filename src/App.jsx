@@ -21,16 +21,10 @@ import SignUp from './pages/SignUp';
 import HomePage from './pages/HomePage';
 import ProtectedRoute from './ui/ProtectedRoute';
 import UserProfile from './pages/UserProfile';
-import AppLayoutFront from './ui/AppLayoutFront';
+import AppLayoutFront from './ui/Front/AppLayoutFront';
+import ScrollToTop from './utils/ScrollToTop';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 3,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 3000),
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 function App() {
   return (
@@ -39,6 +33,7 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} />
         <GlobalStyles />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route
               element={
@@ -61,7 +56,7 @@ function App() {
             </Route>
             <Route element={<AppLayoutFront />}>
               <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
+              <Route path="/register" element={<SignUp />} />
               <Route index path="/" element={<HomePage />} />
               <Route path="*" element={<PageNotFound />} />
             </Route>
