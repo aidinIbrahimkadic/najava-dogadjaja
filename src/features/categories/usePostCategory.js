@@ -16,8 +16,8 @@ export function usePostCategory() {
       toast.success('Uspješno dodan nova kategorija!');
       navigate('/categories', { replace: true });
     },
-    onError: (err) => {
-      toast.error(`${err.response?.data?.message}`);
+    onError: (error) => {
+      toast.error(`${error.message}`);
     },
   });
 

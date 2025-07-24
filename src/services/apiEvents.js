@@ -3,11 +3,9 @@ import axiosInstance from './axiosInstance';
 export async function getEvents() {
   try {
     const response = await axiosInstance.get(`/events/events`);
-    console.log(response.data);
     return response.data;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju događaja');
   }
 }
 
@@ -48,9 +46,8 @@ export async function postEvent({
     });
 
     return response.data;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dodavanju događaja');
   }
 }
 
@@ -60,9 +57,8 @@ export async function deleteEvent(id) {
   try {
     await axiosInstance.delete(`/events/events/${id}`);
     return id;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri brisanju događaja');
   }
 }
 
@@ -112,8 +108,7 @@ export async function updateEvent({
     });
 
     return response.data;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri ažuriranju događaja');
   }
 }

@@ -17,7 +17,7 @@ export function useLogout() {
     localStorage.removeItem('eventsToken');
     localStorage.removeItem('refreshToken');
 
-    queryClient.removeQueries({ queryKey: ['userProfile'] });
+    queryClient.removeQueries({ queryKey: ['userPermissions'] });
 
     navigate('/');
   }

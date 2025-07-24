@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { updateCategory as updateCategoryAPI } from '../../services/apiCategories'; // Your axios service
 
 export function useUpdateCategory() {
@@ -15,7 +16,7 @@ export function useUpdateCategory() {
       queryClient.invalidateQueries(['categories']);
     },
     onError: (error) => {
-      console.error('Error updating category:', error);
+      toast.error(`${error.message}`);
     },
   });
 

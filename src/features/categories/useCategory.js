@@ -21,7 +21,7 @@ export function useGetCategory(id) {
   });
   useEffect(() => {
     if (error) {
-      toast.error(`${error.response.data.message}`);
+      toast.error(`${error.message}`);
     }
   }, [error]);
 

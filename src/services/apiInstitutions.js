@@ -3,9 +3,11 @@ import axiosInstance from './axiosInstance';
 export async function getCategories() {
   try {
     const response = await axiosInstance.get(`/events/kategorije`);
+    console.log(response.data);
     return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju kategorija');
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 }
 
@@ -15,8 +17,9 @@ export async function getCategory(id) {
   try {
     const response = await axiosInstance.get(`/events/kategorije/${id}`);
     return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju kategorije');
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 }
 
@@ -26,8 +29,9 @@ export async function deleteCategory(id) {
   try {
     await axiosInstance.delete(`/events/kategorije/${id}`);
     return id;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Greška pri brisanju kategorije');
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 }
 
@@ -53,8 +57,9 @@ export async function updateCategory({ data: { naziv, opis, boja }, editId: id }
       boja,
     });
     return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Greška pri ažuriranju kategorije');
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 }
 

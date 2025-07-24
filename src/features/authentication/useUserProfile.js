@@ -1,5 +1,7 @@
+// POPRAVITI VISKA, mozda brisati dok vidim gdje se jos koristi
+
 import { useQuery } from '@tanstack/react-query';
-// import toast from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from '../../services/apiAuth';
 
@@ -14,14 +16,13 @@ export function useUserProfile() {
       console.log('User loaded:', data);
     },
     onError: (error) => {
-      console.log('Failed to load profile:', error.message);
-      // toast.error('Ne postoji korisnik');
+      toast.error(`${error.message}`);
       localStorage.removeItem('eventsToken');
+      localStorage.removeItem('refreshToken');
 
       navigate('/login', { replace: true });
     },
   });
 
-  // POPRAVITI isAuthenticated: user?.role === "authenticated"
-  return { isLoading, user, isAuthenticated: user?.email };
+  return { isLoading, user };
 }

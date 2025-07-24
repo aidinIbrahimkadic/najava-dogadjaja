@@ -142,6 +142,23 @@ export default function MainNav() {
         </li>
         {/* POPRAVITI  Izbaciti iz navigacije*/}
         <li>
+          <StyledNavLink to="/roles">
+            <IconWrapper>
+              <HiOutlineCog6Tooth />
+            </IconWrapper>
+            <Label isCollapsed={isCollapsed}>Uloge</Label>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/permissions">
+            <IconWrapper>
+              <HiOutlineCog6Tooth />
+            </IconWrapper>
+            <Label isCollapsed={isCollapsed}>Dozvole</Label>
+          </StyledNavLink>
+        </li>
+
+        <li>
           <StyledNavLink to="/">
             <IconWrapper>
               <HiOutlineCog6Tooth />

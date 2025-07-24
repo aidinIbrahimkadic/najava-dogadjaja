@@ -16,13 +16,12 @@ export function useLogin() {
   } = useMutation({
     mutationFn: loginApi,
     onSuccess: (data) => {
-      localStorage.setItem('eventsToken', data.token);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      localStorage.setItem('eventsToken', data.data.tokens.access_token);
+      localStorage.setItem('refreshToken', data.data.tokens.refresh_token);
       navigate('/dashboard', { replace: true });
     },
-    onError: (data) => {
-      console.log('ERROR', data.message);
-      toast.error(`${data.message}`);
+    onError: (error) => {
+      toast.error(`${error.message}`);
     },
   });
 

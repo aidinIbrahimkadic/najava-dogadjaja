@@ -20,8 +20,8 @@ export function useRegister() {
 
       navigate('/login', { replace: true });
     },
-    onError: (data) => {
-      toast.error(`${data.response.data.message}`);
+    onError: (error) => {
+      toast.error(`${error.message}`);
     },
   });
 

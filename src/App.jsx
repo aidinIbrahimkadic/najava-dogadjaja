@@ -53,6 +53,7 @@ function App() {
               <Route path="/account" element={<Account />} />
               <Route path="/users" element={<Users />} />
               <Route path="/me" element={<UserProfile />} />
+              <Route path="*" element={<PageNotFound />} />
             </Route>
             <Route element={<AppLayoutFront />}>
               <Route path="/login" element={<Login />} />

@@ -94,57 +94,6 @@ const AppContainer = styled.div`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 `;
 
-const Header = styled.header`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-`;
-
-const HeaderContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 1rem;
-  }
-`;
-
-const Logo = styled.div`
-  font-size: 1.8rem;
-  font-weight: bold;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  cursor: pointer;
-`;
-
-const SearchSection = styled.div`
-  display: flex;
-  gap: 1rem;
-  flex: 1;
-  max-width: 600px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    max-width: none;
-    flex-direction: column;
-  }
-`;
-
-const UserSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-
 const CarouselContainer = styled.div`
   position: relative;
   max-width: 1200px;
@@ -368,12 +317,6 @@ const EventLocation = styled.span`
   font-size: 0.9rem;
 `;
 
-const LikeSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
 const LikeButton = styled(Button)`
   border: none;
   background: none;
@@ -470,7 +413,6 @@ const PopularEventMeta = styled.div`
 
 const EventsApp = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isLoggedIn] = useState(true); // Set to true to show logged in state
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedPreferences, setSelectedPreferences] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -576,52 +518,6 @@ const EventsApp = () => {
 
   return (
     <AppContainer>
-      <Header>
-        <HeaderContent>
-          <Logo>EventHub</Logo>
-
-          <SearchSection>
-            <Input placeholder="Search events..." prefix={<SearchOutlined />} size="large" />
-            <Select placeholder="Categories" style={{ minWidth: 130 }} size="large">
-              {categories.map((category) => (
-                <Option key={category} value={category}>
-                  {category}
-                </Option>
-              ))}
-            </Select>
-            <Select placeholder="Institutions" style={{ minWidth: 150 }} size="large">
-              {institutions.map((institution) => (
-                <Option key={institution.name} value={institution.name}>
-                  {institution.name}
-                </Option>
-              ))}
-            </Select>
-          </SearchSection>
-
-          <UserSection>
-            {isLoggedIn ? (
-              <>
-                <Badge count={likedEvents.size} offset={[-5, 5]}>
-                  <Button
-                    type="text"
-                    icon={<HeartOutlined />}
-                    size="large"
-                    style={{ color: '#ff4d4f' }}
-                  />
-                </Badge>
-                <Avatar icon={<UserOutlined />} style={{ background: '#667eea' }} />
-                <span>aidinIbrahimkadic</span>
-              </>
-            ) : (
-              <>
-                <Button type="primary">Login</Button>
-                <Button>Register</Button>
-              </>
-            )}
-          </UserSection>
-        </HeaderContent>
-      </Header>
-
       {/* Carousel */}
       <CarouselContainer>
         <CarouselWrapper

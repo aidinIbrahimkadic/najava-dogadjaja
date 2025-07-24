@@ -18,10 +18,10 @@ import Select from '../../ui/Select';
 import { usePostEvent } from './usePostEvent';
 import { useUpdateEvent } from './useUpdateEvent';
 import { useGetCategories } from '../categories/useCategories';
-import { useUserProfile } from '../authentication/useUserProfile';
 import Checkbox from '../../ui/Checkbox';
 import { useEffect, useState } from 'react';
 import ExistingImagePreview from '../../ui/ExistingImagePreview';
+import { useUserPermissions } from '../authentication/useUserPermissions';
 
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const [existingSlika, setExistingSlika] = useState(null);
@@ -31,7 +31,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const { isLoading, categories } = useGetCategories();
 
   //POPRAVITI povuci korisnika na osnovu IDa i dodati isLoading
-  const { user } = useUserProfile();
+  const { user } = useUserPermissions();
 
   const isWorking = isCreating || isEditing;
 

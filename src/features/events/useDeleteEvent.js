@@ -12,7 +12,7 @@ export function useDeleteEvent() {
       toast.success('Event deleted successfully');
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to delete event');
+      toast.error(error.message || 'Failed to delete event');
     },
   });
 }

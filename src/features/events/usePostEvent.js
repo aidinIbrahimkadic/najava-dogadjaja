@@ -16,8 +16,8 @@ export function usePostEvent() {
       toast.success('Uspješno dodan novi event!');
       navigate('/events', { replace: true });
     },
-    onError: (err) => {
-      toast.error(`${err.message}`);
+    onError: (error) => {
+      toast.error(`${error.message}`);
     },
   });
 

@@ -1,9 +1,9 @@
 import Modal from '../ui/Modal';
 import { HiOutlineUser } from 'react-icons/hi2';
 import styled from 'styled-components';
-import { useUserProfile } from '../features/authentication/useUserProfile';
 import Spinner from '../ui/Spinner';
 import Button from '../ui/Button';
+import { useUserPermissions } from '../features/authentication/useUserPermissions';
 
 const AccountContainer = styled.div`
   display: flex;
@@ -81,7 +81,7 @@ const AccountHeaderContainer = styled.div`
 `;
 
 export default function UserProfile() {
-  const { user, isLoading } = useUserProfile();
+  const { user, isLoading } = useUserPermissions();
 
   if (isLoading) return <Spinner />;
 

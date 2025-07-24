@@ -12,7 +12,7 @@ export function useDeleteCategory() {
       toast.success('Category deleted successfully');
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to delete category');
+      toast.error(error.message || 'Failed to delete category');
     },
   });
 }

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { updateEvent as updateEventAPI } from '../../services/apiEvents';
 
 export function useUpdateEvent() {
@@ -15,7 +16,7 @@ export function useUpdateEvent() {
       queryClient.invalidateQueries(['events']);
     },
     onError: (error) => {
-      console.error('Error updating event:', error);
+      toast.error(`${error.message}`);
     },
   });
 

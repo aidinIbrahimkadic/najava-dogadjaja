@@ -13,7 +13,7 @@ export function useGetEvents() {
   });
   useEffect(() => {
     if (error) {
-      console.log(`${error.response.data.message}`);
+      toast(`${error.message}`);
     }
   }, [error]);
 

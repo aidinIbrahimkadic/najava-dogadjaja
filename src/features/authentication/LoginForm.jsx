@@ -197,7 +197,7 @@ const SpinnerContainer = styled.div`
 `;
 
 export default function LoginPage() {
-  const { login, isPending } = useLogin();
+  const { login, isPending, isError } = useLogin();
 
   const {
     control,
@@ -243,6 +243,7 @@ export default function LoginPage() {
               render={({ field }) => (
                 <>
                   <Input
+                    autoFocus={isError ? true : false}
                     {...field}
                     prefix={<MailOutlined />}
                     placeholder="Email adresa"

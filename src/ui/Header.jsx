@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import { useUserProfile } from '../features/authentication/useUserProfile';
 import { useSidebarCollapsed } from '../context/SidebarContext';
 import { useLogout } from '../features/authentication/useLogout';
 
@@ -10,6 +9,7 @@ import { HiOutlineUser } from 'react-icons/hi2';
 
 import Button from './Button';
 import Spinner from './Spinner';
+import { useUserPermissions } from '../features/authentication/useUserPermissions';
 
 const StyledHeader = styled.header`
   grid-area: header;
@@ -58,7 +58,9 @@ export default function Header() {
   const { isCollapsed, toggleCollapsed } = useSidebarCollapsed();
   const logout = useLogout();
 
-  const { user, isLoading } = useUserProfile();
+  // POPRAVITI Provjeriti zamijenio sam useUserProfile()
+  const { user, isLoading } = useUserPermissions();
+
   return (
     <StyledHeader>
       <ToggleButton

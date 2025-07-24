@@ -9,9 +9,9 @@ import {
 } from '@ant-design/icons';
 import FrontLogo from './FrontLogo';
 import styled from 'styled-components';
-import { useUserProfile } from '../../features/authentication/useUserProfile';
 import { useState } from 'react';
 import { useLogout } from '../../features/authentication/useLogout';
+import { useUserPermissions } from '../../features/authentication/useUserPermissions';
 
 const { Header } = Layout;
 
@@ -158,7 +158,7 @@ const dropdownItems = [
 export default function FrontHeader() {
   const [likedEvents] = useState(new Set([1, 3])); // Mock liked events
   const logout = useLogout();
-  const { user } = useUserProfile();
+  const { user } = useUserPermissions();
 
   //   POPRAVITI Iz baze povlaciti liked events za korisnika
   //   const toggleLike = (eventId) => {
