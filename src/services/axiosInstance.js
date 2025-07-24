@@ -130,6 +130,7 @@ axiosInstance.interceptors.response.use(
           refreshToken,
         });
 
+        console.log(res);
         const newToken = res.data.token;
         const newRefreshToken = res.data.refreshToken;
 

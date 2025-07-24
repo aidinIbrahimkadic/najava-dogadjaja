@@ -23,27 +23,36 @@ const sizes = {
 const variations = {
   primary: css`
     color: var(--color-brand-50);
-    background-color: var(--color-brand-600);
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+    transition: all 0.3s ease-in-out;
+    /* background-color: var(--color-brand-600); */
 
     &:hover {
-      background-color: var(--color-brand-700);
+      background: linear-gradient(135deg, #ea580c, #dc2626);
+      box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4) !important;
+      transform: translateY(-1px);
     }
   `,
   secondary: css`
     color: var(--color-grey-600);
     background: var(--color-grey-0);
     border: 1px solid var(--color-grey-200);
+    transition: all 0.3s ease-in-out;
 
     &:hover {
       background-color: var(--color-grey-50);
+      transform: translateY(-1px);
     }
   `,
   danger: css`
     color: var(--color-red-100);
     background-color: var(--color-red-700);
+    transition: all 0.3s ease-in-out;
 
     &:hover {
       background-color: var(--color-red-800);
+      transform: translateY(-1px);
     }
   `,
   link: css`

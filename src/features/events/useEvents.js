@@ -1,4 +1,4 @@
-import { QueryClient, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getEvents } from '../../services/apiEvents';
@@ -13,7 +13,7 @@ export function useGetEvents() {
   });
   useEffect(() => {
     if (error) {
-      toast(`${error.message}`);
+      toast.error(`${error.message}`);
     }
   }, [error]);
 

@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { getCategories } from '../../services/apiCategories';
+import { getLocations } from '../../services/apiLocations';
 
-export function useGetCategories() {
+export function useGetLocations() {
   const { isLoading, data, error } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategories,
+    queryKey: ['locations'],
+    queryFn: getLocations,
     onSuccess: () => {
-      toast.success(`Categories loaded`);
+      toast.success(`Locations loaded`);
     },
   });
   useEffect(() => {
@@ -17,7 +17,8 @@ export function useGetCategories() {
     }
   }, [error]);
 
-  const categories = data?.data;
+  const locations = data?.data;
   const count = data?.total;
-  return { isLoading, categories, error, count };
+
+  return { isLoading, locations, error, count };
 }

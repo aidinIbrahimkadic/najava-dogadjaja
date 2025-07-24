@@ -3,11 +3,9 @@ import axiosInstance from './axiosInstance';
 export async function getLocations() {
   try {
     const response = await axiosInstance.get(`/events/lokacije`);
-    console.log(response.data);
     return response.data;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju lokacija');
   }
 }
 
@@ -17,9 +15,8 @@ export async function getLocation(id) {
   try {
     const response = await axiosInstance.get(`/events/lokacije/${id}`);
     return response.data;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju lokacije');
   }
 }
 
@@ -29,42 +26,56 @@ export async function deleteLocation(id) {
   try {
     await axiosInstance.delete(`/events/lokacije/${id}`);
     return id;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri brisanju lokacije');
   }
 }
 
-export async function postLocation({ naziv, opis, boja }) {
+export async function postLocation({
+  naziv,
+  opis,
+  adresa,
+  mjesto,
+  longitude,
+  latitude,
+  user_idguid,
+}) {
   if (!naziv) throw new Error('Naziv lokacije je obavezan');
 
-  const response = await axiosInstance.post(`/events/location`, {
-    naziv,
-    opis,
-    boja,
-  });
-  return response.data;
-}
-
-export async function updateCategory({ data: { naziv, opis, boja }, editId: id }) {
-  if (!id) throw new Error('Category ID is required');
-  if (!naziv) throw new Error('Naziv kategorije je obavezan');
-
   try {
-    const response = await axiosInstance.put(`/events/kategorije/${id}`, {
+    const response = await axiosInstance.post(`/events/lokacije`, {
       naziv,
       opis,
-      boja,
+      adresa,
+      mjesto,
+      longitude,
+      latitude,
+      user_idguid,
     });
     return response.data;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dodavanju lokacije');
   }
 }
 
-// export async function checkIfCategoryIsUsed(categoryId) {
-//   const res = await fetch(`/events?category=${categoryId}`);
-//   const data = await res.json();
-//   return data.length > 0;
-// }
+export async function updateLocation({
+  data: { naziv, opis, adresa, mjesto, longitude, latitude },
+  editId: id,
+}) {
+  if (!id) throw new Error('Location ID is required');
+  if (!naziv) throw new Error('Naziv lokacije je obavezan');
+
+  try {
+    const response = await axiosInstance.put(`/events/lokacije/${id}`, {
+      naziv,
+      opis,
+      adresa,
+      mjesto,
+      longitude,
+      latitude,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri ažuriranju lokacije');
+  }
+}

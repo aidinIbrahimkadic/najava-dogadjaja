@@ -148,7 +148,7 @@ const SpinnerContainer = styled.div`
 `;
 
 export default function RegisterForm() {
-  const { register, isPending, isError } = useRegister();
+  const { register, isPending } = useRegister();
 
   const {
     control,
@@ -189,21 +189,19 @@ export default function RegisterForm() {
               name="email"
               control={control}
               rules={{
-                required: {
-                  message: 'Unesite email!',
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Email nije validan!',
-                  },
+                required: 'Email je obavezan!',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Email nije validan!',
                 },
               }}
               render={({ field }) => (
                 <>
                   <Input
-                    autoFocus={isError ? true : false}
+                    autoFocus
                     {...field}
                     prefix={<MailOutlined />}
-                    placeholder="Email"
+                    placeholder="Email*"
                     size="large"
                     status={errors.email ? 'error' : ''}
                   />
@@ -217,7 +215,7 @@ export default function RegisterForm() {
               name="password"
               control={control}
               rules={{
-                required: 'Unesite lozinku!',
+                required: 'Lozinka je obavezna!',
                 minLength: {
                   value: 6,
                   message: 'Lozinka mora imati najmanje 6 znakova!',
@@ -229,7 +227,7 @@ export default function RegisterForm() {
                     {...field}
                     autoComplete="new-password"
                     prefix={<LockOutlined />}
-                    placeholder="Lozinka"
+                    placeholder="Lozinka*"
                     size="large"
                     status={errors.password ? 'error' : ''}
                   />
@@ -279,25 +277,6 @@ export default function RegisterForm() {
             />
           </FormItem>
           <FormItem>
-            <Controller
-              name="username"
-              control={control}
-              rules={{ required: 'Unesite korisničko ime!' }}
-              render={({ field }) => (
-                <>
-                  <Input
-                    {...field}
-                    prefix={<UserOutlined />}
-                    placeholder="Username"
-                    size="large"
-                    status={errors.username ? 'error' : ''}
-                  />
-                  {errors.username && <ErrorMessage>{errors.username.message}</ErrorMessage>}
-                </>
-              )}
-            />
-          </FormItem>
-          <FormItem>
             <StyledButton
               type="primary"
               htmlType="submit"
@@ -307,6 +286,12 @@ export default function RegisterForm() {
               {isPending ? 'Registracija...' : 'Registrujte se'}
             </StyledButton>
           </FormItem>
+          <Controller
+            name="roles"
+            control={control}
+            defaultValue={['Public']}
+            render={({ field }) => <input type="hidden" {...field} />}
+          />
         </StyledForm>
 
         <LoginLink>
