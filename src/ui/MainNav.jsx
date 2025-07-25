@@ -109,14 +109,6 @@ export default function MainNav() {
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to="/users">
-            <IconWrapper>
-              <HiOutlineUsers />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Korisnici</Label>
-          </StyledNavLink>
-        </li>
-        <li>
           <StyledNavLink to="/locations">
             <IconWrapper>
               <HiOutlineMap />
@@ -138,6 +130,14 @@ export default function MainNav() {
               <HiOutlineCog6Tooth />
             </IconWrapper>
             <Label isCollapsed={isCollapsed}>Postavke</Label>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/users">
+            <IconWrapper>
+              <HiOutlineUsers />
+            </IconWrapper>
+            <Label isCollapsed={isCollapsed}>Korisnici</Label>
           </StyledNavLink>
         </li>
         {/* POPRAVITI  Izbaciti iz navigacije*/}
