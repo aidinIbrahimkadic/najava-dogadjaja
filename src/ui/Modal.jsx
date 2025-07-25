@@ -15,7 +15,7 @@ const StyledModal = styled.div`
   box-shadow: var(--shadow-lg);
   transition: all 0.5s;
 
-  width: ${(props) => (props.size == 'small' ? '30%' : props.size == 'medium' ? '40%' : '75%')};
+  width: ${(props) => (props.size == 'small' ? '30%' : props.size == 'medium' ? '40%' : '55%')};
 `;
 
 const Overlay = styled.div`
