@@ -4,7 +4,11 @@ import toast from 'react-hot-toast';
 import { getLocations } from '../../services/apiLocations';
 
 export function useGetLocations() {
-  const { isLoading, data, error } = useQuery({
+  const {
+    isLoading,
+    data: locations,
+    error,
+  } = useQuery({
     queryKey: ['locations'],
     queryFn: getLocations,
     onSuccess: () => {
@@ -17,8 +21,8 @@ export function useGetLocations() {
     }
   }, [error]);
 
-  const locations = data?.data;
-  const count = data?.total;
+  // const locations = data;
+  // const count = data?.total;
 
-  return { isLoading, locations, error, count };
+  return { isLoading, locations, error };
 }

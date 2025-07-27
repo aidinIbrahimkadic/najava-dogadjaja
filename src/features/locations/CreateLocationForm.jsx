@@ -510,6 +510,7 @@ import FormField from '../../ui/FormField';
 
 import { usePostLocation } from './usePostLocation';
 import { useUpdateLocation } from './useUpdateLocation';
+import { useUserProfile } from '../authentication/useUserProfile';
 
 // === Styled Components ===
 const SuggestionsBox = styled.ul`
@@ -544,7 +545,7 @@ const Suggestion = styled.li`
 `;
 
 const MapWrapper = styled.div`
-  height: 350px;
+  height: 25rem;
   width: 100%;
   margin-bottom: 16px;
   border-radius: 8px;
@@ -740,9 +741,13 @@ function LocationMapPicker({ latitude, longitude, onChange }) {
 }
 
 // === Main Form Component ===
-function CreateLocationForm({ locationToEdit = {}, onCloseModal }) {
+function CreateLocationForm({ locationToEdit = {}, user_email, onCloseModal }) {
   const { isCreating, postLocation } = usePostLocation();
   const { isEditing, updateLocation } = useUpdateLocation();
+
+  const { user: myProfile } = useUserProfile();
+  const userEmail = myProfile?.data?.user?.email || '';
+
   const isWorking = isCreating || isEditing;
 
   const { idguid: editId, ...editValues } = locationToEdit;
@@ -879,6 +884,20 @@ function CreateLocationForm({ locationToEdit = {}, onCloseModal }) {
           />
         </FormField>
       </FormRow>
+      <FormRow columns="1fr 1fr">
+        <FormField label="Mjesto" required error={errors?.mjesto?.message}>
+          <Input
+            type="text"
+            id="mjesto"
+            style={{ zIndex: 1 }}
+            disabled={isWorking}
+            {...register('mjesto')}
+          />
+        </FormField>
+        <FormField label="Korisnik">
+          <Input type="text" id="user" disabled value={isEditSession ? user_email : userEmail} />
+        </FormField>
+      </FormRow>
       <FormRow>
         <CoordinateInputs>
           <FormField label="Latitude" error={errors?.latitude?.message}>
@@ -908,16 +927,9 @@ function CreateLocationForm({ locationToEdit = {}, onCloseModal }) {
           </FormField>
         </CoordinateInputs>
       </FormRow>
-
       <FormRow>
         <FormField label="Opis lokacije" error={errors?.opis?.message}>
           <TextArea id="opis" disabled={isWorking} rows={4} {...register('opis')} />
-        </FormField>
-      </FormRow>
-
-      <FormRow>
-        <FormField label="Mjesto" error={errors?.mjesto?.message}>
-          <Input type="text" id="mjesto" disabled={isWorking} {...register('mjesto')} />
         </FormField>
       </FormRow>
 

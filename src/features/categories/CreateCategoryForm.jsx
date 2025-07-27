@@ -15,6 +15,7 @@ import InputColor from '../../ui/InputColor';
 function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
   const { isCreating, postCategory } = usePostCategory();
   const { isEditing, updateCategory } = useUpdateCategory();
+
   const isWorking = isCreating || isEditing;
 
   const { idguid: editId, ...editValues } = categoryToEdit;
@@ -67,6 +68,7 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
           />
         </FormField>
       </FormRow>
+
       <FormRow>
         <FormField label="Opis kategorije" error={errors?.opis?.message}>
           <TextArea
@@ -78,6 +80,7 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
           />
         </FormField>
       </FormRow>
+
       <FormRow>
         <FormField label="Boja kategorije">
           <InputColor

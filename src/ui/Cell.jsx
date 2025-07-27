@@ -15,6 +15,13 @@ export default function Cell({ children, type = 'normal' }) {
         {children.length > 15 ? '...' : ''}
       </StyledCell>
     );
+  } else if (type === 'textAdresa') {
+    return (
+      <StyledCell>
+        {children.slice(0, 40)}
+        {children.length > 40 ? '...' : ''}
+      </StyledCell>
+    );
   }
   return <StyledCell>{children}</StyledCell>;
 }

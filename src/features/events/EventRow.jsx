@@ -15,6 +15,8 @@ import Cell from '../../ui/Cell';
 import TwoRowCell from '../../ui/TwoRowCell';
 import Checkbox from '../../ui/Checkbox';
 import { ImageCell } from '../../ui/ImageCell';
+import { useGetLocation } from '../locations/useLocation';
+import Spinner from '../../ui/Spinner';
 
 function EventRow({ event, index }) {
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ function EventRow({ event, index }) {
 
   const { idguid, category_idguid, title, location, slika, is_public, start_date, end_date } =
     event;
+
+  const { isLoading: isLoadingLocation, location: lokacija } = useGetLocation(location);
 
   function handleDelete(id) {
     deleteEvent(id);
@@ -38,7 +42,7 @@ function EventRow({ event, index }) {
       <Cell>
         <ImageCell slika={slika} title={title} />
       </Cell>
-      <Cell>{location}</Cell>
+      <Cell>{isLoadingLocation ? <Spinner /> : lokacija.naziv}</Cell>
       <Cell>
         <Badge bgColor={category?.boja}>{categoryName}</Badge>
       </Cell>

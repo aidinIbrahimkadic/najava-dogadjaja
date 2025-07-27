@@ -6,11 +6,10 @@ import Menus from '../../ui/Menus';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import CreateCategoryForm from './CreateCategoryForm';
 
-// import { useGetCategory } from './useCategory';
-
 import { useDeleteCategory } from './useDeleteCategory';
 import { HiTrash, HiPencilSquare } from 'react-icons/hi2';
 import Badge from '../../ui/Badge';
+import { useGetUser } from '../users/useUser';
 
 const Cell = styled.div`
   font-weight: 400;
@@ -23,27 +22,14 @@ const Cell = styled.div`
 function CategoryRow({ category, index }) {
   const { mutate: deleteCategory, isPending } = useDeleteCategory();
 
-  //POPRAVITI kada edhem napravi API za provjeru da li se kategorija koristi
-  // const [isPendingCategory, setIsPendingCategory] = useState(false);
+  const { idguid, naziv, operater, opis, boja } = category;
 
-  // async function handleConfirmDelete(idguid) {
-  //   setIsPendingCategory(true);
-  //   const isUsed = await checkIfCategoryIsUsed(idguid);
-
-  //   if (isUsed) {
-  //     toast.error('Ne možete obrisati kategoriju jer je vezana za postojeći event.');
-  //     setIsPendingCategory(false);
-  //     return;
-  //   }
-
-  //   deleteCategory(idguid);
-  //   setIsPendingCategory(false);
-  // }
+  const { user } = useGetUser(operater);
+  const userEmail = user?.data.email;
 
   function handleDelete(id) {
     deleteCategory(id);
   }
-  const { idguid, naziv, operater, opis, boja } = category;
 
   return (
     <Table.Row>
@@ -53,7 +39,7 @@ function CategoryRow({ category, index }) {
       <Cell>
         <Badge bgColor={boja} />
       </Cell>
-      <Cell>{operater}</Cell>
+      <Cell>{userEmail}</Cell>
       <Cell>
         <Modal>
           <Menus.Menu>
@@ -79,8 +65,6 @@ function CategoryRow({ category, index }) {
             <ConfirmDelete
               resourceName="categories"
               disabled={isPending}
-              //POPRAVITI kada edhem napravi API za provjeru da li se kategorija koristi
-              // disabled={isPending || isPendingCategory}
               onConfirm={() => handleDelete(idguid)}
             />
           </Modal.Window>

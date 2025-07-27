@@ -1,31 +1,31 @@
-import { useGetLocations } from './useLocations';
+import { useGetUsers } from './useUsers';
 import CalendarSpinner from '../../ui/CalendarSpinner';
 import Empty from '../../ui/Empty';
 import Table from '../../ui/Table';
 import Pagination from '../../ui/Pagination';
 import Menus from '../../ui/Menus';
-import LocationRow from './LocationRow';
+import UserRow from './UsersRow';
 
-export default function LocationsTable() {
-  const { locations, isLoading, error, count } = useGetLocations();
+export default function UsersTable() {
+  const { users, isLoading, error, count } = useGetUsers();
   if (isLoading) return <CalendarSpinner />;
+
   if (error) return <Empty />;
 
   return (
     <Menus>
-      <Table columns=".1fr 2fr  2fr 1fr .1fr">
+      <Table columns=".1fr 2fr  1fr 1fr 1fr .1fr">
         <Table.Header>
           <div>#</div>
-          <div>Naziv</div>
-          <div>Adresa</div>
-          <div>Mjesto</div>
+          <div>Email</div>
+          <div>Ime</div>
+          <div>Prezime</div>
+          <div>Institucija</div>
           <div></div>
         </Table.Header>
         <Table.Body
-          data={locations.data}
-          render={(location, i) => (
-            <LocationRow index={i} key={location.idguid} location={location} />
-          )}
+          data={users.data.users}
+          render={(user, i) => <UserRow index={i} key={user.idguid} user={user} />}
         />
         <Table.Footer>
           <Pagination count={count} />

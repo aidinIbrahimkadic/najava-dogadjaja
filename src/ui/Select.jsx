@@ -223,7 +223,7 @@ const Select = ({
   id,
   name,
   options,
-  placeholder = 'Odaberite kategoriju',
+  placeholder = 'Odaberite',
   disabled = false,
   required = false,
   validation = {},

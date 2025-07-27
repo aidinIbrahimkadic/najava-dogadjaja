@@ -22,6 +22,7 @@ import Checkbox from '../../ui/Checkbox';
 import { useEffect, useState } from 'react';
 import ExistingImagePreview from '../../ui/ExistingImagePreview';
 import { useUserPermissions } from '../authentication/useUserPermissions';
+import { useGetLocations } from '../locations/useLocations';
 
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const [existingSlika, setExistingSlika] = useState(null);
@@ -29,6 +30,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const { isCreating, postEvent } = usePostEvent();
   const { isEditing, updateEvent } = useUpdateEvent();
   const { isLoading, categories } = useGetCategories();
+  const { isLoading: isLocationsLoading, locations } = useGetLocations();
 
   //POPRAVITI povuci korisnika na osnovu IDa i dodati isLoading
   const { user } = useUserPermissions();
@@ -138,7 +140,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </FormField>
         </FormRow>
         <FormRow columns="1fr 1fr">
-          <FormField label="Lokacija događaja" required error={errors?.location?.message}>
+          {/* <FormField label="Lokacija događaja" required error={errors?.location?.message}>
             <Input
               type="text"
               id="location"
@@ -148,6 +150,27 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
                 required: 'Ovo polje je obavezno',
               })}
             />
+          </FormField> */}
+          <FormField label="Lokacija događaja" required error={errors?.location?.message}>
+            {isLocationsLoading ? (
+              <Spinner />
+            ) : (
+              <Select
+                id="location"
+                name="location"
+                options={locations.data.map((c) => ({
+                  value: c.idguid,
+                  label: c.naziv,
+                }))}
+                disabled={isWorking}
+                register={register}
+                setValue={setValue}
+                watch={watch}
+                validation={{
+                  required: 'Molimo odaberite odgovarajuću lokaciju događaja',
+                }}
+              />
+            )}
           </FormField>
           <FormField label="Korisnik" error={errors?.user_idguid?.message}>
             <Input
