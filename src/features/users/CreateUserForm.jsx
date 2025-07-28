@@ -188,7 +188,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
               <StyledInput
                 // autoFocus
                 {...field}
-                placeholder="Institucija"
+                placeholder="Rola"
                 size="large"
                 status={errors.email ? 'error' : ''}
               />
