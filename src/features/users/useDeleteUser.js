@@ -9,7 +9,7 @@ export function useDeleteUser() {
     mutationFn: deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      toast.success('Korinisk uspješno izbrisana');
+      toast.success('Korisnik uspješno izbrisan');
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to delete user');

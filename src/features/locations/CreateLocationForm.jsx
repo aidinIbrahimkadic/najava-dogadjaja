@@ -586,9 +586,9 @@ function AddressAutocomplete({ value, onChange, setGeoData, disabled, error }) {
       setLoading(true);
       try {
         const searchQuery = val.includes('Tešanj') ? val : `${val} Tešanj`;
-        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=ba&limit=8&q=${encodeURIComponent(
+        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=ba&accept-language=lat&limit=8&q=${encodeURIComponent(
           searchQuery
-        )}&viewbox=${TESANJ_BBOX}&bounded=1`;
+        )}&viewbox=${TESANJ_BBOX}&bounded=1&accept-language=lat`;
 
         const res = await fetch(url);
         const data = await res.json();

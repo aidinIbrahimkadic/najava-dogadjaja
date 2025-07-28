@@ -1,9 +1,8 @@
 import axiosInstance from './axiosInstance';
 
-export async function getCategories() {
+export async function getInstitutions() {
   try {
-    const response = await axiosInstance.get(`/events/kategorije`);
-    console.log(response.data);
+    const response = await axiosInstance.get(`/events/institucije`);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -11,11 +10,11 @@ export async function getCategories() {
   }
 }
 
-export async function getCategory(id) {
-  if (!id) throw new Error('Category ID is required');
+export async function getInstitution(id) {
+  if (!id) throw new Error('Institution ID is required');
 
   try {
-    const response = await axiosInstance.get(`/events/kategorije/${id}`);
+    const response = await axiosInstance.get(`/events/institucije/${id}`);
     return response.data;
   } catch (err) {
     console.log(err);
@@ -23,11 +22,11 @@ export async function getCategory(id) {
   }
 }
 
-export async function deleteCategory(id) {
-  if (!id) throw new Error('Category ID is required');
+export async function deleteInstitution(id) {
+  if (!id) throw new Error('Institution ID is required');
 
   try {
-    await axiosInstance.delete(`/events/kategorije/${id}`);
+    await axiosInstance.delete(`/events/institucije/${id}`);
     return id;
   } catch (err) {
     console.log(err);
@@ -35,26 +34,24 @@ export async function deleteCategory(id) {
   }
 }
 
-export async function postCategory({ naziv, opis, boja }) {
-  if (!naziv) throw new Error('Naziv kategorije je obavezan');
+export async function postInstitution({ naziv, opis }) {
+  if (!naziv) throw new Error('Naziv institucije je obavezan');
 
-  const response = await axiosInstance.post(`/events/kategorije`, {
+  const response = await axiosInstance.post(`/events/institucije`, {
     naziv,
     opis,
-    boja,
   });
   return response.data;
 }
 
-export async function updateCategory({ data: { naziv, opis, boja }, editId: id }) {
-  if (!id) throw new Error('Category ID is required');
-  if (!naziv) throw new Error('Naziv kategorije je obavezan');
+export async function updateInstitution({ data: { naziv, opis }, editId: id }) {
+  if (!id) throw new Error('Institution ID is required');
+  if (!naziv) throw new Error('Naziv institucije je obavezan');
 
   try {
-    const response = await axiosInstance.put(`/events/kategorije/${id}`, {
+    const response = await axiosInstance.put(`/events/institucije/${id}`, {
       naziv,
       opis,
-      boja,
     });
     return response.data;
   } catch (err) {
