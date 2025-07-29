@@ -17,6 +17,7 @@ const Form = styled.form`
     props.type === 'modal' &&
     css`
       width: 100%;
+      padding: 0 0 1.4rem 0;
     `}
     
   overflow: hidden;

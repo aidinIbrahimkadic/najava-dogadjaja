@@ -11,6 +11,7 @@ import {
   HiOutlineUsers,
   HiOutlineBuildingLibrary,
   HiOutlineMap,
+  HiOutlineIdentification,
 } from 'react-icons/hi2';
 
 const NavList = styled.ul`
@@ -144,19 +145,19 @@ export default function MainNav() {
         <li>
           <StyledNavLink to="/roles">
             <IconWrapper>
-              <HiOutlineCog6Tooth />
+              <HiOutlineIdentification />
             </IconWrapper>
             <Label isCollapsed={isCollapsed}>Uloge</Label>
           </StyledNavLink>
         </li>
-        <li>
+        {/* <li>
           <StyledNavLink to="/permissions">
             <IconWrapper>
               <HiOutlineCog6Tooth />
             </IconWrapper>
             <Label isCollapsed={isCollapsed}>Dozvole</Label>
           </StyledNavLink>
-        </li>
+        </li> */}
 
         <li>
           <StyledNavLink to="/">

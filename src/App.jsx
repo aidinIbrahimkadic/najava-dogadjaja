@@ -23,6 +23,7 @@ import ProtectedRoute from './ui/ProtectedRoute';
 import UserProfile from './pages/UserProfile';
 import AppLayoutFront from './ui/Front/AppLayoutFront';
 import ScrollToTop from './utils/ScrollToTop';
+import Roles from './pages/Roles';
 
 const queryClient = new QueryClient();
 
@@ -51,8 +52,10 @@ function App() {
               <Route path="/institutions" element={<Institutions />} />
               <Route path="/locations" element={<Locations />} />
               <Route path="/account" element={<Account />} />
-              <Route path="/users" element={<Users />} />
               <Route path="/me" element={<UserProfile />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/roles" element={<Roles />} />
+              {/* <Route path="/permissions" element={<Permissions />} /> */}
               <Route path="*" element={<PageNotFound />} />
             </Route>
             <Route element={<AppLayoutFront />}>

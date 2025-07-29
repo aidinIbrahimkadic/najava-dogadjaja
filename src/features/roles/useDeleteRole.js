@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteRole } from '../../services/apiRoles';
 import toast from 'react-hot-toast';
 
-export function useDeletRole() {
+export function useDeleteRole() {
   const queryClient = useQueryClient();
 
   return useMutation({

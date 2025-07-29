@@ -3,7 +3,6 @@ import axiosInstance from './axiosInstance';
 export async function getRoles() {
   try {
     const response = await axiosInstance.get(`/admin/roles`);
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Greška pri dobavljanju role');
