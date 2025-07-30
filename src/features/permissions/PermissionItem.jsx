@@ -4,7 +4,8 @@ import Checkbox from '../../ui/Checkbox';
 
 const Card = styled.label`
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  align-items: flex-end;
   justify-content: space-between;
   padding: 1rem;
   border-radius: 0.75rem;
@@ -14,7 +15,7 @@ const Card = styled.label`
   background: '#ffff';
 
   width: 100%;
-  min-height: 12rem;
+  /* min-height: 9rem; */
   transition: all 0.2s ease;
 
   &:hover {
@@ -42,8 +43,10 @@ const Description = styled.div`
 function PermissionItem({ permission, checked, onChange }) {
   return (
     <Card>
-      <Name>{permission.description}</Name>
-      <Description>{permission.name}</Description>
+      <div>
+        <Name>{permission.description}</Name>
+        <Description>{permission.name}</Description>
+      </div>
       <Checkbox checked={checked} onChange={() => onChange(permission.idguid)} />
     </Card>
   );

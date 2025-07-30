@@ -58,3 +58,39 @@ export async function updateRole({ data: { name, description }, editId: id }) {
     throw new Error(error.response?.data?.message || 'Greška pri ažuriranju role');
   }
 }
+
+// RolePermissions
+export async function getRolePermissions(id) {
+  if (!id) throw new Error('Role ID is required');
+
+  try {
+    const response = await axiosInstance.get(`/admin/role-permissions/${id}?limit=40`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju role');
+  }
+}
+
+export async function updateRolePermissions({ selectedPermissions, editId: id }) {
+  if (!id) throw new Error('Role ID is required');
+
+  try {
+    const response = await axiosInstance.put(`/admin/role-permissions/${id}`, {
+      permission_idguids: selectedPermissions,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri ažuriranju role');
+  }
+}
+
+export async function deleteRolePermissions(id) {
+  if (!id) throw new Error('Role ID is required');
+
+  try {
+    await axiosInstance.delete(`/admin/role-permissions/${id}`);
+    return id;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri brisanju permisije');
+  }
+}

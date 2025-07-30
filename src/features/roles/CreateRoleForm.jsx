@@ -6,23 +6,38 @@ import FormField from '../../ui/FormField';
 import Input from '../../ui/Input';
 import { usePostRole } from './usePostRole';
 import { useUpdateRole } from './useUpdateRole';
-import { useGetPermissions } from '../permissions/usePermissions';
 import PermissionItem from '../permissions/PermissionItem';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Heading from '../../ui/Heading';
 import Checkbox from '../../ui/Checkbox';
+import { useGetRolePermissions } from '../role-permissions/useRolePermissions';
+import { useUpdateRolePermissions } from '../role-permissions/useUpdateRolePermissions';
 
 // Unified styled component for all input types
 
 function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
   const { isCreating, postRole } = usePostRole();
   const { isEditing, updateRole } = useUpdateRole();
-  const { permissions, isLoading: isLoadingPermissions } = useGetPermissions();
+
   const isWorking = isCreating || isEditing;
   const { idguid: editId, permissions: rolePermissions = [], ...editValues } = roleToEdit;
   const isEditSession = Boolean(editId);
 
-  const allPermissions = permissions?.data?.permissions || [];
+  const { rolePermissions: rolePermissionsStare, isLoading: isLoadingPermissions } =
+    useGetRolePermissions(editId);
+
+  const { updateRolePermissions } = useUpdateRolePermissions();
+
+  const allPermissions = useMemo(() => {
+    return rolePermissionsStare?.data?.permissions || [];
+  }, [rolePermissionsStare]);
+
+  // const asignedPermissions = allPermissions.filter((permission) => {
+  //   if (permission.assigned) {
+  //     return permission.idguid;
+  //   }
+  // });
+  // console.log(asignedPermissions);
 
   const { handleSubmit, reset, formState, register } = useForm({
     defaultValues: isEditSession ? editValues : {},
@@ -43,6 +58,14 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
     );
   };
 
+  useEffect(() => {
+    if (isEditSession && allPermissions.length > 0) {
+      const assigned = allPermissions.filter((perm) => perm.assigned).map((perm) => perm.idguid);
+
+      setSelectedPermissions(assigned);
+    }
+  }, [isEditSession, allPermissions]);
+
   function handleSelectAllToggle() {
     // if (!permissions || permissions.length === 0) return;
 
@@ -59,11 +82,8 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
     }
   }
 
-  console.log('isLoadingPermissions', isLoadingPermissions);
-  console.log('permisije', permissions);
-
   function onSubmit(data) {
-    if (isEditSession)
+    if (isEditSession) {
       updateRole(
         { data, editId },
         {
@@ -73,7 +93,16 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
           },
         }
       );
-    else
+      updateRolePermissions(
+        { selectedPermissions, editId },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
+    } else
       postRole(
         { ...data },
         {
@@ -91,7 +120,7 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
-      <FormRow columns="1fr 1fr">
+      <FormRow columns={isEditSession ? '1fr 1fr' : '1fr'}>
         <FormField label="Naziv role" error={errors?.name?.message} required>
           <Input
             autoFocus
@@ -108,13 +137,13 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
           <Input type="text" id="description" disabled={isWorking} {...register('description')} />
         </FormField>
       </FormRow>
-      <br />
-      <hr />
-      <br />
-      <Heading as="h5">Odaberite dozvole za rolu:</Heading>
 
-      {!isLoadingPermissions && allPermissions.length > 0 && (
+      {!isLoadingPermissions && allPermissions.length > 0 && isEditSession && (
         <>
+          <br />
+          <hr />
+          <br />
+          <Heading as="h5">Odaberite dozvole za rolu:</Heading>
           <div style={{ margin: '1rem 0' }}>
             <label
               style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
@@ -126,7 +155,7 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
                 }
                 onChange={handleSelectAllToggle}
               />
-              Označi/odznači sve
+              Označi sve
             </label>
           </div>
 

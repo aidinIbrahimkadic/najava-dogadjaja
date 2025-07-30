@@ -42,7 +42,7 @@ function RoleRow({ role, index }) {
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
-          <Modal.Window name="Uredi rolu" size="large">
+          <Modal.Window name="Uredi rolu" size="xl">
             <CreateRoleForm roleToEdit={role} />
           </Modal.Window>
           <Modal.Window name="Izbriši rolu" size="small">
