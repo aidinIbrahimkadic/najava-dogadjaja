@@ -13,6 +13,7 @@ import { useGetInstitutions } from '../institutions/useInstitutions';
 import Spinner from '../../ui/Spinner';
 import Select from '../../ui/Select';
 import Heading from '../../ui/Heading';
+import { useGetRoles } from '../roles/useRoles';
 
 // Unified styled component for all input types
 const StyledInput = styled(Input)`
@@ -92,10 +93,12 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
   const { isCreating, postUser } = usePostUser();
   const { isEditing, updateUser } = useUpdateUser();
   const { isLoading, institutions } = useGetInstitutions();
+  const { isLoading: isLoadingRoles, roles } = useGetRoles();
   const isWorking = isCreating || isEditing;
   const { idguid: editId, ...editValues } = userToEdit;
   const isEditSession = Boolean(editId);
 
+  console.log(roles);
   const { handleSubmit, reset, control, formState, getValues, watch, setValue, register } = useForm(
     {
       defaultValues: isEditSession ? editValues : {},
@@ -130,6 +133,8 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
     // console.log(errors);
   }
 
+  console.log(roles);
+
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
       <FormRow columns="1fr">
@@ -159,7 +164,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
       </FormRow>
       <FormRow columns="1fr 1fr">
         <FormField label="Institucija" required error={errors?.institution_idguid?.message}>
-          {isLoading ? (
+          {isLoadingRoles ? (
             <Spinner />
           ) : (
             <Select
@@ -180,21 +185,42 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
           )}
         </FormField>
 
-        <FormField label="Rola" required error={errors?.first_name?.message}>
+        <FormField label="Uloga" required error={errors?.role_idguid?.message}>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <Select
+              id="role_idguid"
+              name="role_idguid"
+              options={roles.data.roles.map((c) => ({
+                value: c.idguid,
+                label: c.name,
+              }))}
+              disabled={isWorking}
+              register={register}
+              setValue={setValue}
+              watch={watch}
+              validation={{
+                required: 'Molimo odaberite odgovarajuću rolu',
+              }}
+            />
+          )}
+        </FormField>
+
+        {/* <FormField label="Uloga" required error={errors?.first_name?.message}>
           <Controller
             name="first_name"
             control={control}
             render={({ field }) => (
               <StyledInput
-                // autoFocus
                 {...field}
-                placeholder="Rola"
+                placeholder="Uloga"
                 size="large"
                 status={errors.email ? 'error' : ''}
               />
             )}
           />
-        </FormField>
+        </FormField> */}
       </FormRow>
       <FormRow columns="1fr 1fr">
         <FormField label="Ime korisnika" error={errors?.first_name?.message}>
