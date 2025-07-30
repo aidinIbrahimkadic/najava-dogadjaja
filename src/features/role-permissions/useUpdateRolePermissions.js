@@ -14,7 +14,7 @@ export function useUpdateRolePermissions() {
     mutationFn: updateRolePermissionsAPI,
     onSuccess: () => {
       queryClient.invalidateQueries(['rolePermissions']);
-      toast.success(`Uspješno izmijenjene permisije za rolu`);
+      toast.success(`Uspješno izmijenjena rola`);
     },
     onError: (error) => {
       toast.error(`${error.message}`);
