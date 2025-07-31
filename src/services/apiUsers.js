@@ -31,7 +31,15 @@ export async function deleteUser(id) {
   }
 }
 
-export async function postUser({ email, first_name, last_name, password, password2, roles }) {
+export async function postUser({
+  email,
+  first_name,
+  last_name,
+  password,
+  password2,
+  institucija_idguid,
+  roles,
+}) {
   if (!email) throw new Error('Email korisnika je obavezan');
 
   try {
@@ -41,6 +49,7 @@ export async function postUser({ email, first_name, last_name, password, passwor
       last_name,
       password,
       password2,
+      institucija_idguid,
       roles,
     });
     return response.data;
@@ -50,7 +59,7 @@ export async function postUser({ email, first_name, last_name, password, passwor
 }
 
 export async function updateUser({
-  data: { email, first_name, last_name, password, password2, roles },
+  data: { email, first_name, last_name, password, password2, institucija, roles },
   editId: id,
 }) {
   if (!id) throw new Error('User ID is required');
@@ -62,11 +71,48 @@ export async function updateUser({
       first_name,
       last_name,
       password,
+      institucija_idguid: institucija,
       password2,
       roles,
     });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Greška pri ažuriranju korisnika');
+  }
+}
+
+// UserRoles
+export async function getUserRoles(id) {
+  if (!id) throw new Error('User ID is required');
+
+  try {
+    const response = await axiosInstance.get(`/admin/user-roles/${id}?limit=40`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju korisnika');
+  }
+}
+
+export async function updateUserRoles({ selectedRole, editId: id }) {
+  if (!id) throw new Error('User ID is required');
+
+  try {
+    const response = await axiosInstance.put(`/admin/user-roles/${id}`, {
+      role_idguids: [selectedRole],
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri ažuriranju korisnika');
+  }
+}
+
+export async function deleteUserRoles(id) {
+  if (!id) throw new Error('User ID is required');
+
+  try {
+    await axiosInstance.delete(`/admin/user-roles/${id}`);
+    return id;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri brisanju uloge');
   }
 }

@@ -236,7 +236,7 @@ const Select = ({
   const wrapperRef = useRef(null);
 
   const selectedValue = watch?.(name); // WATCH current value
-  const selectedLabel = options.find((opt) => opt.value === selectedValue)?.label || '';
+  const selectedLabel = options?.find((opt) => opt.value === selectedValue)?.label || '';
 
   const handleKeyDown = (e) => {
     if (!isOpen) {

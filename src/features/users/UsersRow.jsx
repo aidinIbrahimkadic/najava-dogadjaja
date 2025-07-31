@@ -7,16 +7,19 @@ import Modal from '../../ui/Modal';
 import Menus from '../../ui/Menus';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 
-import { HiTrash, HiPencilSquare } from 'react-icons/hi2';
+import { HiTrash, HiPencilSquare, HiLockClosed } from 'react-icons/hi2';
 import Cell from '../../ui/Cell';
 import CreateUserForm from './CreateUserForm';
+import { useGetUser } from './useUser';
 // import CreateLocationForm from './CreateLocationForm';
 
 function UserRow({ user, index }) {
   //   const navigate = useNavigate();
   const { mutate: deleteUser, isPending } = useDeleteUser();
 
-  const { idguid, email, first_name, last_name } = user;
+  const { idguid, email, first_name, last_name, institucija } = user;
+
+  const { user: moreOnUser } = useGetUser(idguid);
 
   function handleDelete(id) {
     deleteUser(id);
@@ -28,7 +31,8 @@ function UserRow({ user, index }) {
       <Cell>{email}</Cell>
       <Cell>{first_name}</Cell>
       <Cell>{last_name}</Cell>
-      <Cell>Neka institucija</Cell>
+      <Cell>{institucija?.naziv}</Cell>
+      <Cell>{moreOnUser?.data?.roles[0]?.name}</Cell>
       <Cell>
         <Modal>
           <Menus.Menu>
@@ -39,6 +43,11 @@ function UserRow({ user, index }) {
                   Uredi
                 </Menus.Button>
               </Modal.Open>
+              <Modal.Open opens="Izmijeni password">
+                <Menus.Button title="Izmijeni password" icon={<HiLockClosed />}>
+                  Izmijeni password
+                </Menus.Button>
+              </Modal.Open>
               <Modal.Open opens="Izbriši korisnika">
                 <Menus.Button title="Izbriši korisnika" icon={<HiTrash />}>
                   Izbriši
@@ -47,6 +56,9 @@ function UserRow({ user, index }) {
             </Menus.List>
           </Menus.Menu>
           <Modal.Window name="Uredi korisnika" size="large">
+            <CreateUserForm userToEdit={user} />
+          </Modal.Window>
+          <Modal.Window name="Izmijeni password" size="large">
             <CreateUserForm userToEdit={user} />
           </Modal.Window>
           <Modal.Window name="Izbriši korisnika" size="small">

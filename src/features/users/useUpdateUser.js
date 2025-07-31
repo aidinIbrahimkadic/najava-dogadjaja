@@ -13,6 +13,7 @@ export function useUpdateUser() {
   } = useMutation({
     mutationFn: updateUserAPI,
     onSuccess: () => {
+      toast.success('Uspješno izmjenjen korisnik!');
       queryClient.invalidateQueries(['users']);
     },
     onError: (error) => {

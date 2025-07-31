@@ -14,13 +14,14 @@ export default function UsersTable() {
 
   return (
     <Menus>
-      <Table columns=".1fr 2fr  1fr 1fr 1fr .1fr">
+      <Table columns=".1fr 2fr  1fr 1fr 1fr 1fr .1fr">
         <Table.Header>
           <div>#</div>
           <div>Email</div>
           <div>Ime</div>
           <div>Prezime</div>
           <div>Institucija</div>
+          <div>Uloga</div>
           <div></div>
         </Table.Header>
         <Table.Body
