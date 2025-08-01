@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-
 import { useDeleteLocation } from './useDeleteLocation';
 
 import Table from '../../ui/Table';
@@ -11,10 +9,12 @@ import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
 import Cell from '../../ui/Cell';
 import CreateLocationForm from './CreateLocationForm';
 import { useGetUser } from '../users/useUser';
+import { useUserPermissions } from '../authentication/useUserPermissions';
+import Spinner from '../../ui/Spinner';
 
 function LocationRow({ location, index }) {
-  const navigate = useNavigate();
   const { mutate: deleteLocation, isPending } = useDeleteLocation();
+  const { isLoading, hasPermission } = useUserPermissions();
 
   const { idguid, naziv, adresa, mjesto, operater } = location;
   const { user } = useGetUser(operater);
@@ -25,6 +25,9 @@ function LocationRow({ location, index }) {
     deleteLocation(id);
   }
 
+  {
+    isLoading && <Spinner />;
+  }
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
@@ -36,31 +39,36 @@ function LocationRow({ location, index }) {
           <Menus.Menu>
             <Menus.Toggle id={idguid} />
             <Menus.List id={idguid}>
-              <Menus.Button icon={<HiEye />} onClick={() => navigate(`/lokacije/${idguid}`)}>
-                Više detalja
-              </Menus.Button>
-              <Modal.Open opens="Uredi lokaciju">
-                <Menus.Button title="Uredi lokaciju" icon={<HiPencilSquare />}>
-                  Uredi
-                </Menus.Button>
-              </Modal.Open>
-              <Modal.Open opens="Izbriši lokaciju">
-                <Menus.Button title="Izbriši lokaciju" icon={<HiTrash />}>
-                  Izbriši
-                </Menus.Button>
-              </Modal.Open>
+              {hasPermission('events_lokacije_save') && (
+                <Modal.Open opens="Uredi lokaciju">
+                  <Menus.Button title="Uredi lokaciju" icon={<HiPencilSquare />}>
+                    Uredi
+                  </Menus.Button>
+                </Modal.Open>
+              )}
+              {hasPermission('events_lokacije_delete') && (
+                <Modal.Open opens="Izbriši lokaciju">
+                  <Menus.Button title="Izbriši lokaciju" icon={<HiTrash />}>
+                    Izbriši
+                  </Menus.Button>
+                </Modal.Open>
+              )}
             </Menus.List>
           </Menus.Menu>
-          <Modal.Window name="Uredi lokaciju" size="large">
-            <CreateLocationForm locationToEdit={location} user_email={user_email} />
-          </Modal.Window>
-          <Modal.Window name="Izbriši lokaciju" size="small">
-            <ConfirmDelete
-              resourceName="location"
-              disabled={isPending}
-              onConfirm={() => handleDelete(idguid)}
-            />
-          </Modal.Window>
+          {hasPermission('events_lokacije_save') && (
+            <Modal.Window name="Uredi lokaciju" size="large">
+              <CreateLocationForm locationToEdit={location} user_email={user_email} />
+            </Modal.Window>
+          )}
+          {hasPermission('events_lokacije_delete') && (
+            <Modal.Window name="Izbriši lokaciju" size="small">
+              <ConfirmDelete
+                resourceName="location"
+                disabled={isPending}
+                onConfirm={() => handleDelete(idguid)}
+              />
+            </Modal.Window>
+          )}
         </Modal>
       </Cell>
     </Table.Row>

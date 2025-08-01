@@ -17,22 +17,14 @@ import Checkbox from '../../ui/Checkbox';
 import { ImageCell } from '../../ui/ImageCell';
 import { useGetLocation } from '../locations/useLocation';
 import Spinner from '../../ui/Spinner';
+import { useUserPermissions } from '../authentication/useUserPermissions';
 
 function EventRow({ event, index }) {
   const navigate = useNavigate();
   const { mutate: deleteEvent, isPending } = useDeleteEvent();
+  const { isLoading, hasPermission } = useUserPermissions();
 
-  const {
-    idguid,
-    category_idguid,
-    cijena,
-    title,
-    location,
-    slika,
-    is_public,
-    start_date,
-    end_date,
-  } = event;
+  const { idguid, category_idguid, cijena, title, location, slika, is_public, start_date } = event;
 
   const { isLoading: isLoadingLocation, location: lokacija } = useGetLocation(location);
 
@@ -43,6 +35,10 @@ function EventRow({ event, index }) {
   //POPRAVITI
   const { category } = useGetCategory(category_idguid);
   const categoryName = category?.naziv;
+
+  {
+    isLoading && <Spinner />;
+  }
 
   return (
     <Table.Row>
@@ -63,7 +59,6 @@ function EventRow({ event, index }) {
         <Badge bgColor={category?.boja}>{categoryName}</Badge>
       </Cell>
       <TwoRowCell>{start_date}</TwoRowCell>
-      <TwoRowCell>{end_date}</TwoRowCell>
       <Cell>
         <Checkbox checked={is_public} disabled />
       </Cell>
@@ -75,28 +70,36 @@ function EventRow({ event, index }) {
               <Menus.Button icon={<HiEye />} onClick={() => navigate(`/events/${idguid}`)}>
                 Više detalja
               </Menus.Button>
-              <Modal.Open opens="Uredi događaj">
-                <Menus.Button title="Uredi događaj" icon={<HiPencilSquare />}>
-                  Uredi
-                </Menus.Button>
-              </Modal.Open>
-              <Modal.Open opens="Izbriši događaj">
-                <Menus.Button title="Izbriši događaj" icon={<HiTrash />}>
-                  Izbriši
-                </Menus.Button>
-              </Modal.Open>
+              {hasPermission('events_save') && (
+                <Modal.Open opens="Uredi događaj">
+                  <Menus.Button title="Uredi događaj" icon={<HiPencilSquare />}>
+                    Uredi
+                  </Menus.Button>
+                </Modal.Open>
+              )}
+              {hasPermission('events_delete') && (
+                <Modal.Open opens="Izbriši događaj">
+                  <Menus.Button title="Izbriši događaj" icon={<HiTrash />}>
+                    Izbriši
+                  </Menus.Button>
+                </Modal.Open>
+              )}
             </Menus.List>
           </Menus.Menu>
-          <Modal.Window name="Uredi događaj" size="xl">
-            <CreateEventForm eventToEdit={event} />
-          </Modal.Window>
-          <Modal.Window name="Izbriši događaj" size="small">
-            <ConfirmDelete
-              resourceName="event"
-              disabled={isPending}
-              onConfirm={() => handleDelete(idguid)}
-            />
-          </Modal.Window>
+          {hasPermission('events_save') && (
+            <Modal.Window name="Uredi događaj" size="xl">
+              <CreateEventForm eventToEdit={event} />
+            </Modal.Window>
+          )}
+          {hasPermission('events_delete') && (
+            <Modal.Window name="Izbriši događaj" size="small">
+              <ConfirmDelete
+                resourceName="event"
+                disabled={isPending}
+                onConfirm={() => handleDelete(idguid)}
+              />
+            </Modal.Window>
+          )}
         </Modal>
       </Cell>
     </Table.Row>

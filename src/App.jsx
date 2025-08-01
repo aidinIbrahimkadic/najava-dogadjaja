@@ -38,23 +38,73 @@ function App() {
           <Routes>
             <Route
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredPermission="admin_dashboard">
                   <AppLayout />
                 </ProtectedRoute>
               }
             >
               <Route element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/events" element={<Events />} />
+              <Route
+                path="/events"
+                element={
+                  <ProtectedRoute requiredPermission="events_pregled">
+                    <Events />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/event/:eventId" element={<Event />} />
-              <Route path="/categories" element={<Categories />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/institutions" element={<Institutions />} />
-              <Route path="/locations" element={<Locations />} />
+              <Route
+                path="/categories"
+                element={
+                  <ProtectedRoute requiredPermission="events_categories_pregled">
+                    <Categories />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute requiredPermission="admin_settings_pregled">
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/institutions"
+                element={
+                  <ProtectedRoute requiredPermission="events_institucije_pregled">
+                    <Institutions />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/locations"
+                element={
+                  <ProtectedRoute requiredPermission="events_lokacije_pregled">
+                    <Locations />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/account" element={<Account />} />
               <Route path="/me" element={<UserProfile />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/roles" element={<Roles />} />
+              <Route
+                path="/users"
+                element={
+                  <ProtectedRoute requiredPermission="admin_users_save">
+                    <Users />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/roles"
+                element={
+                  <ProtectedRoute requiredPermission="admin_roles_save">
+                    <Roles />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<PageNotFound />} />
             </Route>
             <Route element={<AppLayoutFront />}>

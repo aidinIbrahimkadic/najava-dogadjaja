@@ -14,6 +14,7 @@ import { useGetRolePermissions } from '../role-permissions/useRolePermissions';
 import { useUpdateRolePermissions } from '../role-permissions/useUpdateRolePermissions';
 import Spinner from '../../ui/Spinner';
 import CalendarSpinner from '../../ui/CalendarSpinner';
+import { useUserPermissions } from '../authentication/useUserPermissions';
 
 // Unified styled component for all input types
 
@@ -24,6 +25,7 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
   const isWorking = isCreating || isEditing;
   const { idguid: editId, permissions: rolePermissions = [], ...editValues } = roleToEdit;
   const isEditSession = Boolean(editId);
+  const { isLoading, hasPermission } = useUserPermissions();
 
   const { rolePermissions: rolePermissionsStare, isLoading: isLoadingPermissions } =
     useGetRolePermissions(editId);
@@ -120,6 +122,9 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
     // console.log(errors);
   }
 
+  {
+    isLoading && <Spinner />;
+  }
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
       {isLoadingPermissions ? (
@@ -148,50 +153,53 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
               />
             </FormField>
           </FormRow>
-          {!isLoadingPermissions && allPermissions.length > 0 && isEditSession && (
-            <>
-              <br />
-              <hr />
-              <br />
-              <Heading as="h5">Odaberite dozvole za rolu:</Heading>
-              <div style={{ margin: '1rem 0' }}>
-                <label
+          {!isLoadingPermissions &&
+            allPermissions.length > 0 &&
+            isEditSession &&
+            hasPermission('admin_roles_permissions_save') && (
+              <>
+                <br />
+                <hr />
+                <br />
+                <Heading as="h5">Odaberite dozvole za rolu:</Heading>
+                <div style={{ margin: '1rem 0' }}>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Checkbox
+                      checked={
+                        allPermissions.length > 0 &&
+                        allPermissions.every((p) => selectedPermissions.includes(p.idguid))
+                      }
+                      onChange={handleSelectAllToggle}
+                    />
+                    Označi sve
+                  </label>
+                </div>
+
+                <div
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    cursor: 'pointer',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                    gap: '1rem',
                   }}
                 >
-                  <Checkbox
-                    checked={
-                      allPermissions.length > 0 &&
-                      allPermissions.every((p) => selectedPermissions.includes(p.idguid))
-                    }
-                    onChange={handleSelectAllToggle}
-                  />
-                  Označi sve
-                </label>
-              </div>
-
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                  gap: '1rem',
-                }}
-              >
-                {allPermissions.map((permission) => (
-                  <PermissionItem
-                    key={permission.idguid}
-                    permission={permission}
-                    checked={selectedPermissions.includes(permission.idguid)}
-                    onChange={handlePermissionToggle}
-                  />
-                ))}
-              </div>
-            </>
-          )}
+                  {allPermissions.map((permission) => (
+                    <PermissionItem
+                      key={permission.idguid}
+                      permission={permission}
+                      checked={selectedPermissions.includes(permission.idguid)}
+                      onChange={handlePermissionToggle}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           <br />
           <FormRow>
             <Button

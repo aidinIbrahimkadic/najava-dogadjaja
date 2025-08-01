@@ -39,8 +39,6 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   const isWorking = isCreating || isEditing;
 
-  console.log(eventToEdit);
-
   let formatedValues = {};
 
   const { idguid: editIdd } = eventToEdit;

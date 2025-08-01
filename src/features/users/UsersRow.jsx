@@ -13,11 +13,13 @@ import CreateUserForm from './CreateUserForm';
 import { useGetUser } from './useUser';
 import EditUserPasswordForm from './EditUserPasswordForm';
 import Spinner from '../../ui/Spinner';
+import { useUserPermissions } from '../authentication/useUserPermissions';
 // import CreateLocationForm from './CreateLocationForm';
 
 function UserRow({ user, index }) {
   //   const navigate = useNavigate();
   const { mutate: deleteUser, isPending } = useDeleteUser();
+  const { isLoading, hasPermission } = useUserPermissions();
 
   const { idguid, email, first_name, last_name, institucija } = user;
 
@@ -25,6 +27,10 @@ function UserRow({ user, index }) {
 
   function handleDelete(id) {
     deleteUser(id);
+  }
+
+  {
+    isLoading && <Spinner />;
   }
 
   return (
@@ -47,31 +53,42 @@ function UserRow({ user, index }) {
                   Uredi
                 </Menus.Button>
               </Modal.Open>
-              <Modal.Open opens="Izmijeni password">
-                <Menus.Button title="Izmijeni password" icon={<HiLockClosed />}>
-                  Izmijeni password
-                </Menus.Button>
-              </Modal.Open>
-              <Modal.Open opens="Izbriši korisnika">
-                <Menus.Button title="Izbriši korisnika" icon={<HiTrash />}>
-                  Izbriši
-                </Menus.Button>
-              </Modal.Open>
+              {hasPermission('admin_users_save') && (
+                <Modal.Open opens="Izmijeni password">
+                  <Menus.Button title="Izmijeni password" icon={<HiLockClosed />}>
+                    Izmijeni password
+                  </Menus.Button>
+                </Modal.Open>
+              )}
+              {hasPermission('admin_users_delete') && (
+                <Modal.Open opens="Izbriši korisnika">
+                  <Menus.Button title="Izbriši korisnika" icon={<HiTrash />}>
+                    Izbriši
+                  </Menus.Button>
+                </Modal.Open>
+              )}
             </Menus.List>
           </Menus.Menu>
-          <Modal.Window name="Uredi korisnika" size="large">
-            <CreateUserForm userToEdit={user} />
-          </Modal.Window>
-          <Modal.Window name="Izmijeni password" size="large">
-            <EditUserPasswordForm userToEdit={user} />
-          </Modal.Window>
-          <Modal.Window name="Izbriši korisnika" size="small">
-            <ConfirmDelete
-              resourceName="user"
-              disabled={isPending}
-              onConfirm={() => handleDelete(idguid)}
-            />
-          </Modal.Window>
+          {hasPermission('admin_users_save') && (
+            <>
+              <Modal.Window name="Uredi korisnika" size="large">
+                <CreateUserForm userToEdit={user} />
+              </Modal.Window>
+              <Modal.Window name="Izmijeni password" size="large">
+                <EditUserPasswordForm userToEdit={user} />
+              </Modal.Window>
+            </>
+          )}
+
+          {hasPermission('admin_users_delete') && (
+            <Modal.Window name="Izbriši korisnika" size="small">
+              <ConfirmDelete
+                resourceName="user"
+                disabled={isPending}
+                onConfirm={() => handleDelete(idguid)}
+              />
+            </Modal.Window>
+          )}
         </Modal>
       </Cell>
     </Table.Row>

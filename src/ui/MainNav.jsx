@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { useSidebarCollapsed } from '../context/SidebarContext';
 
+import CalendarSpinner from './CalendarSpinner';
+
 import {
   HiOutlineHome,
   HiOutlineNumberedList,
@@ -13,6 +15,7 @@ import {
   HiOutlineMap,
   HiOutlineIdentification,
 } from 'react-icons/hi2';
+import { useUserPermissions } from '../features/authentication/useUserPermissions';
 
 const NavList = styled.ul`
   display: flex;
@@ -81,7 +84,11 @@ const Label = styled.span.withConfig({
 `;
 export default function MainNav() {
   const { isCollapsed } = useSidebarCollapsed();
+  const { isLoading, hasPermission } = useUserPermissions();
 
+  {
+    isLoading && <CalendarSpinner />;
+  }
   return (
     <nav>
       <NavList>
@@ -93,71 +100,80 @@ export default function MainNav() {
             <Label isCollapsed={isCollapsed}>Početna</Label>
           </StyledNavLink>
         </li>
-        <li>
-          <StyledNavLink to="/events">
-            <IconWrapper>
-              <HiOutlineCalendarDays />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Događaji</Label>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/categories">
-            <IconWrapper>
-              <HiOutlineNumberedList />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Kategorije</Label>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/locations">
-            <IconWrapper>
-              <HiOutlineMap />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Lokacije</Label>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/institutions">
-            <IconWrapper>
-              <HiOutlineBuildingLibrary />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Institucije</Label>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/settings">
-            <IconWrapper>
-              <HiOutlineCog6Tooth />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Postavke</Label>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/users">
-            <IconWrapper>
-              <HiOutlineUsers />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Korisnici</Label>
-          </StyledNavLink>
-        </li>
-        {/* POPRAVITI  Izbaciti iz navigacije*/}
-        <li>
-          <StyledNavLink to="/roles">
-            <IconWrapper>
-              <HiOutlineIdentification />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Uloge</Label>
-          </StyledNavLink>
-        </li>
-        {/* <li>
-          <StyledNavLink to="/permissions">
-            <IconWrapper>
-              <HiOutlineCog6Tooth />
-            </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Dozvole</Label>
-          </StyledNavLink>
-        </li> */}
+        {hasPermission('events_pregled') && (
+          <li>
+            <StyledNavLink to="/events">
+              <IconWrapper>
+                <HiOutlineCalendarDays />
+              </IconWrapper>
+              <Label isCollapsed={isCollapsed}>Događaji</Label>
+            </StyledNavLink>
+          </li>
+        )}
+
+        {hasPermission('events_categories_pregled') && (
+          <li>
+            <StyledNavLink to="/categories">
+              <IconWrapper>
+                <HiOutlineNumberedList />
+              </IconWrapper>
+              <Label isCollapsed={isCollapsed}>Kategorije</Label>
+            </StyledNavLink>
+          </li>
+        )}
+
+        {hasPermission('events_lokacije_pregled') && (
+          <li>
+            <StyledNavLink to="/locations">
+              <IconWrapper>
+                <HiOutlineMap />
+              </IconWrapper>
+              <Label isCollapsed={isCollapsed}>Lokacije</Label>
+            </StyledNavLink>
+          </li>
+        )}
+
+        {hasPermission('events_institucije_pregled') && (
+          <li>
+            <StyledNavLink to="/institutions">
+              <IconWrapper>
+                <HiOutlineBuildingLibrary />
+              </IconWrapper>
+              <Label isCollapsed={isCollapsed}>Institucije</Label>
+            </StyledNavLink>
+          </li>
+        )}
+
+        {hasPermission('admin_settings_pregled') && (
+          <li>
+            <StyledNavLink to="/settings">
+              <IconWrapper>
+                <HiOutlineCog6Tooth />
+              </IconWrapper>
+              <Label isCollapsed={isCollapsed}>Postavke</Label>
+            </StyledNavLink>
+          </li>
+        )}
+        {hasPermission('admin_users_save') && (
+          <li>
+            <StyledNavLink to="/users">
+              <IconWrapper>
+                <HiOutlineUsers />
+              </IconWrapper>
+              <Label isCollapsed={isCollapsed}>Korisnici</Label>
+            </StyledNavLink>
+          </li>
+        )}
+        {hasPermission('admin_roles_save') && (
+          <li>
+            <StyledNavLink to="/roles">
+              <IconWrapper>
+                <HiOutlineIdentification />
+              </IconWrapper>
+              <Label isCollapsed={isCollapsed}>Uloge</Label>
+            </StyledNavLink>
+          </li>
+        )}
 
         <li>
           <StyledNavLink to="/">

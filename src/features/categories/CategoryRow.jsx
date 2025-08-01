@@ -11,6 +11,8 @@ import { useDeleteCategory } from './useDeleteCategory';
 import { HiTrash, HiPencilSquare } from 'react-icons/hi2';
 import { useGetUser } from '../users/useUser';
 import BadgeIcon from '../../ui/BadgeIcon';
+import { useUserPermissions } from '../authentication/useUserPermissions';
+import Spinner from '../../ui/Spinner';
 
 const Cell = styled.div`
   font-weight: 400;
@@ -22,6 +24,7 @@ const Cell = styled.div`
 
 function CategoryRow({ category, index }) {
   const { mutate: deleteCategory, isPending } = useDeleteCategory();
+  const { isLoading, hasPermission } = useUserPermissions();
 
   const { idguid, naziv, operater, opis, boja, ikona } = category;
   const IconComponent = FaIcons[ikona];
@@ -31,6 +34,10 @@ function CategoryRow({ category, index }) {
 
   function handleDelete(id) {
     deleteCategory(id);
+  }
+
+  {
+    isLoading && <Spinner />;
   }
 
   return (
@@ -60,29 +67,36 @@ function CategoryRow({ category, index }) {
           <Menus.Menu>
             <Menus.Toggle id={idguid} />
             <Menus.List id={idguid}>
-              <Modal.Open opens="Uredi kategoriju">
-                <Menus.Button title="Uredi kategoriju" icon={<HiPencilSquare />}>
-                  Uredi
-                </Menus.Button>
-              </Modal.Open>
-              <Modal.Open opens="Izbriši kategoriju">
-                <Menus.Button title="Izbriši kategoriju" icon={<HiTrash />}>
-                  Izbriši
-                </Menus.Button>
-              </Modal.Open>
+              {hasPermission('events_categories_save') && (
+                <Modal.Open opens="Uredi kategoriju">
+                  <Menus.Button title="Uredi kategoriju" icon={<HiPencilSquare />}>
+                    Uredi
+                  </Menus.Button>
+                </Modal.Open>
+              )}
+              {hasPermission('events_categories_delete') && (
+                <Modal.Open opens="Izbriši kategoriju">
+                  <Menus.Button title="Izbriši kategoriju" icon={<HiTrash />}>
+                    Izbriši
+                  </Menus.Button>
+                </Modal.Open>
+              )}
             </Menus.List>
           </Menus.Menu>
-
-          <Modal.Window name="Uredi kategoriju" size="medium">
-            <CreateCategoryForm categoryToEdit={category} />
-          </Modal.Window>
-          <Modal.Window name="Izbriši kategoriju" size="small">
-            <ConfirmDelete
-              resourceName="categories"
-              disabled={isPending}
-              onConfirm={() => handleDelete(idguid)}
-            />
-          </Modal.Window>
+          {hasPermission('events_categories_save') && (
+            <Modal.Window name="Uredi kategoriju" size="medium">
+              <CreateCategoryForm categoryToEdit={category} />
+            </Modal.Window>
+          )}
+          {hasPermission('events_categories_delete') && (
+            <Modal.Window name="Izbriši kategoriju" size="small">
+              <ConfirmDelete
+                resourceName="categories"
+                disabled={isPending}
+                onConfirm={() => handleDelete(idguid)}
+              />
+            </Modal.Window>
+          )}
         </Modal>
       </Cell>
     </Table.Row>

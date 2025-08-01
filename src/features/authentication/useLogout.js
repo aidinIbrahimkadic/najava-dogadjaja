@@ -5,14 +5,6 @@ export function useLogout() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  // function logout() {
-  //   localStorage.removeItem('eventsToken');
-  //   localStorage.removeItem('refreshToken');
-  //   queryClient.clear();
-
-  //   navigate('/');
-  // }
-
   function logout() {
     localStorage.removeItem('eventsToken');
     localStorage.removeItem('refreshToken');
