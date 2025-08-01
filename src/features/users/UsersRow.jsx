@@ -11,6 +11,8 @@ import { HiTrash, HiPencilSquare, HiLockClosed } from 'react-icons/hi2';
 import Cell from '../../ui/Cell';
 import CreateUserForm from './CreateUserForm';
 import { useGetUser } from './useUser';
+import EditUserPasswordForm from './EditUserPasswordForm';
+import Spinner from '../../ui/Spinner';
 // import CreateLocationForm from './CreateLocationForm';
 
 function UserRow({ user, index }) {
@@ -19,7 +21,7 @@ function UserRow({ user, index }) {
 
   const { idguid, email, first_name, last_name, institucija } = user;
 
-  const { user: moreOnUser } = useGetUser(idguid);
+  const { isLoading: isLoadingMoreOnUser, user: moreOnUser } = useGetUser(idguid);
 
   function handleDelete(id) {
     deleteUser(id);
@@ -32,7 +34,9 @@ function UserRow({ user, index }) {
       <Cell>{first_name}</Cell>
       <Cell>{last_name}</Cell>
       <Cell>{institucija?.naziv}</Cell>
-      <Cell>{moreOnUser?.data?.roles[0]?.name}</Cell>
+      <Cell>
+        {isLoadingMoreOnUser ? <Spinner size="small" /> : moreOnUser?.data?.roles[0]?.name}
+      </Cell>
       <Cell>
         <Modal>
           <Menus.Menu>
@@ -59,7 +63,7 @@ function UserRow({ user, index }) {
             <CreateUserForm userToEdit={user} />
           </Modal.Window>
           <Modal.Window name="Izmijeni password" size="large">
-            <CreateUserForm userToEdit={user} />
+            <EditUserPasswordForm userToEdit={user} />
           </Modal.Window>
           <Modal.Window name="Izbriši korisnika" size="small">
             <ConfirmDelete

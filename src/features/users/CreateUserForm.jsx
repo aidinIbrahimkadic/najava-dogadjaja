@@ -480,7 +480,6 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
 
   function onSubmit(data) {
     const newRoleId = getValues('role_idguid');
-
     if (isEditSession) {
       updateUser(
         { data, editId },
@@ -511,8 +510,8 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
         last_name: data.last_name,
         password: data.password,
         password2: data.password2,
-        institucija_idguid: data.institucija, // Change from 'institucija' to 'institucija_idguid'
-        roles: data.role_idguid ? [data.role_idguid] : [], // Convert role to array format
+        institucija_idguid: data.institucija,
+        roles: data.role_idguid ? [data.role_idguid] : [],
       };
 
       postUser(formattedData, {
@@ -554,7 +553,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
       <FormRow columns="1fr 1fr">
         <FormField label="Institucija" error={errors?.institucija?.message}>
           {isLoadingInstitutions ? (
-            <Spinner />
+            <Spinner size="small" />
           ) : (
             <Select
               id="institucija"
@@ -573,7 +572,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
 
         <FormField label="Uloga" required error={errors?.role_idguid?.message}>
           {isLoadingRoles || isLoadingUser ? (
-            <Spinner />
+            <Spinner size="small" />
           ) : (
             <Select
               id="role_idguid"
@@ -633,59 +632,63 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
         </FormField>
       </FormRow>
 
-      <hr />
-      <Heading as="h3">Sigurnosne postavke</Heading>
+      {!isEditSession && (
+        <>
+          <Heading as="h3">Sigurnosne postavke</Heading>
 
-      <FormRow columns="1fr 1fr">
-        <FormField label="Lozinka" error={errors?.password?.message} required>
-          <Controller
-            name="password"
-            control={control}
-            rules={{
-              required: 'Molimo unesite lozinku!',
-              minLength: {
-                value: 8,
-                message: 'Lozinka mora imati najmanje 8 znakova!',
-              },
-              pattern: {
-                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-                message: 'Lozinka mora sadržavati velika slova, mala slova i brojeve!',
-              },
-            }}
-            render={({ field }) => (
-              <StyledPasswordInput
-                {...field}
-                autoComplete="new-password"
-                prefix={<LockOutlined />}
-                placeholder="Lozinka"
-                size="large"
-                status={errors.password ? 'error' : ''}
+          <FormRow columns="1fr 1fr">
+            <FormField label="Lozinka" error={errors?.password?.message} required>
+              <Controller
+                name="password"
+                control={control}
+                rules={{
+                  required: 'Molimo unesite lozinku!',
+                  minLength: {
+                    value: 8,
+                    message: 'Lozinka mora imati najmanje 8 znakova!',
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+                    message: 'Lozinka mora sadržavati velika slova, mala slova i brojeve!',
+                  },
+                }}
+                render={({ field }) => (
+                  <StyledPasswordInput
+                    {...field}
+                    autoComplete="new-password"
+                    prefix={<LockOutlined />}
+                    placeholder="Lozinka"
+                    size="large"
+                    status={errors.password ? 'error' : ''}
+                  />
+                )}
               />
-            )}
-          />
-        </FormField>
+            </FormField>
 
-        <FormField label="Ponovite lozinku" error={errors?.password2?.message} required>
-          <Controller
-            name="password2"
-            control={control}
-            rules={{
-              required: 'Molimo ponovite lozinku!',
-              validate: (value) => value === getValues('password') || 'Lozinke se ne podudaraju!',
-            }}
-            render={({ field }) => (
-              <StyledPasswordInput
-                {...field}
-                prefix={<LockOutlined />}
-                placeholder="Ponovite lozinku"
-                size="large"
-                status={errors.password2 ? 'error' : ''}
-                onPaste={(e) => e.preventDefault()}
+            <FormField label="Ponovite lozinku" error={errors?.password2?.message} required>
+              <Controller
+                name="password2"
+                control={control}
+                rules={{
+                  required: 'Molimo ponovite lozinku!',
+                  validate: (value) =>
+                    value === getValues('password') || 'Lozinke se ne podudaraju!',
+                }}
+                render={({ field }) => (
+                  <StyledPasswordInput
+                    {...field}
+                    prefix={<LockOutlined />}
+                    placeholder="Ponovite lozinku"
+                    size="large"
+                    status={errors.password2 ? 'error' : ''}
+                    onPaste={(e) => e.preventDefault()}
+                  />
+                )}
               />
-            )}
-          />
-        </FormField>
-      </FormRow>
+            </FormField>
+          </FormRow>
+        </>
+      )}
 
       <FormRow>
         <Button

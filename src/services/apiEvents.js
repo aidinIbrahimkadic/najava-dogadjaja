@@ -19,6 +19,7 @@ export async function postEvent({
   slika,
   category_idguid,
   user_idguid,
+  cijena,
 }) {
   if (!title || !start_date || !category_idguid || !user_idguid)
     throw new Error('Nedostaje neki od obaveznih podataka title, start date ili kategorija');
@@ -30,6 +31,7 @@ export async function postEvent({
     formData.append('location', location || '');
     formData.append('start_date', start_date);
     formData.append('end_date', end_date || '');
+    formData.append('cijena', cijena || '');
     formData.append('is_public', is_public);
     formData.append('category_idguid', category_idguid);
     formData.append('user_idguid', user_idguid);
@@ -73,6 +75,7 @@ export async function updateEvent({
     category_idguid,
     is_public,
     slika,
+    cijena,
   },
   editId: id,
   // Image url
@@ -89,6 +92,7 @@ export async function updateEvent({
     formData.append('start_date', start_date);
     formData.append('end_date', end_date || '');
     formData.append('is_public', is_public);
+    formData.append('cijena', cijena);
     formData.append('category_idguid', category_idguid);
     formData.append('user_idguid', user_idguid);
 

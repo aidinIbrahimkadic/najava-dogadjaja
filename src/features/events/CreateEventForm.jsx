@@ -32,10 +32,14 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const { isLoading, categories } = useGetCategories();
   const { isLoading: isLocationsLoading, locations } = useGetLocations();
 
+  // Povući instituciju u zavisnosti od toga da li korisnik kreira događaj (onda od trenutnog korisinka institucija), ili samo pregleda onda institucija na osnovu institucija_idguid
+  //POPRAVITI KAD edhem doda u getUserById instituciju
   //POPRAVITI povuci korisnika na osnovu IDa i dodati isLoading
   const { user } = useUserPermissions();
 
   const isWorking = isCreating || isEditing;
+
+  console.log(eventToEdit);
 
   let formatedValues = {};
 
@@ -54,6 +58,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
       start_date: format(new Date(eventToEdit.start_date), "yyyy-MM-dd'T'HH:mm"),
       end_date: format(new Date(eventToEdit.end_date), "yyyy-MM-dd'T'HH:mm"),
       user_idguid: user.idguid,
+      cijena: eventToEdit.cijena ? parseFloat(eventToEdit.cijena).toFixed(2) : '0.00',
     };
   }
 
@@ -61,7 +66,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   const { register, handleSubmit, reset, watch, setValue, getValues, formState, control } = useForm(
     {
-      defaultValues: isEditSession ? editValues : {},
+      defaultValues: isEditSession ? editValues : { cijena: 0 },
     }
   );
 
@@ -75,6 +80,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
       data.end_date = newEnd.format('YYYY-MM-DDTHH:mm');
     }
 
+    data.cijena = parseFloat(Number(data.cijena || 0).toFixed(2));
     if (isEditSession)
       updateEvent(
         { data, editId },
@@ -140,17 +146,6 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </FormField>
         </FormRow>
         <FormRow columns="1fr 1fr">
-          {/* <FormField label="Lokacija događaja" required error={errors?.location?.message}>
-            <Input
-              type="text"
-              id="location"
-              defaultValue=""
-              disabled={isWorking}
-              {...register('location', {
-                required: 'Ovo polje je obavezno',
-              })}
-            />
-          </FormField> */}
           <FormField label="Lokacija događaja" required error={errors?.location?.message}>
             {isLocationsLoading ? (
               <Spinner />
@@ -189,7 +184,39 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             />
           </FormField>
         </FormRow>
-
+        <FormRow columns="1fr 1fr">
+          <FormField label="Institucija" error={errors?.institucija_idguid?.message}>
+            <Input
+              type="text"
+              id="institucija_idguid"
+              value={`${user?.first_name} ${user?.last_name}`}
+              disabled
+            />
+          </FormField>
+          <FormField label="Cijena (KM)" error={errors?.cijena?.message}>
+            <Controller
+              control={control}
+              name="cijena"
+              rules={{
+                min: { value: 0, message: 'Cijena ne može biti negativna' },
+              }}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  step="0.05"
+                  min="0"
+                  id="cijena"
+                  disabled={isWorking}
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    field.onChange(isNaN(value) ? 0 : parseFloat(value.toFixed(2)));
+                  }}
+                />
+              )}
+            />
+          </FormField>
+        </FormRow>
         <FormRow>
           <FormField label="Opis događaja" error={errors?.description?.message}>
             <TextArea

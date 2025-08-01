@@ -55,7 +55,6 @@ function App() {
               <Route path="/me" element={<UserProfile />} />
               <Route path="/users" element={<Users />} />
               <Route path="/roles" element={<Roles />} />
-              {/* <Route path="/permissions" element={<Permissions />} /> */}
               <Route path="*" element={<PageNotFound />} />
             </Route>
             <Route element={<AppLayoutFront />}>

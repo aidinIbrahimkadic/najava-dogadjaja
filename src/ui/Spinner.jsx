@@ -15,18 +15,27 @@ const SpinnerWrapper = styled.div`
 `;
 
 const StyledSpinner = styled.span`
-  width: 4rem;
-  height: 4rem;
+  width: ${(props) => {
+    if (props.size === 'small') return '2rem';
+    if (props.size === 'large') return '6rem';
+    return '4rem';
+  }};
+
+  height: ${(props) => {
+    if (props.size === 'small') return '2rem';
+    if (props.size === 'large') return '6rem';
+    return '4rem';
+  }};
   border: 4px solid var(--color-grey-200);
   border-top-color: var(--color-brand-600);
   border-radius: 50%;
   animation: ${spin} 0.8s linear infinite;
 `;
 
-export default function Spinner() {
+export default function Spinner({ size = 'medium' }) {
   return (
     <SpinnerWrapper>
-      <StyledSpinner />
+      <StyledSpinner size={size} />
     </SpinnerWrapper>
   );
 }

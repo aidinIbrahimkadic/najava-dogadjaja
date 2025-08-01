@@ -12,6 +12,8 @@ import Heading from '../../ui/Heading';
 import Checkbox from '../../ui/Checkbox';
 import { useGetRolePermissions } from '../role-permissions/useRolePermissions';
 import { useUpdateRolePermissions } from '../role-permissions/useUpdateRolePermissions';
+import Spinner from '../../ui/Spinner';
+import CalendarSpinner from '../../ui/CalendarSpinner';
 
 // Unified styled component for all input types
 
@@ -120,82 +122,98 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
-      <FormRow columns={isEditSession ? '1fr 1fr' : '1fr'}>
-        <FormField label="Naziv role" error={errors?.name?.message} required>
-          <Input
-            autoFocus
-            type="text"
-            id="name"
-            disabled={isWorking}
-            {...register('name', {
-              required: 'Ovo polje je obavezno',
-            })}
-          />
-        </FormField>
-
-        <FormField label="Opis role" error={errors?.description?.message} required>
-          <Input type="text" id="description" disabled={isWorking} {...register('description')} />
-        </FormField>
-      </FormRow>
-
-      {!isLoadingPermissions && allPermissions.length > 0 && isEditSession && (
+      {isLoadingPermissions ? (
+        <CalendarSpinner />
+      ) : (
         <>
-          <br />
-          <hr />
-          <br />
-          <Heading as="h5">Odaberite dozvole za rolu:</Heading>
-          <div style={{ margin: '1rem 0' }}>
-            <label
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
-            >
-              <Checkbox
-                checked={
-                  allPermissions.length > 0 &&
-                  allPermissions.every((p) => selectedPermissions.includes(p.idguid))
-                }
-                onChange={handleSelectAllToggle}
+          <FormRow columns={isEditSession ? '1fr 1fr' : '1fr'}>
+            <FormField label="Naziv role" error={errors?.name?.message} required>
+              <Input
+                autoFocus
+                type="text"
+                id="name"
+                disabled={isWorking}
+                {...register('name', {
+                  required: 'Ovo polje je obavezno',
+                })}
               />
-              Označi sve
-            </label>
-          </div>
+            </FormField>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-              gap: '1rem',
-            }}
-          >
-            {allPermissions.map((permission) => (
-              <PermissionItem
-                key={permission.idguid}
-                permission={permission}
-                checked={selectedPermissions.includes(permission.idguid)}
-                onChange={handlePermissionToggle}
+            <FormField label="Opis role" error={errors?.description?.message} required>
+              <Input
+                type="text"
+                id="description"
+                disabled={isWorking}
+                {...register('description')}
               />
-            ))}
-          </div>
+            </FormField>
+          </FormRow>
+          {!isLoadingPermissions && allPermissions.length > 0 && isEditSession && (
+            <>
+              <br />
+              <hr />
+              <br />
+              <Heading as="h5">Odaberite dozvole za rolu:</Heading>
+              <div style={{ margin: '1rem 0' }}>
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Checkbox
+                    checked={
+                      allPermissions.length > 0 &&
+                      allPermissions.every((p) => selectedPermissions.includes(p.idguid))
+                    }
+                    onChange={handleSelectAllToggle}
+                  />
+                  Označi sve
+                </label>
+              </div>
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                  gap: '1rem',
+                }}
+              >
+                {allPermissions.map((permission) => (
+                  <PermissionItem
+                    key={permission.idguid}
+                    permission={permission}
+                    checked={selectedPermissions.includes(permission.idguid)}
+                    onChange={handlePermissionToggle}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+          <br />
+          <FormRow>
+            <Button
+              title="Odustani"
+              variation="secondary"
+              type="reset"
+              size="small"
+              onClick={() => onCloseModal?.()}
+            >
+              Odustani
+            </Button>
+            <Button
+              title={isEditSession ? 'Uredi rolu' : 'Dodaj novog rolu'}
+              size="small"
+              variation="primary"
+              disabled={isWorking}
+            >
+              {isEditSession ? 'Uredi rolu' : 'Dodaj novog rolu'}
+            </Button>
+          </FormRow>
         </>
       )}
-      <FormRow>
-        <Button
-          title="Odustani"
-          variation="secondary"
-          type="reset"
-          size="small"
-          onClick={() => onCloseModal?.()}
-        >
-          Odustani
-        </Button>
-        <Button
-          title={isEditSession ? 'Uredi rolu' : 'Dodaj novog rolu'}
-          size="small"
-          variation="primary"
-          disabled={isWorking}
-        >
-          {isEditSession ? 'Uredi rolu' : 'Dodaj novog rolu'}
-        </Button>
-      </FormRow>
     </Form>
   );
 }

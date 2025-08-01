@@ -22,8 +22,17 @@ function EventRow({ event, index }) {
   const navigate = useNavigate();
   const { mutate: deleteEvent, isPending } = useDeleteEvent();
 
-  const { idguid, category_idguid, title, location, slika, is_public, start_date, end_date } =
-    event;
+  const {
+    idguid,
+    category_idguid,
+    cijena,
+    title,
+    location,
+    slika,
+    is_public,
+    start_date,
+    end_date,
+  } = event;
 
   const { isLoading: isLoadingLocation, location: lokacija } = useGetLocation(location);
 
@@ -42,7 +51,14 @@ function EventRow({ event, index }) {
       <Cell>
         <ImageCell slika={slika} title={title} />
       </Cell>
-      <Cell>{isLoadingLocation ? <Spinner /> : lokacija.naziv}</Cell>
+      <Cell>
+        {cijena == 0 ? (
+          <Badge bgColor={'#60ca7d'}>Besplatno</Badge>
+        ) : (
+          parseFloat(cijena).toFixed(2) + ' KM'
+        )}{' '}
+      </Cell>
+      <Cell>{isLoadingLocation ? <Spinner size="small" /> : lokacija.naziv}</Cell>
       <Cell>
         <Badge bgColor={category?.boja}>{categoryName}</Badge>
       </Cell>
@@ -71,7 +87,7 @@ function EventRow({ event, index }) {
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
-          <Modal.Window name="Uredi događaj" size="large">
+          <Modal.Window name="Uredi događaj" size="xl">
             <CreateEventForm eventToEdit={event} />
           </Modal.Window>
           <Modal.Window name="Izbriši događaj" size="small">

@@ -11,6 +11,7 @@ import FormField from '../../ui/FormField';
 import { usePostCategory } from './usePostCategory';
 import { useUpdateCategory } from './useUpdateCategory';
 import InputColor from '../../ui/InputColor';
+import { IconSelector } from './IconSelector';
 
 function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
   const { isCreating, postCategory } = usePostCategory();
@@ -81,7 +82,7 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
         </FormField>
       </FormRow>
 
-      <FormRow>
+      <FormRow columns="1fr 1fr">
         <FormField label="Boja kategorije">
           <InputColor
             type="color"
@@ -90,9 +91,13 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
             disabled={isWorking}
             {...register('boja')}
           />
+        </FormField>{' '}
+      </FormRow>
+      <FormRow>
+        <FormField label="Ikona kategorije">
+          <IconSelector register={register} name="ikona" defaultValue={editValues.ikona} />
         </FormField>
       </FormRow>
-
       <FormRow>
         <Button
           title="Odustani"

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import * as FaIcons from 'react-icons/fa';
 
 import Table from '../../ui/Table';
 import Modal from '../../ui/Modal';
@@ -8,8 +9,8 @@ import CreateCategoryForm from './CreateCategoryForm';
 
 import { useDeleteCategory } from './useDeleteCategory';
 import { HiTrash, HiPencilSquare } from 'react-icons/hi2';
-import Badge from '../../ui/Badge';
 import { useGetUser } from '../users/useUser';
+import BadgeIcon from '../../ui/BadgeIcon';
 
 const Cell = styled.div`
   font-weight: 400;
@@ -22,7 +23,8 @@ const Cell = styled.div`
 function CategoryRow({ category, index }) {
   const { mutate: deleteCategory, isPending } = useDeleteCategory();
 
-  const { idguid, naziv, operater, opis, boja } = category;
+  const { idguid, naziv, operater, opis, boja, ikona } = category;
+  const IconComponent = FaIcons[ikona];
 
   const { user } = useGetUser(operater);
   const userEmail = user?.data.email;
@@ -35,10 +37,23 @@ function CategoryRow({ category, index }) {
     <Table.Row>
       <Cell>{index + 1}</Cell>
       <Cell>{naziv}</Cell>
-      <Cell type="textCell">{opis}</Cell>
       <Cell>
-        <Badge bgColor={boja} />
+        <BadgeIcon bgColor={boja}>
+          {IconComponent && (
+            <IconComponent
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '8rem',
+              }}
+              size={30}
+            />
+          )}
+        </BadgeIcon>
       </Cell>
+
+      <Cell type="textCell">{opis}</Cell>
+
       <Cell>{userEmail}</Cell>
       <Cell>
         <Modal>

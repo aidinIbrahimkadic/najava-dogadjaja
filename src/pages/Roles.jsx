@@ -7,7 +7,7 @@ export default function Roles() {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">Sve role</Heading>
+        <Heading as="h1">Sve uloge</Heading>
         <AddRole />
       </Row>
       <Row type="vertical">

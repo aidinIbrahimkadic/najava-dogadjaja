@@ -31,18 +31,19 @@ export async function deleteCategory(id) {
   }
 }
 
-export async function postCategory({ naziv, opis, boja }) {
+export async function postCategory({ naziv, opis, boja, ikona }) {
   if (!naziv) throw new Error('Naziv kategorije je obavezan');
 
   const response = await axiosInstance.post(`/events/kategorije`, {
     naziv,
     opis,
     boja,
+    ikona,
   });
   return response.data;
 }
 
-export async function updateCategory({ data: { naziv, opis, boja }, editId: id }) {
+export async function updateCategory({ data: { naziv, opis, boja, ikona }, editId: id }) {
   if (!id) throw new Error('Category ID is required');
   if (!naziv) throw new Error('Naziv kategorije je obavezan');
 
@@ -51,6 +52,7 @@ export async function updateCategory({ data: { naziv, opis, boja }, editId: id }
       naziv,
       opis,
       boja,
+      ikona,
     });
     return response.data;
   } catch (error) {

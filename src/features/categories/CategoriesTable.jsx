@@ -14,13 +14,13 @@ export default function CategoriesTable() {
 
   return (
     <Menus>
-      <Table columns=".2fr 15rem 2fr 12rem 2fr .2fr">
+      <Table columns=".2fr 1fr 15rem  12rem 2fr .2fr">
         <Table.Header>
           <div>#</div>
           <div>Naziv</div>
+          <div>Ikona</div>
           <div>Opis</div>
-          <div>Boja</div>
-          <div>Operater</div>
+          <div>Korisnik</div>
           <div></div>
         </Table.Header>
         <Table.Body
