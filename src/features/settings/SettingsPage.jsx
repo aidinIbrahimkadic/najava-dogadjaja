@@ -10,7 +10,7 @@ import Checkbox from '../../ui/Checkbox';
 import { FILE_URL } from '../../utils/constants';
 import { useEffect, useState } from 'react';
 import FileInput from '../../ui/FileInput';
-import ExistingImagePreview from '../../ui/ExistingImagePreview';
+// import ExistingImagePreview from '../../ui/ExistingImagePreview';
 import Button from '../../ui/Button';
 import { useGetSettings } from './useSettings';
 import CalendarSpinner from '../../ui/CalendarSpinner';
@@ -44,9 +44,14 @@ export default function SettingsPage() {
   }, [settings, reset]);
 
   function onSubmit(data) {
-    console.log(data);
+    const payload = {
+      ...data,
+      site_logo: data.site_logo?.length ? data.site_logo : existingSlika,
+      favicon16x16: data.favicon16x16?.length ? data.favicon16x16 : existingIcon,
+    };
+
     updateSettings(
-      { data },
+      { data: payload },
       {
         onSuccess: () => {
           reset();
@@ -114,37 +119,134 @@ export default function SettingsPage() {
       <FormRow columns="1fr 1fr">
         <FormField label="Logotip" error={errors?.site_logo?.message} required>
           {existingSlika ? (
-            <ExistingImagePreview
-              slikaUrl={`${FILE_URL}${existingSlika}`}
-              onRemove={() => {
-                setExistingSlika(null);
-                setValue('site_logo', null);
+            <div
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                width: 'fit-content',
+                // height: 'fit-content',
               }}
-            />
+            >
+              <img
+                src={
+                  /^data:image\/[a-z]+;base64,/.test(existingSlika)
+                    ? existingSlika
+                    : `${FILE_URL}${existingSlika}`
+                }
+                alt="Logotip"
+                style={{
+                  display: 'block',
+                  maxWidth: '200px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setExistingSlika(null);
+                  setValue('site_logo', null);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '-1rem',
+                  right: '-1rem',
+                  backgroundColor: 'var(--color-red-500)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '24px',
+                  height: '24px',
+                  cursor: 'pointer',
+                }}
+              >
+                ×
+              </button>
+            </div>
           ) : (
             <FileInput
               disabled={isEditing}
               id="site_logo"
               accept="image/*"
-              {...register('site_logo')}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setExistingSlika(reader.result); // base64 prikaz
+                  setValue('site_logo', e.target.files); // proslijedi RHF-u
+                };
+                reader.readAsDataURL(file);
+              }}
             />
           )}
         </FormField>
+
         <FormField label="Ikonica" error={errors?.favicon16x16?.message} required>
-          {existingSlika ? (
-            <ExistingImagePreview
-              slikaUrl={`${FILE_URL}${existingIcon}`}
-              onRemove={() => {
-                setExistingIcon(null);
-                setValue('favicon16x16', null);
+          {existingIcon ? (
+            <div
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                width: 'fit-content',
+                height: 'fit-content',
               }}
-            />
+            >
+              <img
+                src={
+                  /^data:image\/[a-z]+;base64,/.test(existingIcon)
+                    ? existingIcon
+                    : `${FILE_URL}${existingIcon}`
+                }
+                alt="Favicon"
+                style={{
+                  display: 'block',
+                  width: '64px',
+                  height: '64px',
+                  objectFit: 'contain',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setExistingIcon(null);
+                  setValue('favicon16x16', null);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '-1rem',
+                  right: '-1rem',
+                  backgroundColor: 'var(--color-red-500)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '24px',
+                  height: '24px',
+                  cursor: 'pointer',
+                }}
+              >
+                ×
+              </button>
+            </div>
           ) : (
             <FileInput
               disabled={isEditing}
               id="favicon16x16"
               accept="image/*"
-              {...register('favicon16x16')}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setExistingIcon(reader.result); // base64 preview
+                  setValue('favicon16x16', e.target.files); // RHF
+                };
+                reader.readAsDataURL(file);
+              }}
             />
           )}
         </FormField>
@@ -230,7 +332,7 @@ export default function SettingsPage() {
           </div>
         </FormField>
       </FormRow>
-      <FormRow>
+      <FormRow buttons="has">
         <Button title="Spremi izmjene" size="medium" variation="primary">
           Spremi izmjene
         </Button>

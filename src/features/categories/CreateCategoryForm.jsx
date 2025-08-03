@@ -98,7 +98,7 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
           <IconSelector register={register} name="ikona" defaultValue={editValues.ikona} />
         </FormField>
       </FormRow>
-      <FormRow>
+      <FormRow buttons="has">
         <Button
           title="Odustani"
           variation="secondary"

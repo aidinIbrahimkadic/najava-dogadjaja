@@ -54,7 +54,7 @@ function EditUserForm({ userToEdit = {}, onCloseModal }) {
         </FormField>
       </FormRow>
 
-      <FormRow>
+      <FormRow buttons="has">
         <Button
           title="Odustani"
           variation="secondary"

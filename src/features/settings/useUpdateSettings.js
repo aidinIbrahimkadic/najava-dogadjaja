@@ -13,6 +13,8 @@ export function useUpdateSettings() {
   } = useMutation({
     mutationFn: updateSettingsAPI,
     onSuccess: () => {
+      toast.success(`Postavke uspješno izmijenjene`);
+
       queryClient.invalidateQueries(['settings']);
     },
     onError: (error) => {

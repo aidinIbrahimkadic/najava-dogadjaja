@@ -79,7 +79,7 @@ function CategoryRow({ category, index }) {
             </Menus.List>
           </Menus.Menu>
           {hasPermission('events_categories_save') && (
-            <Modal.Window name="Uredi kategoriju" size="medium">
+            <Modal.Window name="Uredi kategoriju">
               <CreateCategoryForm categoryToEdit={category} />
             </Modal.Window>
           )}

@@ -20,7 +20,7 @@ const StyledModal = styled.div`
       ? '30%'
       : props.size == 'medium'
         ? '40%'
-        : props.size == 'xl'
+        : props.size == 'extraLarge'
           ? '70%'
           : '55%'};
 `;
@@ -54,7 +54,7 @@ const ModalHeading = styled.h2`
 const ModalContent = styled.div`
   padding: ${(props) =>
     props.size === 'large' ? '3.2rem 4rem 3.2rem 46px' : '2.4rem 3rem 2.4rem 36px'};
-  max-height: 90dvh;
+  max-height: 80dvh;
   scrollbar-gutter: stable;
   overflow-y: auto;
 
@@ -125,12 +125,13 @@ function Open({ children, opens: opensWindowName }) {
   return cloneElement(children, { onClick: () => open(opensWindowName) });
 }
 
-function Window({ children, name, size = 'large' }) {
+function Window({ children, name, size }) {
   const { openName, close } = useContext(ModalContext);
   const ref = useOutsideClick(close);
 
   if (name !== openName) return null;
 
+  console.log(size);
   return createPortal(
     <Overlay>
       <StyledModal size={size} ref={ref}>

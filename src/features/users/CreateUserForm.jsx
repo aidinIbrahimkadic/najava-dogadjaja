@@ -201,7 +201,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
       </FormRow>
 
       <FormRow columns="1fr 1fr">
-        <FormField label="Institucija" error={errors?.institucija?.message}>
+        <FormField label="Institucija" required error={errors?.institucija?.message}>
           {isLoadingInstitutions ? (
             <Spinner size="small" />
           ) : (
@@ -216,6 +216,9 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
               register={register}
               setValue={setValue}
               watch={watch}
+              validation={{
+                required: 'Molimo odaberite odgovarajuću instituciju',
+              }}
             />
           )}
         </FormField>
@@ -284,8 +287,9 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
 
       {!isEditSession && (
         <>
+          <br />
+          <hr />
           <Heading as="h3">Sigurnosne postavke</Heading>
-
           <FormRow columns="1fr 1fr">
             <FormField label="Lozinka" error={errors?.password?.message} required>
               <Controller
@@ -340,7 +344,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
         </>
       )}
 
-      <FormRow>
+      <FormRow buttons="has">
         <Button
           title="Odustani"
           variation="secondary"

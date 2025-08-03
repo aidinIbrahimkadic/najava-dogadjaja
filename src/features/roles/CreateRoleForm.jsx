@@ -201,7 +201,7 @@ function CreateRoleForm({ roleToEdit = {}, onCloseModal }) {
               </>
             )}
           <br />
-          <FormRow>
+          <FormRow buttons="has">
             <Button
               title="Odustani"
               variation="secondary"

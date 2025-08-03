@@ -59,6 +59,7 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
             autoFocus
             type="text"
             id="naziv"
+            placeholder="Unesite naziv institucije"
             disabled={isWorking}
             {...register('naziv', {
               required: 'Ovo polje je obavezno',
@@ -69,6 +70,7 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
           <Input
             type="text"
             id="ime_direktora"
+            placeholder="Unesite ime direktora institucije"
             disabled={isWorking}
             {...register('ime_direktora')}
           />
@@ -104,6 +106,7 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
         <FormField label="Broj telefona" error={errors?.broj_telefona?.message}>
           <Input
             type="text"
+            placeholder="Unesite broj telefona institucije"
             id="broj_telefona"
             disabled={isWorking}
             {...register('broj_telefona')}
@@ -112,12 +115,19 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
       </FormRow>
       <FormRow columns="1fr 1fr">
         <FormField label="Adresa" error={errors?.adresa?.message}>
-          <Input type="text" id="adresa" disabled={isWorking} {...register('adresa')} />
+          <Input
+            type="text"
+            id="adresa"
+            placeholder="Unesite adresu institucije"
+            disabled={isWorking}
+            {...register('adresa')}
+          />
         </FormField>
         <FormField label="Web stranica" error={errors?.web_stranica?.message}>
           <Input
             type="text"
             disabled={isWorking}
+            placeholder="Unesite link web stranice institucije"
             id="web_stranica"
             {...register('web_stranica', {
               pattern: {
@@ -130,10 +140,16 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
       </FormRow>
       <FormRow>
         <FormField label="Opis institucije" error={errors?.opis?.message}>
-          <Textarea type="text" id="opis" disabled={isWorking} {...register('opis')} />
+          <Textarea
+            type="text"
+            id="opis"
+            disabled={isWorking}
+            {...register('opis')}
+            placeholder="Unesite opis institucije"
+          />
         </FormField>
       </FormRow>
-      <FormRow>
+      <FormRow buttons="has">
         <Button
           title="Odustani"
           variation="secondary"
@@ -144,12 +160,12 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
           Odustani
         </Button>
         <Button
-          title={isEditSession ? 'Uredi instituciju' : 'Dodaj novog instituciju'}
+          title={isEditSession ? 'Uredi instituciju' : 'Dodaj novu instituciju'}
           size="small"
           variation="primary"
           disabled={isWorking}
         >
-          {isEditSession ? 'Uredi instituciju' : 'Dodaj novog instituciju'}
+          {isEditSession ? 'Uredi instituciju' : 'Dodaj novu instituciju'}
         </Button>
       </FormRow>
     </Form>

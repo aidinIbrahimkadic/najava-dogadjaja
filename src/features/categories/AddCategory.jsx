@@ -11,7 +11,7 @@ function AddCategory() {
             Dodaj novu kategoriju
           </Button>
         </Modal.Open>
-        <Modal.Window name="Dodaj novu kategoriju" size="medium">
+        <Modal.Window name="Dodaj novu kategoriju" size="">
           <CreateCategoryForm />
         </Modal.Window>
       </Modal>

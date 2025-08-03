@@ -933,7 +933,7 @@ function CreateLocationForm({ locationToEdit = {}, user_email, onCloseModal }) {
         </FormField>
       </FormRow>
 
-      <FormRow>
+      <FormRow buttons="has">
         <Button
           variation="secondary"
           type="button"

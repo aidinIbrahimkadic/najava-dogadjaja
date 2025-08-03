@@ -12,7 +12,7 @@ function AddEvent() {
             Dodaj novi događaj
           </Button>
         </Modal.Open>
-        <Modal.Window name="Dodaj novi događaj" size="large">
+        <Modal.Window name="Dodaj novi događaj" size="extraLarge">
           <CreateEventForm />
         </Modal.Window>
       </Modal>

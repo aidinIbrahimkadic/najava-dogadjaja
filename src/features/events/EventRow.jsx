@@ -87,7 +87,7 @@ function EventRow({ event, index }) {
             </Menus.List>
           </Menus.Menu>
           {hasPermission('events_save') && (
-            <Modal.Window name="Uredi događaj" size="xl">
+            <Modal.Window name="Uredi događaj" size="extraLarge">
               <CreateEventForm eventToEdit={event} />
             </Modal.Window>
           )}

@@ -140,18 +140,18 @@ export default function UserProfilePage() {
               <EditData>{user.data.email}</EditData>
             </div>
             <div>
-              <EditLabel>Password</EditLabel>
+              <EditLabel>Lozinka</EditLabel>
               <PasswordDots>Neki password</PasswordDots>
             </div>
           </EditDataContainer>
           <div>
             <Modal>
-              <Modal.Open opens="Promijeni Password">
+              <Modal.Open opens="Promijeni lozinku">
                 <Button size="small" variation="link">
-                  Promijeni Password
+                  Promijeni lozinku
                 </Button>
               </Modal.Open>
-              <Modal.Window size="medium" name="Promijeni Password">
+              <Modal.Window size="medium" name="Promijeni lozinku">
                 <EditUserPasswordForm />
               </Modal.Window>
             </Modal>

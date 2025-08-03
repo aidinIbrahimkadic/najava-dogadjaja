@@ -381,7 +381,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </FormField>
         </FormRow>
 
-        <FormRow>
+        <FormRow buttons="has">
           <Button
             variation="secondary"
             title="Odustani"

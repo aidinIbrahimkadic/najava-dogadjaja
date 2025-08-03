@@ -138,7 +138,7 @@ function EditUserPasswordForm({ onCloseModal }) {
         </FormField>
       </FormRow>
 
-      <FormRow>
+      <FormRow buttons="has">
         <Button
           title="Odustani"
           variation="secondary"
@@ -148,8 +148,8 @@ function EditUserPasswordForm({ onCloseModal }) {
         >
           Odustani
         </Button>
-        <Button title="Uredi korisnika" size="small" variation="primary" disabled={isEditing}>
-          Uredi korisnika
+        <Button title="Promijeni lozinku" size="small" variation="primary" disabled={isEditing}>
+          Promijeni lozinku
         </Button>
       </FormRow>
     </Form>
