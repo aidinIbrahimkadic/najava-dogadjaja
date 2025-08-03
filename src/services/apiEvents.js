@@ -18,6 +18,7 @@ export async function postEvent({
   is_public,
   slika,
   category_idguid,
+  institucija_idguid,
   user_idguid,
   cijena,
 }) {
@@ -35,6 +36,7 @@ export async function postEvent({
     formData.append('is_public', is_public);
     formData.append('category_idguid', category_idguid);
     formData.append('user_idguid', user_idguid);
+    formData.append('institucijaIdguid', institucija_idguid);
 
     // Append the file with field name 'image' or whatever your backend expects
     if (slika instanceof FileList) {
@@ -76,6 +78,7 @@ export async function updateEvent({
     is_public,
     slika,
     cijena,
+    institucija_idguid,
   },
   editId: id,
   // Image url
@@ -94,6 +97,7 @@ export async function updateEvent({
     formData.append('is_public', is_public);
     formData.append('cijena', cijena);
     formData.append('category_idguid', category_idguid);
+    formData.append('institucijaIdguid', institucija_idguid);
     formData.append('user_idguid', user_idguid);
 
     if (slika instanceof FileList && slika.length > 0) {

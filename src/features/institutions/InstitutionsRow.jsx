@@ -25,11 +25,13 @@ function InstitutionRow({ institution, index }) {
   {
     isLoading && <Spinner />;
   }
+
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
       <Cell>{naziv}</Cell>
       <Cell>{opis}</Cell>
+
       <Cell>
         <Modal>
           <Menus.Menu>

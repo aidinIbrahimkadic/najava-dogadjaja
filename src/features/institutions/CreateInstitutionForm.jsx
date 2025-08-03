@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 import FormRow from '../../ui/FormRow';
@@ -7,6 +7,8 @@ import Input from '../../ui/Input';
 import { usePostInstitution } from './usePostInstitution';
 import { useUpdateInstitution } from './useUpdateInstitution';
 import Textarea from '../../ui/TextArea';
+import { StyledInput } from '../../ui/StyledInput';
+import { MailOutlined } from '@ant-design/icons';
 
 // Unified styled component for all input types
 
@@ -17,7 +19,7 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
   const { idguid: editId, ...editValues } = institutionToEdit;
   const isEditSession = Boolean(editId);
 
-  const { handleSubmit, reset, formState, register } = useForm({
+  const { handleSubmit, reset, formState, control, register } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
   const { errors } = formState;
@@ -51,7 +53,7 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
-      <FormRow>
+      <FormRow columns="1fr 1fr">
         <FormField label="Naziv institucije" error={errors?.naziv?.message} required>
           <Input
             autoFocus
@@ -63,13 +65,74 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
             })}
           />
         </FormField>
+        <FormField label="Ime direktora" error={errors?.ime_direktora?.message}>
+          <Input
+            type="text"
+            id="ime_direktora"
+            disabled={isWorking}
+            {...register('ime_direktora')}
+          />
+        </FormField>
+      </FormRow>
+      <FormRow columns="1fr 1fr">
+        {/* <FormField label="Email" error={errors?.email?.message}>
+          <Input type="text" id="email" disabled={isWorking} {...register('email')} />
+        </FormField> */}
+        <FormField label="Email" error={errors?.email?.message}>
+          <Controller
+            name="email"
+            control={control}
+            rules={{
+              required: 'Molimo unesite email adresu!',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Molimo unesite validnu email adresu!',
+              },
+            }}
+            render={({ field }) => (
+              <StyledInput
+                disabled={isEditing}
+                {...field}
+                prefix={<MailOutlined />}
+                placeholder="Email adresa"
+                size="large"
+                status={errors?.email ? 'error' : ''}
+              />
+            )}
+          />
+        </FormField>
+        <FormField label="Broj telefona" error={errors?.broj_telefona?.message}>
+          <Input
+            type="text"
+            id="broj_telefona"
+            disabled={isWorking}
+            {...register('broj_telefona')}
+          />
+        </FormField>
+      </FormRow>
+      <FormRow columns="1fr 1fr">
+        <FormField label="Adresa" error={errors?.adresa?.message}>
+          <Input type="text" id="adresa" disabled={isWorking} {...register('adresa')} />
+        </FormField>
+        <FormField label="Web stranica" error={errors?.web_stranica?.message}>
+          <Input
+            type="text"
+            disabled={isWorking}
+            id="web_stranica"
+            {...register('web_stranica', {
+              pattern: {
+                value: /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/\S*)?$/,
+                message: 'Unesite ispravan link web stranice',
+              },
+            })}
+          />
+        </FormField>
       </FormRow>
       <FormRow>
         <FormField label="Opis institucije" error={errors?.opis?.message}>
           <Textarea type="text" id="opis" disabled={isWorking} {...register('opis')} />
         </FormField>
       </FormRow>
-
       <FormRow>
         <Button
           title="Odustani"

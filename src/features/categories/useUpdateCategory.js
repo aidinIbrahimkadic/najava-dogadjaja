@@ -13,6 +13,7 @@ export function useUpdateCategory() {
   } = useMutation({
     mutationFn: updateCategoryAPI,
     onSuccess: () => {
+      toast.success(`Kategorija uspješno izmjenjena`);
       queryClient.invalidateQueries(['categories']);
     },
     onError: (error) => {

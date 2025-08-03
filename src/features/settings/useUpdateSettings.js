@@ -1,25 +1,24 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { updateEvent as updateEventAPI } from '../../services/apiEvents';
+import { updateSettings as updateSettingsAPI } from '../../services/apiSettings'; // Your axios service
 
-export function useUpdateEvent() {
+export function useUpdateSettings() {
   const queryClient = useQueryClient();
 
   const {
     isError,
     isSuccess,
     isPending: isEditing,
-    mutate: updateEvent,
+    mutate: updateSettings,
   } = useMutation({
-    mutationFn: updateEventAPI,
+    mutationFn: updateSettingsAPI,
     onSuccess: () => {
-      toast.success(`Događaj uspješno ažuriran!`);
-      queryClient.invalidateQueries(['events']);
+      queryClient.invalidateQueries(['settings']);
     },
     onError: (error) => {
       toast.error(`${error.message}`);
     },
   });
 
-  return { isError, isSuccess, isEditing, updateEvent };
+  return { isError, isSuccess, isEditing, updateSettings };
 }

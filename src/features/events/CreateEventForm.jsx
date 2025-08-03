@@ -21,8 +21,10 @@ import { useGetCategories } from '../categories/useCategories';
 import Checkbox from '../../ui/Checkbox';
 import { useEffect, useState } from 'react';
 import ExistingImagePreview from '../../ui/ExistingImagePreview';
-import { useUserPermissions } from '../authentication/useUserPermissions';
 import { useGetLocations } from '../locations/useLocations';
+import { useGetInstitutions } from '../institutions/useInstitutions';
+import { useGetUser } from '../users/useUser';
+import { useUserPermissions } from '../authentication/useUserPermissions';
 
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const [existingSlika, setExistingSlika] = useState(null);
@@ -31,11 +33,15 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const { isEditing, updateEvent } = useUpdateEvent();
   const { isLoading, categories } = useGetCategories();
   const { isLoading: isLocationsLoading, locations } = useGetLocations();
+  const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions();
 
-  // Povući instituciju u zavisnosti od toga da li korisnik kreira događaj (onda od trenutnog korisinka institucija), ili samo pregleda onda institucija na osnovu institucija_idguid
-  //POPRAVITI KAD edhem doda u getUserById instituciju
-  //POPRAVITI povuci korisnika na osnovu IDa i dodati isLoading
-  const { user } = useUserPermissions();
+  //KORISNIK KOJI JE LOGOVAN
+  const { isLoading: isLoadingPermission, hasPermission, user: userCreate } = useUserPermissions();
+
+  //Ucitavamo korisnika sa vise informacija
+  const { isLoading: isLoadingUser, user } = useGetUser(
+    Object.keys(eventToEdit).length !== 0 ? eventToEdit?.user_idguid : userCreate?.idguid
+  );
 
   const isWorking = isCreating || isEditing;
 
@@ -55,7 +61,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
       ...eventToEdit,
       start_date: format(new Date(eventToEdit.start_date), "yyyy-MM-dd'T'HH:mm"),
       end_date: format(new Date(eventToEdit.end_date), "yyyy-MM-dd'T'HH:mm"),
-      user_idguid: user.idguid,
+      user_idguid: eventToEdit.user.idguid,
       cijena: eventToEdit.cijena ? parseFloat(eventToEdit.cijena).toFixed(2) : '0.00',
     };
   }
@@ -64,11 +70,24 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   const { register, handleSubmit, reset, watch, setValue, getValues, formState, control } = useForm(
     {
-      defaultValues: isEditSession ? editValues : { cijena: 0 },
+      defaultValues: isEditSession ? editValues : { cijena: 0, institucija_idguid: '' }, // Uklanjamo user?.data?.institucija?.idguid odavde
     }
   );
-
   const { errors } = formState;
+
+  // Dodajemo useEffect koji će postaviti instituciju kada se user učita
+  useEffect(() => {
+    if (!isEditSession && user?.data?.institucija?.idguid && !isLoadingUser) {
+      setValue('institucija_idguid', user.data.institucija.idguid);
+    }
+  }, [user, isLoadingUser, isEditSession, setValue]);
+
+  // Takođe možemo dodati useEffect za user_idguid
+  useEffect(() => {
+    if (!isEditSession && user?.data?.idguid && !isLoadingUser) {
+      setValue('user_idguid', user.data.idguid);
+    }
+  }, [user, isLoadingUser, isEditSession, setValue]);
 
   function onSubmit(data) {
     const { start_date, end_date } = data;
@@ -169,13 +188,13 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             <Input
               type="text"
               id="user_display"
-              value={`${user?.first_name} ${user?.last_name}`}
+              value={`${user?.data?.first_name || ''} ${user?.data?.last_name || ''}`}
               disabled
             />
             <input
               type="hidden"
               id="user_idguid"
-              value={user.idguid}
+              value={user?.data?.idguid || ''}
               {...register('user_idguid', {
                 required: 'Ovo polje je obavezno',
               })}
@@ -183,13 +202,26 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </FormField>
         </FormRow>
         <FormRow columns="1fr 1fr">
-          <FormField label="Institucija" error={errors?.institucija_idguid?.message}>
-            <Input
-              type="text"
-              id="institucija_idguid"
-              value={`${user?.first_name} ${user?.last_name}`}
-              disabled
-            />
+          <FormField label="Institucija" required error={errors?.institucija_idguid?.message}>
+            {isLoadingInstitutions && isLoadingPermission && isLoadingUser ? (
+              <Spinner />
+            ) : (
+              <Select
+                id="institucija_idguid"
+                name="institucija_idguid"
+                options={institutions?.data?.map((inst) => ({
+                  value: inst.idguid,
+                  label: inst.naziv,
+                }))}
+                disabled={!hasPermission('events_institucije_save')}
+                register={register}
+                setValue={setValue}
+                watch={watch}
+                validation={{
+                  required: 'Molimo odaberite odgovarajuću instituciju',
+                }}
+              />
+            )}
           </FormField>
           <FormField label="Cijena (KM)" error={errors?.cijena?.message}>
             <Controller

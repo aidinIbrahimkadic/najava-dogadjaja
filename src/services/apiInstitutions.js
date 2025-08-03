@@ -34,17 +34,33 @@ export async function deleteInstitution(id) {
   }
 }
 
-export async function postInstitution({ naziv, opis }) {
+export async function postInstitution({
+  naziv,
+  opis,
+  ime_direktora,
+  email,
+  broj_telefona,
+  adresa,
+  web_stranica,
+}) {
   if (!naziv) throw new Error('Naziv institucije je obavezan');
 
   const response = await axiosInstance.post(`/events/institucije`, {
     naziv,
     opis,
+    ime_direktora,
+    email,
+    broj_telefona,
+    adresa,
+    web_stranica,
   });
   return response.data;
 }
 
-export async function updateInstitution({ data: { naziv, opis }, editId: id }) {
+export async function updateInstitution({
+  data: { naziv, opis, ime_direktora, email, broj_telefona, adresa, web_stranica },
+  editId: id,
+}) {
   if (!id) throw new Error('Institution ID is required');
   if (!naziv) throw new Error('Naziv institucije je obavezan');
 
@@ -52,6 +68,11 @@ export async function updateInstitution({ data: { naziv, opis }, editId: id }) {
     const response = await axiosInstance.put(`/events/institucije/${id}`, {
       naziv,
       opis,
+      ime_direktora,
+      email,
+      broj_telefona,
+      adresa,
+      web_stranica,
     });
     return response.data;
   } catch (err) {

@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import * as FaIcons from 'react-icons/fa';
 
 import Table from '../../ui/Table';
@@ -9,28 +8,25 @@ import CreateCategoryForm from './CreateCategoryForm';
 
 import { useDeleteCategory } from './useDeleteCategory';
 import { HiTrash, HiPencilSquare } from 'react-icons/hi2';
-import { useGetUser } from '../users/useUser';
 import BadgeIcon from '../../ui/BadgeIcon';
 import { useUserPermissions } from '../authentication/useUserPermissions';
 import Spinner from '../../ui/Spinner';
+import Cell from '../../ui/Cell';
 
-const Cell = styled.div`
-  font-weight: 400;
-  color: ${(props) => (props.color ? 'var(--color-grey-50)' : 'var(--color-grey-600)')};
-  background-color: ${(props) => props.color};
+// const Cell = styled.div`
+//   font-weight: 400;
+//   color: ${(props) => (props.color ? 'var(--color-grey-50)' : 'var(--color-grey-600)')};
+//   background-color: ${(props) => props.color};
 
-  font-family: 'Sono';
-`;
+//   font-family: 'Sono';
+// `;
 
 function CategoryRow({ category, index }) {
   const { mutate: deleteCategory, isPending } = useDeleteCategory();
   const { isLoading, hasPermission } = useUserPermissions();
 
-  const { idguid, naziv, operater, opis, boja, ikona } = category;
+  const { idguid, naziv, opis, boja, ikona } = category;
   const IconComponent = FaIcons[ikona];
-
-  const { user } = useGetUser(operater);
-  const userEmail = user?.data.email;
 
   function handleDelete(id) {
     deleteCategory(id);
@@ -59,9 +55,8 @@ function CategoryRow({ category, index }) {
         </BadgeIcon>
       </Cell>
 
-      <Cell type="textCell">{opis}</Cell>
+      <Cell type="textAdresa">{opis}</Cell>
 
-      <Cell>{userEmail}</Cell>
       <Cell>
         <Modal>
           <Menus.Menu>
