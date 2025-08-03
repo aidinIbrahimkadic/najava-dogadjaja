@@ -116,3 +116,18 @@ export async function deleteUserRoles(id) {
     throw new Error(error.response?.data?.message || 'Greška pri brisanju uloge');
   }
 }
+
+export async function updateMe({ data: { first_name, last_name, username, password, password2 } }) {
+  try {
+    const response = await axiosInstance.post(`/auth/profile-update/`, {
+      username,
+      first_name,
+      last_name,
+      password,
+      password2,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri ažuriranju korisnika');
+  }
+}

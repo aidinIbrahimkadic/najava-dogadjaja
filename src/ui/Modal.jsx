@@ -21,7 +21,7 @@ const StyledModal = styled.div`
       : props.size == 'medium'
         ? '40%'
         : props.size == 'xl'
-          ? '75%'
+          ? '70%'
           : '55%'};
 `;
 

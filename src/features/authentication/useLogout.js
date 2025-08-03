@@ -10,7 +10,6 @@ export function useLogout() {
     localStorage.removeItem('refreshToken');
 
     queryClient.removeQueries({ queryKey: ['userPermissions'] });
-
     navigate('/');
   }
 
