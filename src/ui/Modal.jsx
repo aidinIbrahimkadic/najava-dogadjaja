@@ -131,7 +131,6 @@ function Window({ children, name, size }) {
 
   if (name !== openName) return null;
 
-  console.log(size);
   return createPortal(
     <Overlay>
       <StyledModal size={size} ref={ref}>

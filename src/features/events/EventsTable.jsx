@@ -14,11 +14,11 @@ export default function EventsTable() {
 
   return (
     <Menus>
-      <Table columns=".1fr 1fr 1fr 1fr 1.5fr 1fr 1fr  .3fr .2fr">
+      <Table columns=".1fr 1.5fr .5fr 1fr .5fr 1fr  .3fr .2fr">
         <Table.Header>
           <div>#</div>
           <div>Naziv</div>
-          <div>Poster</div>
+          {/* <div>Poster</div> */}
           <div>Cijena</div>
           <div>Lokacija</div>
           <div>Kategorija</div>

@@ -20,11 +20,11 @@ import { useUpdateEvent } from './useUpdateEvent';
 import { useGetCategories } from '../categories/useCategories';
 import Checkbox from '../../ui/Checkbox';
 import { useEffect, useState } from 'react';
-import ExistingImagePreview from '../../ui/ExistingImagePreview';
 import { useGetLocations } from '../locations/useLocations';
 import { useGetInstitutions } from '../institutions/useInstitutions';
 import { useGetUser } from '../users/useUser';
 import { useUserPermissions } from '../authentication/useUserPermissions';
+import { ImageCell } from '../../ui/ImageCell';
 
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const [existingSlika, setExistingSlika] = useState(null);
@@ -354,8 +354,8 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
         <FormRow columns="1fr 1fr">
           <FormField label="Poster:" error={errors?.slika?.message}>
             {existingSlika ? (
-              <ExistingImagePreview
-                slikaUrl={`${FILE_URL}${existingSlika}`}
+              <ImageCell
+                slika={existingSlika}
                 onRemove={() => {
                   setExistingSlika(null);
                   setValue('slika', null);

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 import { useGetCategory } from '../categories/useCategory';
 import { useDeleteEvent } from '../events/useDeleteEvent';
@@ -14,17 +14,17 @@ import Badge from '../../ui/Badge';
 import Cell from '../../ui/Cell';
 import TwoRowCell from '../../ui/TwoRowCell';
 import Checkbox from '../../ui/Checkbox';
-import { ImageCell } from '../../ui/ImageCell';
+// import { ImageCell } from '../../ui/ImageCell';
 import { useGetLocation } from '../locations/useLocation';
 import Spinner from '../../ui/Spinner';
 import { useUserPermissions } from '../authentication/useUserPermissions';
 
 function EventRow({ event, index }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { mutate: deleteEvent, isPending } = useDeleteEvent();
   const { isLoading, hasPermission } = useUserPermissions();
 
-  const { idguid, category_idguid, cijena, title, location, slika, is_public, start_date } = event;
+  const { idguid, category_idguid, cijena, title, location, is_public, start_date } = event;
 
   const { isLoading: isLoadingLocation, location: lokacija } = useGetLocation(location);
 
@@ -43,10 +43,8 @@ function EventRow({ event, index }) {
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
-      <Cell type="textCell">{title}</Cell>
-      <Cell>
-        <ImageCell slika={slika} title={title} />
-      </Cell>
+      <Cell type="textAdresa">{title}</Cell>
+
       <Cell>
         {cijena == 0 ? (
           <Badge bgColor={'#60ca7d'}>Besplatno</Badge>
@@ -67,9 +65,9 @@ function EventRow({ event, index }) {
           <Menus.Menu>
             <Menus.Toggle id={idguid} />
             <Menus.List id={idguid}>
-              <Menus.Button icon={<HiEye />} onClick={() => navigate(`/events/${idguid}`)}>
+              {/* <Menus.Button icon={<HiEye />} onClick={() => navigate(`/events/${idguid}`)}>
                 Više detalja
-              </Menus.Button>
+              </Menus.Button> */}
               {hasPermission('events_save') && (
                 <Modal.Open opens="Uredi događaj">
                   <Menus.Button title="Uredi događaj" icon={<HiPencilSquare />}>

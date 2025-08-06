@@ -59,7 +59,7 @@ export default function AppLayout() {
       </Main>
       <Footer>
         <span>
-          <a href={`https:/www.${settings?.site_link}`} target="_blank">
+          <a href={`https://www.${settings?.site_link}`} target="_blank" rel="noopener noreferrer">
             © {currentYear} {settings?.site_copyright}
           </a>
         </span>

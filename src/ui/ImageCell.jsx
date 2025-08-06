@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import { FILE_URL } from '../utils/constants';
 import styled from 'styled-components';
+import { createPortal } from 'react-dom';
+
+const ThumbnailWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  margin: 0.5rem;
+  width: 'fit-content';
+`;
+const AdditionalWrapper = styled.div``;
 
 const Thumbnail = styled.img`
-  height: 6rem;
+  height: auto;
   width: 6rem;
   object-fit: cover;
   cursor: pointer;
@@ -12,6 +21,21 @@ const Thumbnail = styled.img`
   &:hover {
     transform: scale(1.05);
   }
+`;
+
+const RemoveButton = styled.button`
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+  background-color: #e3342f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 18px;
 `;
 
 const Overlay = styled.div`
@@ -34,20 +58,47 @@ const FullImage = styled.img`
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 `;
 
-export const ImageCell = ({ slika, title }) => {
+export const ImageCell = ({ slika, title, onRemove }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const imageUrl = `${FILE_URL}${slika}`;
+  if (!slika) return null;
+
+  const thumbnailImage = `${FILE_URL}${slika}?width=60`;
+  const fullImage = `${FILE_URL}${slika}?width=600`;
 
   return (
     <>
-      <Thumbnail src={imageUrl} alt={`Sličica od ${title}`} onClick={() => setIsOpen(true)} />
+      <AdditionalWrapper>
+        <ThumbnailWrapper>
+          <Thumbnail
+            src={thumbnailImage}
+            alt={`Sličica od ${title}`}
+            onClick={() => setIsOpen(true)}
+          />
+          {onRemove && (
+            <RemoveButton onClick={onRemove} title="Ukloni sliku">
+              ×
+            </RemoveButton>
+          )}
+        </ThumbnailWrapper>
+      </AdditionalWrapper>
 
-      {isOpen && (
-        <Overlay onClick={() => setIsOpen(false)}>
-          <FullImage src={imageUrl} alt={`Originalna veličina fotografije ${title}`} />
-        </Overlay>
-      )}
+      {isOpen &&
+        createPortal(
+          <Overlay
+            onClick={(e) => {
+              e.stopPropagation(); // 🚫 ne propagira dalje
+              setIsOpen(false); // ✅ zatvori sliku
+            }}
+          >
+            <FullImage
+              src={fullImage}
+              alt={`Originalna veličina fotografije ${title}`}
+              onClick={(e) => e.stopPropagation()} // 🛑 spriječi da klik na sliku zatvori overlay
+            />
+          </Overlay>,
+          document.body
+        )}
     </>
   );
 };
