@@ -30,6 +30,9 @@ async function updateSiteMetadata() {
       if (favicon) {
         favicon.href = data.data.favicon16x16;
       }
+    } else {
+      const favicon = document.querySelector('link[rel="icon"]');
+      favicon.href = '/eventura_samoSimbol.ico';
     }
   } catch (error) {
     console.error('Failed to load site metadata:', error);

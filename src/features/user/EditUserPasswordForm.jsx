@@ -4,12 +4,13 @@ import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 import FormRow from '../../ui/FormRow';
 import FormField from '../../ui/FormField';
-import { useUpdateMe } from './useUpdateMe';
+// import { useUpdateMe } from './useUpdateMe';
 import { LockOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Input } from 'antd';
-import { useUserPermissions } from '../authentication/useUserPermissions';
+// import { useUserPermissions } from '../authentication/useUserPermissions';
 import Spinner from '../../ui/Spinner';
+import { usePostChangePassword } from './usePostChangePassword';
 
 const StyledPasswordInput = styled(Input.Password)`
   &.ant-input-affix-wrapper {
@@ -49,22 +50,19 @@ const StyledPasswordInput = styled(Input.Password)`
 `;
 
 function EditUserPasswordForm({ onCloseModal }) {
-  const { isEditing, updateMe } = useUpdateMe();
-  const { isLoading, user } = useUserPermissions();
+  const { mutate: changePassword, isEditing } = usePostChangePassword();
 
   const { control, getValues, handleSubmit, reset, formState } = useForm();
   const { errors } = formState;
 
   function onSubmit(receivedData) {
     const data = {
-      password: receivedData.password,
-      password2: receivedData.password2,
-      first_name: user?.first_name,
-      last_name: user?.last_name,
-      email: user?.email,
+      current_password: receivedData.current_password,
+      new_password: receivedData.new_password,
+      new_password_confirmation: receivedData.new_password_confirmation,
     };
 
-    updateMe(
+    changePassword(
       { data },
       {
         onSuccess: () => {
@@ -79,19 +77,36 @@ function EditUserPasswordForm({ onCloseModal }) {
     // console.log(errors);
   }
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
       <FormRow>
-        <FormField label="Lozinka" error={errors?.password?.message} required>
+        <FormField label="Trenutna lozinka" error={errors?.current_password?.message} required>
           <Controller
-            name="password"
+            name="current_password"
             control={control}
             rules={{
-              required: 'Molimo unesite lozinku!',
+              required: 'Molimo unesite trenutnu lozinku!',
+            }}
+            render={({ field }) => (
+              <StyledPasswordInput
+                {...field}
+                autoComplete="current-password"
+                prefix={<LockOutlined />}
+                placeholder="Trenutna lozinka"
+                size="large"
+                status={errors.current_password ? 'error' : ''}
+              />
+            )}
+          />
+        </FormField>
+      </FormRow>
+      <FormRow>
+        <FormField label="Nova lozinka" error={errors?.new_password?.message} required>
+          <Controller
+            name="new_password"
+            control={control}
+            rules={{
+              required: 'Molimo unesite novu lozinku!',
               minLength: {
                 value: 8,
                 message: 'Lozinka mora imati najmanje 8 znakova!',
@@ -106,7 +121,7 @@ function EditUserPasswordForm({ onCloseModal }) {
                 {...field}
                 autoComplete="new-password"
                 prefix={<LockOutlined />}
-                placeholder="Lozinka"
+                placeholder="Nova lozinka"
                 size="large"
                 status={errors.password ? 'error' : ''}
               />
@@ -116,13 +131,18 @@ function EditUserPasswordForm({ onCloseModal }) {
       </FormRow>
 
       <FormRow>
-        <FormField label="Ponovite lozinku" error={errors?.password2?.message} required>
+        <FormField
+          label="Ponovite novu lozinku"
+          error={errors?.new_password_confirmation?.message}
+          required
+        >
           <Controller
-            name="password2"
+            name="new_password_confirmation"
             control={control}
             rules={{
               required: 'Molimo ponovite lozinku!',
-              validate: (value) => value === getValues('password') || 'Lozinke se ne podudaraju!',
+              validate: (value) =>
+                value === getValues('new_password') || 'Lozinke se ne podudaraju!',
             }}
             render={({ field }) => (
               <StyledPasswordInput

@@ -46,3 +46,18 @@ export async function getUserPermissions() {
     throw new Error(error.response?.data?.message || 'Greška pri dobavljanju dozvola korisnika');
   }
 }
+
+export async function postChangePassword({
+  data: { current_password, new_password, new_password_confirmation },
+}) {
+  try {
+    const response = await axiosInstance.post(`/auth/change-password`, {
+      current_password,
+      new_password,
+      new_password_confirmation,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri promjeni lozinke');
+  }
+}

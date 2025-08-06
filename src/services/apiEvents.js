@@ -105,9 +105,9 @@ export async function updateEvent({
     }
 
     // POPRAVITI Edhem samo jos da napravi provjeru na backendu
-    if (slika === null) {
-      formData.append('remove_slika', 'true');
-    }
+    // if (slika === null) {
+    //   formData.append('remove_slika', 'true');
+    // }
 
     const response = await axiosInstance.put(`/events/events/${id}`, formData, {
       headers: {
@@ -115,6 +115,17 @@ export async function updateEvent({
       },
     });
 
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri ažuriranju događaja');
+  }
+}
+
+export async function updateEventDeleteImage({ id }) {
+  console.log('ID: ', id);
+
+  try {
+    const response = await axiosInstance.delete(`/events/events/remove-image/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Greška pri ažuriranju događaja');

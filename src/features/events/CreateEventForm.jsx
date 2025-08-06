@@ -25,9 +25,11 @@ import { useGetInstitutions } from '../institutions/useInstitutions';
 import { useGetUser } from '../users/useUser';
 import { useUserPermissions } from '../authentication/useUserPermissions';
 import { ImageCell } from '../../ui/ImageCell';
+import { useDeleteImage } from './useDeleteImage';
 
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const [existingSlika, setExistingSlika] = useState(null);
+  const { mutate: deleteImage } = useDeleteImage();
 
   const { isCreating, postEvent } = usePostEvent();
   const { isEditing, updateEvent } = useUpdateEvent();
@@ -91,6 +93,13 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   function onSubmit(data) {
     const { start_date, end_date } = data;
+
+    // console.log(existingSlika);
+
+    if (eventToEdit.slika && !existingSlika) {
+      const id = eventToEdit.idguid;
+      deleteImage({ id });
+    }
 
     if (!end_date && start_date) {
       const newEnd = dayjs(start_date).add(DEFAULT_EVENT_DURATION_IN_HOURS, 'hour');
@@ -353,7 +362,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
         </FormRow>
         <FormRow columns="1fr 1fr">
           <FormField label="Poster:" error={errors?.slika?.message}>
-            {existingSlika ? (
+            {existingSlika && existingSlika !== '00000000-0000-0000-0000-000000000000' ? (
               <ImageCell
                 slika={existingSlika}
                 onRemove={() => {
