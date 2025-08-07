@@ -24,6 +24,7 @@ import UserProfile from './pages/UserProfile';
 import AppLayoutFront from './ui/Front/AppLayoutFront';
 import ScrollToTop from './utils/ScrollToTop';
 import Roles from './pages/Roles';
+import VerifyEmail from './features/authentication/VerifyEmail';
 
 const queryClient = new QueryClient();
 
@@ -110,6 +111,7 @@ function App() {
             <Route element={<AppLayoutFront />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<SignUp />} />
+              <Route path="/auth/verify-email" element={<VerifyEmail />} />
               <Route index path="/" element={<HomePage />} />
               <Route path="*" element={<PageNotFound />} />
             </Route>

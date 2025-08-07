@@ -19,6 +19,7 @@ export function useRegister() {
       console.log(data);
 
       navigate('/login', { replace: true });
+      toast.success('Registracija uspješna! Pogledajte email inbox za verifikaciju email adrese');
     },
     onError: (error) => {
       toast.error(`${error.message}`);

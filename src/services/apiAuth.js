@@ -61,3 +61,32 @@ export async function postChangePassword({
     throw new Error(error.response?.data?.message || 'Greška pri promjeni lozinke');
   }
 }
+
+//SUPERADMIN
+export async function postActivate({ id }) {
+  try {
+    const response = await axiosInstance.post(`/admin/users/activate/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri aktivaciji korisnika');
+  }
+}
+export async function postDeactivate({ id }) {
+  try {
+    const response = await axiosInstance.post(`/admin/users/deactivate/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri deaktivaciji korisnika');
+  }
+}
+
+// Verify email
+export async function postVerifyEmail({ token }) {
+  try {
+    const response = await axiosInstance.post(`/auth/verify-email`, { token: token });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri verifikaciji korisnika');
+  }
+}

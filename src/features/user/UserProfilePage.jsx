@@ -3,6 +3,7 @@ import { HiOutlineUser } from 'react-icons/hi2';
 import styled from 'styled-components';
 import Spinner from '../../ui/Spinner';
 import Button from '../../ui/Button';
+import Checkbox from '../../ui/Checkbox';
 import { useUserPermissions } from '../authentication/useUserPermissions';
 import { useGetUser } from '../users/useUser';
 import EditUserForm from './EditUserForm';
@@ -116,6 +117,10 @@ export default function UserProfilePage() {
             <div>
               <EditLabel>Prezime</EditLabel>
               <EditData>{user.data.last_name}</EditData>
+            </div>
+            <div>
+              <EditLabel>Korisnik aktivan</EditLabel>
+              <Checkbox checked={user.data.active} />
             </div>
           </EditDataContainer>
           <div>

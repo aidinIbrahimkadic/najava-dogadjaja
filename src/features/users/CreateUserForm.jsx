@@ -16,6 +16,9 @@ import { useGetRoles } from '../roles/useRoles';
 import { useGetUser } from './useUser';
 import { useUpdateUserRoles } from '../user-roles/useUpdateUserRoles';
 import { useEffect, useState } from 'react';
+import Checkbox from '../../ui/Checkbox';
+import { usePostActivate } from '../user/usePostActivate';
+import { usePostDeactivate } from './usePostDeactivate';
 
 // Styled components
 const StyledInput = styled(Input)`
@@ -96,6 +99,8 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
   const { isLoadingInstitutions, institutions } = useGetInstitutions();
   const { isLoading: isLoadingRoles, roles } = useGetRoles();
   const { updateUserRoles } = useUpdateUserRoles();
+  const { postActivate, isEditing: isActivating } = usePostActivate();
+  const { postDeactivate, isEditing: isDeactivating } = usePostDeactivate();
 
   const { idguid: editId, ...editValuesRaw } = userToEdit;
   const isEditSession = Boolean(editId);
@@ -106,11 +111,12 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
   const editValues = {
     ...editValuesRaw,
     institucija: userToEdit?.institucija?.idguid || '',
+    active: userToEdit?.active ?? true,
   };
 
   const { handleSubmit, reset, control, formState, getValues, watch, setValue, register } = useForm(
     {
-      defaultValues: isEditSession ? editValues : {},
+      defaultValues: isEditSession ? editValues : { active: true },
     }
   );
 
@@ -128,7 +134,41 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
     }
   }, [user, isEditSession, setValue]);
 
+  useEffect(() => {
+    if (isEditSession) {
+      reset(editValues);
+    }
+  }, [editId]); // eslint-disable-line
+
   function onSubmit(data) {
+    if (isEditSession) {
+      // Ako se status promijenio:
+      if (userToEdit.active && !data.active) {
+        postDeactivate(
+          { id: userToEdit.idguid },
+          {
+            onSuccess: () => {
+              reset();
+              onCloseModal?.();
+            },
+          }
+        );
+        return;
+      }
+      if (!userToEdit.active && data.active) {
+        postActivate(
+          { id: userToEdit.idguid },
+          {
+            onSuccess: () => {
+              reset();
+              onCloseModal?.();
+            },
+          }
+        );
+        return;
+      }
+    }
+
     const newRoleId = getValues('role_idguid');
     if (isEditSession) {
       updateUser(
@@ -280,6 +320,33 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
                 size="large"
                 status={errors.last_name ? 'error' : ''}
               />
+            )}
+          />
+        </FormField>
+      </FormRow>
+      <FormRow columns="1fr">
+        <FormField error={errors?.active?.message}>
+          <Controller
+            name="active"
+            control={control}
+            render={({ field }) => (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <label
+                  htmlFor="active"
+                  style={{
+                    fontWeight: 'bold',
+                    userSelect: 'none',
+                  }}
+                >
+                  {field.value ? 'Aktivan korisnik' : 'Neaktivan korisnik'}
+                </label>
+                <Checkbox
+                  id="active"
+                  checked={!!field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  disabled={isActivating || isDeactivating}
+                />
+              </div>
             )}
           />
         </FormField>
