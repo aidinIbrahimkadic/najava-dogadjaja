@@ -62,7 +62,7 @@ export async function postChangePassword({
   }
 }
 
-//SUPERADMIN
+//SUPERADMIN AKTIVACIJA I DEAKTIVACIJA KORISNIKA
 export async function postActivate({ id }) {
   try {
     const response = await axiosInstance.post(`/admin/users/activate/${id}`);
@@ -88,5 +88,63 @@ export async function postVerifyEmail({ token }) {
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Greška pri verifikaciji korisnika');
+  }
+}
+
+//DEACTIVATE ME
+
+export async function postDeactivateMe({ data: { current_password } }) {
+  try {
+    const response = await axiosInstance.post(`/auth/deactivate`, {
+      current_password,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri deaktivaciji korisnika');
+  }
+}
+
+//FORGOT PASSWORD
+export async function postForgotPassword({ data: { email } }) {
+  try {
+    const response = await axiosInstance.post(`/auth/forgot-password`, {
+      email,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška');
+  }
+}
+
+export async function postResendVerification({ data: { email } }) {
+  try {
+    const response = await axiosInstance.post(`/auth/resend-verification`, {
+      email,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška');
+  }
+}
+
+export async function postResetPassword({
+  data: { email, password, password_confirmation },
+  token,
+}) {
+  console.log('TOKEN:', token);
+  console.log('mail:', email);
+  console.log('password:', password);
+  console.log('password_confirmation:', password_confirmation);
+
+  try {
+    const response = await axiosInstance.post(`/auth/reset-password`, {
+      email,
+      token,
+      password,
+      password_confirmation,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška');
   }
 }

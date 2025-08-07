@@ -3,10 +3,11 @@ import { Input, Button, Card, Typography, Spin } from 'antd';
 import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import CalendarSpinner from '../../ui/CalendarSpinner';
-import { useLogin } from './useLogin';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { StyledPasswordInput } from '../../ui/StyledPasswordInput';
+import { usePostResetPassword } from './usePostResetPassword';
 
 const { Title, Text } = Typography;
 
@@ -119,20 +120,6 @@ const LoginButton = styled(Button)`
   }
 `;
 
-const ForgotPassword = styled(Link)`
-  display: block;
-  text-align: center;
-  color: #f97316;
-  text-decoration: none;
-  margin-top: 16px;
-  font-weight: 500;
-
-  &:hover {
-    color: #ea580c;
-    text-decoration: underline;
-  }
-`;
-
 const RegisterLink = styled.div`
   text-align: center;
   margin-top: 24px;
@@ -163,8 +150,10 @@ const SpinnerContainer = styled.div`
   min-height: calc(100vh - 140px);
 `;
 
-export default function LoginPage() {
-  const { login, isPending, isError } = useLogin();
+export default function ResetPasswordForm() {
+  const { postResetPassword, isCreating, isError } = usePostResetPassword();
+  const [searchParams] = useSearchParams();
+
   const location = useLocation();
 
   useEffect(() => {
@@ -178,19 +167,23 @@ export default function LoginPage() {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
       email: '',
       password: '',
+      token: '',
     },
   });
 
   const onSubmit = (data) => {
-    login({ email: data.email, password: data.password });
+    const token = searchParams.get('token');
+
+    postResetPassword({ data, token });
   };
 
-  if (isPending) {
+  if (isCreating) {
     return (
       <SpinnerContainer>
         <CalendarSpinner />
@@ -201,8 +194,8 @@ export default function LoginPage() {
   return (
     <LoginContainer>
       <LoginCard>
-        <StyledTitle level={2}>Dobrodošli</StyledTitle>
-        <Subtitle>Prijavite se na svoj račun</Subtitle>
+        <StyledTitle level={2}>Zaboravljena lozinka?</StyledTitle>
+        <Subtitle>Unesite Vaš email i lozinku</Subtitle>
 
         <StyledForm onSubmit={handleSubmit(onSubmit)}>
           <FormItem>
@@ -231,42 +224,63 @@ export default function LoginPage() {
               )}
             />
           </FormItem>
-
-          <FormItem>
+          <FormItem label="Nova lozinka" required>
             <Controller
               name="password"
               control={control}
               rules={{
-                required: 'Molimo unesite lozinku!',
+                required: 'Molimo unesite novu lozinku!',
+                minLength: {
+                  value: 8,
+                  message: 'Lozinka mora imati najmanje 8 znakova!',
+                },
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+                  message: 'Lozinka mora sadržavati velika slova, mala slova i brojeve!',
+                },
               }}
               render={({ field }) => (
-                <>
-                  <Input.Password
-                    {...field}
-                    prefix={<LockOutlined />}
-                    placeholder="Lozinka"
-                    size="large"
-                    status={errors.password ? 'error' : ''}
-                  />
-                  {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
-                </>
+                <StyledPasswordInput
+                  {...field}
+                  prefix={<LockOutlined />}
+                  placeholder="Nova lozinka"
+                  size="large"
+                  status={errors.password ? 'error' : ''}
+                />
               )}
             />
           </FormItem>
-
+          <FormItem label="Ponovite novu lozinku" required>
+            <Controller
+              name="password_confirmation"
+              control={control}
+              rules={{
+                required: 'Molimo ponovite lozinku!',
+                validate: (value) => value === getValues('password') || 'Lozinke se ne podudaraju!',
+              }}
+              render={({ field }) => (
+                <StyledPasswordInput
+                  {...field}
+                  prefix={<LockOutlined />}
+                  placeholder="Ponovite lozinku"
+                  size="large"
+                  status={errors.password_confirmation ? 'error' : ''}
+                  onPaste={(e) => e.preventDefault()}
+                />
+              )}
+            />
+          </FormItem>
           <FormItem>
             <LoginButton
               type="primary"
               htmlType="submit"
               icon={<LoginOutlined />}
-              disabled={isPending}
+              disabled={isCreating}
             >
-              {isPending ? 'Prijavljivanje...' : 'Prijavite se'}
+              {isCreating ? 'Šaljemo email...' : 'Promijeni lozinku'}
             </LoginButton>
           </FormItem>
         </StyledForm>
-
-        <ForgotPassword to="/forgot-password">Zaboravili ste lozinku?</ForgotPassword>
 
         <RegisterLink>
           <span>Nemate račun?</span>
@@ -276,3 +290,22 @@ export default function LoginPage() {
     </LoginContainer>
   );
 }
+
+// import { useEffect, useState } from 'react';
+// import { useSearchParams } from 'react-router-dom'; // Ako koristiš react-router-dom v6+
+// import { usePostResetPassword } from './usePostResetPassword';
+
+// function ResetPasswordForm() {
+//   const [searchParams] = useSearchParams();
+//   const [status, setStatus] = useState('loading'); // loading, success, error
+//   const [message, setMessage] = useState('');
+
+//   const { postResetPassword } = usePostResetPassword();
+
+//   postResetPassword({ token });
+//   if (status === 'loading') return <div>Verifikacija u toku...</div>;
+//   if (status === 'error') return <div style={{ color: 'red' }}>{message}</div>;
+//   return <div style={{ color: 'green' }}>{message}</div>;
+// }
+
+// export default ResetPasswordForm;

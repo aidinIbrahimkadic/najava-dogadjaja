@@ -14,6 +14,7 @@ import { useGetUser } from './useUser';
 import EditUserPasswordForm from './EditUserPasswordForm';
 import Spinner from '../../ui/Spinner';
 import { useUserPermissions } from '../authentication/useUserPermissions';
+import Checkbox from '../../ui/Checkbox';
 // import CreateLocationForm from './CreateLocationForm';
 
 function UserRow({ user, index }) {
@@ -21,10 +22,11 @@ function UserRow({ user, index }) {
   const { mutate: deleteUser, isPending } = useDeleteUser();
   const { isLoading, hasPermission } = useUserPermissions();
 
-  const { idguid, email, first_name, last_name, institucija } = user;
+  const { idguid, email, first_name, last_name, institucija, active } = user;
 
   const { isLoading: isLoadingMoreOnUser, user: moreOnUser } = useGetUser(idguid);
 
+  // const fullUser = { ...user, role: moreOnUser?.data?.roles[0] };
   function handleDelete(id) {
     deleteUser(id);
   }
@@ -42,6 +44,9 @@ function UserRow({ user, index }) {
       <Cell>{institucija?.naziv}</Cell>
       <Cell>
         {isLoadingMoreOnUser ? <Spinner size="small" /> : moreOnUser?.data?.roles[0]?.name}
+      </Cell>
+      <Cell>
+        <Checkbox checked={active} disabled />
       </Cell>
       <Cell>
         <Modal>

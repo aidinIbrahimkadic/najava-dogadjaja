@@ -3,6 +3,7 @@
 // Ovaj kod kreira instancu axios-a koja automatski upravlja JWT tokenima, uključujući proaktivno osvježavanje tokena 5 sekundi prije isteka, kao i reaktivno osvježavanje tokena kada dođe do greške 401 ili 403. Također, čisti lokalnu pohranu i preusmjerava korisnika na login stranicu kada token istekne.
 
 import axios from 'axios';
+import { redirectToLogin } from '../utils/redirectService';
 
 const API_URL = 'https://events-opcina.poruci.ba/api';
 
@@ -122,7 +123,8 @@ const handleTokenExpired = () => {
   delete axiosInstance.defaults.headers.common['Authorization'];
 
   // Redirect na login
-  window.location.href = '/login';
+  // window.location.href = '/login';
+  redirectToLogin('Uneseni korisnik ne postoji');
 };
 
 // Funkcija za provjeru da li je greška vezana za istekli token
@@ -153,7 +155,8 @@ axiosInstance.interceptors.response.use(
     // VAŽNO: Provjeri da li je greška vezana za istekli token
     // ALI samo ako se trenutno ne izvršava refresh proces
     if (isTokenExpiredError(error) && !isRefreshing) {
-      console.log('Token expired i nije u toku refresh - redirecting to login');
+      redirectToLogin('Token expired');
+      // console.log('Token expired i nije u toku refresh - redirecting to login');
       handleTokenExpired();
       return Promise.reject(error);
     }
@@ -161,7 +164,8 @@ axiosInstance.interceptors.response.use(
     if (isUnauthorized && refreshToken) {
       if (originalRequest._retry) {
         // Token refresh već neuspješan jednom za ovaj request
-        console.log('Token refresh failed after retry - redirecting to login');
+        redirectToLogin('Token refresh failed');
+        // console.log('Token refresh failed after retry - redirecting to login');
         handleTokenExpired();
         return Promise.reject(error);
       }
@@ -212,7 +216,8 @@ axiosInstance.interceptors.response.use(
 
     // Za sve ostale unauthorized greške bez refresh tokena
     if (isUnauthorized && !refreshToken) {
-      console.log('No refresh token available - redirecting to login');
+      redirectToLogin('No refresh token available');
+      // console.log('No refresh token available - redirecting to login');
       handleTokenExpired();
     }
 

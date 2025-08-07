@@ -99,6 +99,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
   const { isLoadingInstitutions, institutions } = useGetInstitutions();
   const { isLoading: isLoadingRoles, roles } = useGetRoles();
   const { updateUserRoles } = useUpdateUserRoles();
+
   const { postActivate, isEditing: isActivating } = usePostActivate();
   const { postDeactivate, isEditing: isDeactivating } = usePostDeactivate();
 
@@ -111,6 +112,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
   const editValues = {
     ...editValuesRaw,
     institucija: userToEdit?.institucija?.idguid || '',
+    role_idguid: user?.data?.roles?.[0]?.idguid || '', // 👈 dodaj ovo
     active: userToEdit?.active ?? true,
   };
 

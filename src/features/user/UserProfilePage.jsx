@@ -8,6 +8,7 @@ import { useUserPermissions } from '../authentication/useUserPermissions';
 import { useGetUser } from '../users/useUser';
 import EditUserForm from './EditUserForm';
 import EditUserPasswordForm from './EditUserPasswordForm';
+import DeactivateUserForm from './DeactivateUserForm';
 
 const AccountContainer = styled.div`
   display: flex;
@@ -120,7 +121,7 @@ export default function UserProfilePage() {
             </div>
             <div>
               <EditLabel>Korisnik aktivan</EditLabel>
-              <Checkbox checked={user.data.active} />
+              <Checkbox checked={user.data.active} readOnly />
             </div>
           </EditDataContainer>
           <div>
@@ -158,6 +159,18 @@ export default function UserProfilePage() {
               </Modal.Open>
               <Modal.Window size="medium" name="Promijeni lozinku">
                 <EditUserPasswordForm />
+              </Modal.Window>
+            </Modal>
+          </div>
+          <div>
+            <Modal>
+              <Modal.Open opens="Deaktiviraj profil">
+                <Button size="small" variation="link">
+                  Deaktiviraj profil
+                </Button>
+              </Modal.Open>
+              <Modal.Window size="medium" name="Deaktiviraj profil">
+                <DeactivateUserForm userToEdit={user} />
               </Modal.Window>
             </Modal>
           </div>

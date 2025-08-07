@@ -3,10 +3,10 @@ import { Input, Button, Card, Typography, Spin } from 'antd';
 import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import CalendarSpinner from '../../ui/CalendarSpinner';
-import { useLogin } from './useLogin';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { usePostForgotPassword } from './usepostForgotPassword';
 
 const { Title, Text } = Typography;
 
@@ -30,7 +30,28 @@ const LoginCard = styled(Card)`
     padding: 48px 32px;
   }
 `;
+const LoginLink = styled.div`
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
 
+  span {
+    color: #8c8c8c;
+    margin-right: 8px;
+  }
+
+  a {
+    color: #f97316;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      color: #ea580c;
+      text-decoration: underline;
+    }
+  }
+`;
 const StyledTitle = styled(Title)`
   text-align: center;
   margin-bottom: 8px !important;
@@ -119,21 +140,10 @@ const LoginButton = styled(Button)`
   }
 `;
 
-const ForgotPassword = styled(Link)`
-  display: block;
-  text-align: center;
-  color: #f97316;
-  text-decoration: none;
-  margin-top: 16px;
-  font-weight: 500;
-
-  &:hover {
-    color: #ea580c;
-    text-decoration: underline;
-  }
-`;
-
 const RegisterLink = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   text-align: center;
   margin-top: 24px;
   padding-top: 24px;
@@ -163,8 +173,8 @@ const SpinnerContainer = styled.div`
   min-height: calc(100vh - 140px);
 `;
 
-export default function LoginPage() {
-  const { login, isPending, isError } = useLogin();
+export default function ForgotPasswordForm() {
+  const { postForgotPassword, isCreating, isError } = usePostForgotPassword();
   const location = useLocation();
 
   useEffect(() => {
@@ -182,15 +192,14 @@ export default function LoginPage() {
   } = useForm({
     defaultValues: {
       email: '',
-      password: '',
     },
   });
 
   const onSubmit = (data) => {
-    login({ email: data.email, password: data.password });
+    postForgotPassword({ data });
   };
 
-  if (isPending) {
+  if (isCreating) {
     return (
       <SpinnerContainer>
         <CalendarSpinner />
@@ -201,8 +210,8 @@ export default function LoginPage() {
   return (
     <LoginContainer>
       <LoginCard>
-        <StyledTitle level={2}>Dobrodošli</StyledTitle>
-        <Subtitle>Prijavite se na svoj račun</Subtitle>
+        <StyledTitle level={2}>Zaboravljena šifra?</StyledTitle>
+        <Subtitle>Unesite Vaš email</Subtitle>
 
         <StyledForm onSubmit={handleSubmit(onSubmit)}>
           <FormItem>
@@ -233,44 +242,25 @@ export default function LoginPage() {
           </FormItem>
 
           <FormItem>
-            <Controller
-              name="password"
-              control={control}
-              rules={{
-                required: 'Molimo unesite lozinku!',
-              }}
-              render={({ field }) => (
-                <>
-                  <Input.Password
-                    {...field}
-                    prefix={<LockOutlined />}
-                    placeholder="Lozinka"
-                    size="large"
-                    status={errors.password ? 'error' : ''}
-                  />
-                  {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
-                </>
-              )}
-            />
-          </FormItem>
-
-          <FormItem>
             <LoginButton
               type="primary"
               htmlType="submit"
               icon={<LoginOutlined />}
-              disabled={isPending}
+              disabled={isCreating}
             >
-              {isPending ? 'Prijavljivanje...' : 'Prijavite se'}
+              {isCreating ? 'Šaljemo email...' : 'Zahtjev za promjenu šifre'}
             </LoginButton>
           </FormItem>
         </StyledForm>
-
-        <ForgotPassword to="/forgot-password">Zaboravili ste lozinku?</ForgotPassword>
-
         <RegisterLink>
-          <span>Nemate račun?</span>
-          <Link to="/register">Registrujte se</Link>
+          <div>
+            <span>Već imate račun?</span>
+            <Link to="/login">Prijavite se</Link>
+          </div>
+          <div>
+            <span>Nemate račun?</span>
+            <Link to="/register">Registrujte se</Link>
+          </div>
         </RegisterLink>
       </LoginCard>
     </LoginContainer>

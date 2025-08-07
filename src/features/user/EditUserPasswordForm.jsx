@@ -4,50 +4,11 @@ import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 import FormRow from '../../ui/FormRow';
 import FormField from '../../ui/FormField';
-// import { useUpdateMe } from './useUpdateMe';
 import { LockOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
-import { Input } from 'antd';
-// import { useUserPermissions } from '../authentication/useUserPermissions';
-import Spinner from '../../ui/Spinner';
+
 import { usePostChangePassword } from './usePostChangePassword';
 
-const StyledPasswordInput = styled(Input.Password)`
-  &.ant-input-affix-wrapper {
-    border: 1px solid var(--color-grey-300);
-    background-color: var(--color-grey-0);
-    border-radius: var(--border-radius-sm);
-    padding: 0.8rem 1.2rem;
-    box-shadow: none;
-    transition: all 0.3s;
-    height: auto;
-
-    &:hover {
-      border-color: var(--color-brand-500);
-    }
-
-    &:focus,
-    &.ant-input-affix-wrapper-focused {
-      border-color: var(--color-brand-500);
-      box-shadow: none;
-    }
-
-    .ant-input {
-      background: transparent;
-      border: none;
-      padding: 0;
-      height: auto;
-
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    .ant-input-prefix {
-      margin-right: 8px;
-    }
-  }
-`;
+import { StyledPasswordInput } from '../../ui/StyledPasswordInput';
 
 function EditUserPasswordForm({ onCloseModal }) {
   const { mutate: changePassword, isEditing } = usePostChangePassword();
@@ -150,7 +111,7 @@ function EditUserPasswordForm({ onCloseModal }) {
                 prefix={<LockOutlined />}
                 placeholder="Ponovite lozinku"
                 size="large"
-                status={errors.password2 ? 'error' : ''}
+                status={errors.new_password_confirmation ? 'error' : ''}
                 onPaste={(e) => e.preventDefault()}
               />
             )}
