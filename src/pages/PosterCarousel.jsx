@@ -144,7 +144,7 @@ export default function PosterCarousel() {
       onMouseMove={handleMouseMove}
     >
       <CarouselContent>
-        {[...posters, ...posters].map((img, idx) => (
+        {[...posters, ...posters, ...posters, ...posters, ...posters].map((img, idx) => (
           <PosterCard
             key={idx}
             $image={img}
