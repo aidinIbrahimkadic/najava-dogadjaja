@@ -6,7 +6,7 @@ import CalendarSpinner from '../../ui/CalendarSpinner';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { usePostForgotPassword } from './usepostForgotPassword';
+import { usePostForgotPassword } from './usePostForgotPassword';
 
 const { Title, Text } = Typography;
 
