@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import PosterCarousel from './PosterCarousel';
+import PosterCarousel from '../ui/Front/PosterCarousel';
 
 const Container = styled.div`
   background-color: var(--color-grey-50);
