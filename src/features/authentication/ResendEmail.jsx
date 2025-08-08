@@ -3,11 +3,10 @@ import { Input, Button, Card, Typography, Spin } from 'antd';
 import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import CalendarSpinner from '../../ui/CalendarSpinner';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { StyledPasswordInput } from '../../ui/StyledPasswordInput';
-import { usePostResetPassword } from './usePostResetPassword';
+import { usePostResendVerification } from './usePostResendVerification';
 
 const { Title, Text } = Typography;
 
@@ -120,29 +119,6 @@ const LoginButton = styled(Button)`
   }
 `;
 
-const RegisterLink = styled.div`
-  text-align: center;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #f0f0f0;
-
-  span {
-    color: #8c8c8c;
-    margin-right: 8px;
-  }
-
-  a {
-    color: #f97316;
-    font-weight: 600;
-    text-decoration: none;
-
-    &:hover {
-      color: #ea580c;
-      text-decoration: underline;
-    }
-  }
-`;
-
 const SpinnerContainer = styled.div`
   display: flex;
   align-items: center;
@@ -150,10 +126,9 @@ const SpinnerContainer = styled.div`
   min-height: calc(100vh - 140px);
 `;
 
-export default function ResetPasswordForm() {
-  const { postResetPassword, isCreating, isError } = usePostResetPassword();
-  const [searchParams] = useSearchParams();
-
+export default function ResendEmail() {
+  const { postResendVerification, isPending, isError } = usePostResendVerification();
+  //   const [searchParams] = useSearchParams();
   const location = useLocation();
 
   useEffect(() => {
@@ -164,26 +139,25 @@ export default function ResetPasswordForm() {
     }
   }, [location]);
 
+  //   const email = searchParams.get('email');
+
+  const email = location.state?.email || '';
+
   const {
     control,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: '',
-      password: '',
-      token: '',
+      email: email,
     },
   });
 
   const onSubmit = (data) => {
-    const token = searchParams.get('token');
-
-    postResetPassword({ data, token });
+    postResendVerification({ data });
   };
 
-  if (isCreating) {
+  if (isPending) {
     return (
       <SpinnerContainer>
         <CalendarSpinner />
@@ -194,8 +168,8 @@ export default function ResetPasswordForm() {
   return (
     <LoginContainer>
       <LoginCard>
-        <StyledTitle level={2}>Zaboravljena lozinka?</StyledTitle>
-        <Subtitle>Unesite Vaš email i lozinku</Subtitle>
+        <StyledTitle level={2}>Niste dobili email?</StyledTitle>
+        <Subtitle>Pošaljite ponovo</Subtitle>
 
         <StyledForm onSubmit={handleSubmit(onSubmit)}>
           <FormItem>
@@ -224,68 +198,18 @@ export default function ResetPasswordForm() {
               )}
             />
           </FormItem>
-          <FormItem label="Nova lozinka" required>
-            <Controller
-              name="password"
-              control={control}
-              rules={{
-                required: 'Molimo unesite novu lozinku!',
-                minLength: {
-                  value: 8,
-                  message: 'Lozinka mora imati najmanje 8 znakova!',
-                },
-                pattern: {
-                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-                  message: 'Lozinka mora sadržavati velika slova, mala slova i brojeve!',
-                },
-              }}
-              render={({ field }) => (
-                <StyledPasswordInput
-                  {...field}
-                  prefix={<LockOutlined />}
-                  placeholder="Nova lozinka"
-                  size="large"
-                  status={errors.password ? 'error' : ''}
-                />
-              )}
-            />
-          </FormItem>
-          <FormItem label="Ponovite novu lozinku" required>
-            <Controller
-              name="password_confirmation"
-              control={control}
-              rules={{
-                required: 'Molimo ponovite lozinku!',
-                validate: (value) => value === getValues('password') || 'Lozinke se ne podudaraju!',
-              }}
-              render={({ field }) => (
-                <StyledPasswordInput
-                  {...field}
-                  prefix={<LockOutlined />}
-                  placeholder="Ponovite lozinku"
-                  size="large"
-                  status={errors.password_confirmation ? 'error' : ''}
-                  onPaste={(e) => e.preventDefault()}
-                />
-              )}
-            />
-          </FormItem>
+
           <FormItem>
             <LoginButton
               type="primary"
               htmlType="submit"
               icon={<LoginOutlined />}
-              disabled={isCreating}
+              disabled={isPending}
             >
-              {isCreating ? 'Šaljemo email...' : 'Promijeni lozinku'}
+              {isPending ? 'Šaljem email...' : 'Pošalji ponovo email'}
             </LoginButton>
           </FormItem>
         </StyledForm>
-
-        <RegisterLink>
-          <span>Nemate račun?</span>
-          <Link to="/register">Registrujte se</Link>
-        </RegisterLink>
       </LoginCard>
     </LoginContainer>
   );

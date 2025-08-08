@@ -101,7 +101,7 @@ function EditUserPasswordForm({ userToEdit = {}, onCloseModal }) {
             render={({ field }) => (
               <StyledPasswordInput
                 {...field}
-                autoComplete="new-password"
+                // autoComplete="new-password"
                 prefix={<LockOutlined />}
                 placeholder="Lozinka"
                 size="large"

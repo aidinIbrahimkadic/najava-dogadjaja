@@ -165,7 +165,6 @@ export default function RegisterForm() {
   });
 
   const onSubmit = (data) => {
-    console.log('Register:', data);
     register(data);
   };
 

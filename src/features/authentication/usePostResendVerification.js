@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 export function usePostResendVerification() {
   const {
     mutate: postResendVerification,
-    isPending: isCreating,
+    isPending,
     isError,
   } = useMutation({
     mutationFn: postResendVerificationAPI,
@@ -19,5 +19,5 @@ export function usePostResendVerification() {
     },
   });
 
-  return { postResendVerification, isCreating, isError };
+  return { postResendVerification, isPending, isError };
 }

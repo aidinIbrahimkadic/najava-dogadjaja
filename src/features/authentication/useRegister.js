@@ -16,9 +16,7 @@ export function useRegister() {
   } = useMutation({
     mutationFn: registerApi,
     onSuccess: (data) => {
-      console.log(data);
-
-      navigate('/login', { replace: true });
+      navigate(`/resend-email`, { state: { email: data.data.user.email }, replace: true });
       toast.success('Registracija uspješna! Pogledajte email inbox za verifikaciju email adrese');
     },
     onError: (error) => {

@@ -27,6 +27,7 @@ import Roles from './pages/Roles';
 import VerifyEmail from './features/authentication/VerifyEmail';
 import ForgotPasswordForm from './features/authentication/ForgotPasswordForm';
 import ResetPasswordForm from './features/authentication/ResetPasswordForm';
+import ResendEmail from './features/authentication/ResendEmail';
 
 const queryClient = new QueryClient();
 
@@ -113,6 +114,7 @@ function App() {
             <Route element={<AppLayoutFront />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<SignUp />} />
+              <Route path="/resend-email" element={<ResendEmail />} />
               <Route path="/forgot-password" element={<ForgotPasswordForm />} />
               <Route path="/reset-password" element={<ResetPasswordForm />} />
               <Route path="/auth/verify-email" element={<VerifyEmail />} />
