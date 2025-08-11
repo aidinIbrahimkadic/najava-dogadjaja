@@ -172,8 +172,6 @@ function CategoryRow({ category, index }) {
         )}
       </Cell>
 
-      {/* <Cell type="textAdresa">{opis}</Cell> */}
-
       <Cell>
         <Modal>
           <Menus.Menu>

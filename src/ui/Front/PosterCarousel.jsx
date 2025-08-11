@@ -39,10 +39,6 @@ const PosterCard = styled.div`
 `;
 
 const Overlay = styled.div`
-  /* position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0; */
   background: rgba(0, 0, 0, 0.5);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -62,7 +58,8 @@ const Overlay = styled.div`
 const PosterButton = styled(Button)`
   background-color: var(--color-grey-0) !important;
   color: var(--color-brand-700) !important;
-  border: 1px solid var(--color-brand-700);
+  /* border: 1px solid var(--color-brand-700); */
+  border: none;
   border-radius: 5rem;
   width: 15rem;
   height: 4rem;
@@ -70,7 +67,7 @@ const PosterButton = styled(Button)`
   &:hover {
     background-color: var(--color-brand-700) !important;
     color: var(--color-grey-0) !important;
-    border: var(--color-brand-700);
+    /* border: var(--color-brand-700); */
   }
 `;
 
@@ -152,8 +149,8 @@ export default function PosterCarousel() {
             $dimmed={idx % posters.length === 0 || idx % posters.length === posters.length - 1}
           >
             <Overlay>
-              <PosterButton icon={<EyeOutlined />}>Pogledaj više</PosterButton>
-              <PosterButton icon={<HeartOutlined />}>Like</PosterButton>
+              <PosterButton icon={<EyeOutlined />}>Više</PosterButton>
+              <PosterButton icon={<HeartOutlined />}>Dolazim</PosterButton>
             </Overlay>
           </PosterCard>
         ))}
