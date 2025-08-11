@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import Heading from '../Heading';
 
 // --- Dummy data (narednih događaja) ---
 // Pretpostavka: podaci već dolaze sortirani po datumu/vremenu
@@ -11,7 +12,7 @@ const DUMMY_EVENTS = [
     title: 'Sajam domaćih proizvoda',
     location: 'Gradski trg, Tešanj',
     category: 'Ekonomija',
-    image: null,
+    image: '/images/poster.jpg',
   },
   {
     id: 'e2',
@@ -20,7 +21,7 @@ const DUMMY_EVENTS = [
     title: 'Koncert klasične muzike',
     location: 'Centar za kulturu i obrazovanje',
     category: 'Kultura',
-    image: null,
+    image: '/images/poster1.jpg',
   },
   {
     id: 'e3',
@@ -29,7 +30,7 @@ const DUMMY_EVENTS = [
     title: 'Radionica za poduzetnike',
     location: 'Poslovni inkubator Tešanj',
     category: 'Edukacija',
-    image: null,
+    image: '/images/poster2.jpg',
   },
   {
     id: 'e4',
@@ -38,7 +39,7 @@ const DUMMY_EVENTS = [
     title: 'Ljetno kino: Dokumentarni film',
     location: 'Amfiteatar parka',
     category: 'Film',
-    image: null,
+    image: '/images/poster3.jpg',
   },
   {
     id: 'e5',
@@ -47,7 +48,7 @@ const DUMMY_EVENTS = [
     title: 'Turnir u basketu 3x3',
     location: 'Sportski teren Bukva',
     category: 'Sport',
-    image: null,
+    image: '/images/poster4.jpg',
   },
   {
     id: 'e6',
@@ -56,7 +57,7 @@ const DUMMY_EVENTS = [
     title: 'Slikarska kolonija',
     location: 'Stari grad',
     category: 'Umjetnost',
-    image: null,
+    image: '/images/poster6.jpg',
   },
 ];
 
@@ -83,6 +84,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  margin: 4rem 0;
 `;
 
 const DateSection = styled.section`
@@ -120,19 +122,14 @@ const EventsColumn = styled.div`
 
 const EventCard = styled.article`
   display: grid;
-  grid-template-columns: 100px 220px 1fr;
-  gap: 1rem;
+  grid-template-columns: 0.1fr 1fr;
   align-items: center;
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
+  gap: 1rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
   overflow: hidden;
-
-  grid-template-areas:
-    'time poster category'
-    'time title  category'
-    'time meta   category';
 
   @media (max-width: 900px) {
     grid-template-columns: 80px 120px 1fr;
@@ -140,23 +137,17 @@ const EventCard = styled.article`
 `;
 
 const TimeCol = styled.div`
-  grid-area: time;
-  font-weight: 700;
-  font-size: 2rem;
+  font-weight: 500;
+  font-size: 1.6rem;
   color: #111827;
   letter-spacing: 0.3px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-brand-100);
 `;
 
 // A4 poster omjer (210x297). Koristimo aspect-ratio (moderno) + fallback.
 const Poster = styled.div`
-  grid-area: poster;
-  position: relative;
-  width: 100%;
+  /* position: relative; */
+  height: 14rem;
+  width: 10rem;
   max-width: 220px;
   border-radius: 12px;
   overflow: hidden;
@@ -172,30 +163,32 @@ const Poster = styled.div`
     padding-bottom: calc(297 / 210 * 100%);
   }
 
-  ${(p) =>
-    p.$image &&
+  ${({ $image }) =>
+    $image &&
     css`
-      background-image: url(${p.$image});
+      background-image: url(${$image.startsWith('http')
+        ? $image
+        : `http://localhost:5177${$image}`});
       background-size: cover;
-      background-position: center;
+      /* background-position: center; */
+      background-repeat: no-repeat;
     `}
 `;
 
 const TitleCol = styled.div`
-  grid-area: title;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 `;
 
 const LocationText = styled.div`
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   color: #6b7280;
 `;
 
 const Title = styled.h3`
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.8rem;
   line-height: 1.3;
   color: #111827;
   letter-spacing: 0.6px;
@@ -203,7 +196,6 @@ const Title = styled.h3`
 `;
 
 const Category = styled.span`
-  grid-area: category;
   justify-self: end;
   background: #eef2ff;
   color: #3730a3;
@@ -220,10 +212,17 @@ const Category = styled.span`
 `;
 
 const MetaRow = styled.div`
-  grid-area: meta;
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+`;
+
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 0.1fr;
+  padding: 1rem;
+  align-items: center;
+  width: 100%;
 `;
 
 // --- Component ---
@@ -233,6 +232,7 @@ export default function NextEvents() {
 
   return (
     <Wrapper>
+      <Heading as="h2">Nadolazeći događaji</Heading>
       {orderedDates.map((dateKey) => (
         <DateSection key={dateKey}>
           <DateBadge>{formatDate(dateKey)}</DateBadge>
@@ -240,17 +240,18 @@ export default function NextEvents() {
           <EventsColumn>
             {grouped[dateKey].map((ev) => (
               <EventCard key={ev.id}>
-                <TimeCol>{ev.startTime}h</TimeCol>
                 <Poster $image={ev.image} aria-label="A4 poster" />
+                <Container>
+                  <TitleCol>
+                    {/* Lokacija može biti iznad ili ispod naslova; ostavili smo iznad */}
+                    <LocationText>{ev.location}</LocationText>
+                    <Title>{ev.title}</Title>
+                    <TimeCol>{ev.startTime}h</TimeCol>
+                    <MetaRow />
+                  </TitleCol>
 
-                <TitleCol>
-                  {/* Lokacija može biti iznad ili ispod naslova; ostavili smo iznad */}
-                  <LocationText>{ev.location}</LocationText>
-                  <Title>{ev.title}</Title>
-                  <MetaRow />
-                </TitleCol>
-
-                <Category>{ev.category}</Category>
+                  <Category>{ev.category}</Category>
+                </Container>
               </EventCard>
             ))}
           </EventsColumn>
