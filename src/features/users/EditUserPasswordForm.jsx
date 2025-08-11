@@ -59,7 +59,7 @@ function EditUserPasswordForm({ userToEdit = {}, onCloseModal }) {
   const { errors } = formState;
 
   function onSubmit(formData) {
-    const data = {
+    const formattedData = {
       email: userToEdit.email,
       first_name: userToEdit.first_name,
       last_name: userToEdit.last_name,
@@ -68,9 +68,8 @@ function EditUserPasswordForm({ userToEdit = {}, onCloseModal }) {
       institucija_idguid: userToEdit.institucija,
       role_idguid: user.data.roles[0].idguid,
     };
-    console.log('userToEdit:', user);
     updateUser(
-      { data, editId },
+      { formattedData, editId },
       {
         onSuccess: () => {
           reset();

@@ -33,9 +33,16 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   const { isCreating, postEvent } = usePostEvent();
   const { isEditing, updateEvent } = useUpdateEvent();
-  const { isLoading, categories } = useGetCategories();
+  const { isLoading, categories: categoriesFromAPI } = useGetCategories();
   const { isLoading: isLocationsLoading, locations } = useGetLocations();
   const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions();
+
+  //PRIKAZI SAMO CHILD KATEGORIJE
+  const categories = categoriesFromAPI?.filter((category) => {
+    if (category.parent_idguid !== '00000000-0000-0000-0000-000000000000') {
+      return category;
+    }
+  });
 
   //KORISNIK KOJI JE LOGOVAN
   const { isLoading: isLoadingPermission, hasPermission, user: userCreate } = useUserPermissions();
@@ -93,8 +100,6 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   function onSubmit(data) {
     const { start_date, end_date } = data;
-
-    // console.log(existingSlika);
 
     if (eventToEdit.slika && !existingSlika) {
       const id = eventToEdit.idguid;

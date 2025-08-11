@@ -13,6 +13,7 @@ export function useUpdateInstitution() {
   } = useMutation({
     mutationFn: updateInstitutionAPI,
     onSuccess: () => {
+      toast.success('Podaci institucije su uspješno ažurirani!');
       queryClient.invalidateQueries(['institutions']);
     },
     onError: (error) => {

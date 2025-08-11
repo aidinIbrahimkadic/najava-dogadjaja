@@ -9,7 +9,7 @@ export function useDeleteCategory() {
     mutationFn: deleteCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      toast.success('Category deleted successfully');
+      toast.success('Kategorija uspješno izbrisana');
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to delete category');

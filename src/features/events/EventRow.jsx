@@ -52,7 +52,7 @@ function EventRow({ event, index }) {
           parseFloat(cijena).toFixed(2) + ' KM'
         )}{' '}
       </Cell>
-      <Cell>{isLoadingLocation ? <Spinner size="small" /> : lokacija.naziv}</Cell>
+      <Cell>{isLoadingLocation ? <Spinner size="small" /> : lokacija?.naziv}</Cell>
       <Cell>
         <Badge bgColor={category?.boja}>{categoryName}</Badge>
       </Cell>

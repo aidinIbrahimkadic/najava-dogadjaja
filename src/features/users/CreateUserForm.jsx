@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import Checkbox from '../../ui/Checkbox';
 import { usePostActivate } from '../user/usePostActivate';
 import { usePostDeactivate } from './usePostDeactivate';
+import { SUPER_ADMIN_ROLE } from '../../utils/constants';
 
 // Styled components
 const StyledInput = styled(Input)`
@@ -173,8 +174,16 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
 
     const newRoleId = getValues('role_idguid');
     if (isEditSession) {
+      const formattedData = {
+        email: data.email,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        institucija: data.institucija,
+        role_idguid: data.role_idguid ? data.role_idguid : '',
+      };
+
       updateUser(
-        { data, editId },
+        { formattedData, editId },
         {
           onSuccess: () => {
             if (newRoleId && newRoleId !== selectedRoleIdguid) {
@@ -243,7 +252,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
       </FormRow>
 
       <FormRow columns="1fr 1fr">
-        <FormField label="Institucija" required error={errors?.institucija?.message}>
+        <FormField label="Institucija" error={errors?.institucija?.message}>
           {isLoadingInstitutions ? (
             <Spinner size="small" />
           ) : (
@@ -259,7 +268,15 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
               setValue={setValue}
               watch={watch}
               validation={{
-                required: 'Molimo odaberite odgovarajuću instituciju',
+                validate: (value) => {
+                  const selectedRoleId = watch('role_idguid');
+                  const selectedRole = roles?.data?.roles.find((r) => r.idguid === selectedRoleId);
+
+                  if (selectedRole?.name?.toLowerCase() === SUPER_ADMIN_ROLE.toLowerCase()) {
+                    return true; // nije obavezno
+                  }
+                  return value ? true : 'Molimo odaberite odgovarajuću instituciju';
+                },
               }}
             />
           )}

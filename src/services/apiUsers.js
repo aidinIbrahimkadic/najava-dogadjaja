@@ -59,7 +59,7 @@ export async function postUser({
 }
 
 export async function updateUser({
-  data: { email, first_name, last_name, password, password2, institucija, role_idguid },
+  formattedData: { email, first_name, last_name, password, password2, institucija, role_idguid },
   editId: id,
 }) {
   if (!id) throw new Error('User ID is required');

@@ -9,7 +9,7 @@ export function useDeleteEvent() {
     mutationFn: deleteEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events'] });
-      toast.success('Event deleted successfully');
+      toast.success('Događaj uspješno izbrisan');
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to delete event');

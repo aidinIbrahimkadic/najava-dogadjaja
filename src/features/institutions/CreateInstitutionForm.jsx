@@ -9,8 +9,10 @@ import { useUpdateInstitution } from './useUpdateInstitution';
 import Textarea from '../../ui/TextArea';
 import { StyledInput } from '../../ui/StyledInput';
 import { MailOutlined } from '@ant-design/icons';
-
-// Unified styled component for all input types
+import InputColor from '../../ui/InputColor';
+import { useEffect, useState } from 'react';
+import { FILE_URL } from '../../utils/constants';
+import FileInput from '../../ui/FileInput';
 
 function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
   const { isCreating, postInstitution } = usePostInstitution();
@@ -19,18 +21,38 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
   const { idguid: editId, ...editValues } = institutionToEdit;
   const isEditSession = Boolean(editId);
 
-  const { handleSubmit, reset, formState, control, register } = useForm({
-    defaultValues: isEditSession ? editValues : {},
+  const [existingSlika, setExistingSlika] = useState();
+  const [logoDeleted, setLogoDeleted] = useState(false); // Dodao flag za brisanje
+
+  const { handleSubmit, reset, formState, control, register, setValue } = useForm({
+    defaultValues: isEditSession ? { ...editValues, logo: existingSlika } : {},
   });
   const { errors } = formState;
 
-  function onSubmit(data) {
+  useEffect(() => {
+    // Dodao provjeru da li je logo obrisan - ako jeste, ne postavljaj ga ponovo
+    if (editValues.logo && !logoDeleted) {
+      // Ako je logo već base64
+      if (/^data:image\/[a-z]+;base64,/.test(editValues.logo)) {
+        setExistingSlika(editValues.logo);
+      }
+    }
+  }, [editValues, setValue, reset, setExistingSlika, logoDeleted]); // Dodao logoDeleted u dependencies
+
+  function onSubmit(payload) {
+    const data = {
+      ...payload,
+      // Ako je logo obrisan, pošalji null, inače koristi payload.logo ili postojeći
+      logo: logoDeleted ? null : payload.logo?.length ? payload.logo : existingSlika,
+    };
+
     if (isEditSession)
       updateInstitution(
         { data, editId },
         {
           onSuccess: () => {
             reset();
+            setLogoDeleted(false); // Reset flag-a nakon uspješnog submit-a
             onCloseModal?.();
           },
         }
@@ -41,6 +63,7 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
         {
           onSuccess: () => {
             reset();
+            setLogoDeleted(false); // Reset flag-a nakon uspješnog submit-a
             onCloseModal?.();
           },
         }
@@ -50,6 +73,13 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
   function onError() {
     // console.log(errors);
   }
+
+  // Funkcija za brisanje loga
+  const handleDeleteLogo = () => {
+    setExistingSlika(null);
+    setValue('logo', null);
+    setLogoDeleted(true); // Postavi flag da je logo obrisan
+  };
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
@@ -77,9 +107,6 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
         </FormField>
       </FormRow>
       <FormRow columns="1fr 1fr">
-        {/* <FormField label="Email" error={errors?.email?.message}>
-          <Input type="text" id="email" disabled={isWorking} {...register('email')} />
-        </FormField> */}
         <FormField label="Email" error={errors?.email?.message}>
           <Controller
             name="email"
@@ -147,6 +174,84 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
             {...register('opis')}
             placeholder="Unesite opis institucije"
           />
+        </FormField>
+      </FormRow>
+      <FormRow columns="1fr 1fr">
+        <FormField
+          label="Pozadinska boja zadanog postera institucije"
+          error={errors?.boja_pozadine_postera?.message}
+        >
+          <InputColor
+            type="color"
+            id="boja_pozadine_postera"
+            defaultValue="#ffffff"
+            disabled={isWorking}
+            {...register('boja_pozadine_postera')}
+          />
+        </FormField>
+
+        <FormField label="Logotip" error={errors?.logo?.message}>
+          {existingSlika && !logoDeleted ? ( // Dodao provjeru logoDeleted flag-a
+            <div
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                width: 'fit-content',
+              }}
+            >
+              <img
+                src={
+                  /^data:image\/[a-z]+;base64,/.test(existingSlika)
+                    ? existingSlika
+                    : `${FILE_URL}${existingSlika}`
+                }
+                alt="Logotip"
+                style={{
+                  display: 'block',
+                  maxWidth: '200px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <button
+                type="button"
+                onClick={handleDeleteLogo} // Koristim novu funkciju
+                style={{
+                  position: 'absolute',
+                  top: '-1rem',
+                  right: '-1rem',
+                  backgroundColor: 'var(--color-red-500)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '24px',
+                  height: '24px',
+                  cursor: 'pointer',
+                }}
+              >
+                ×
+              </button>
+            </div>
+          ) : (
+            <FileInput
+              disabled={isEditing}
+              id="logo"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setExistingSlika(reader.result); // base64 prikaz
+                  setValue('logo', file); // proslijedi RHF-u
+                  setLogoDeleted(false); // Reset flag-a kada se učita nova slika
+                };
+
+                reader.readAsDataURL(file);
+              }}
+            />
+          )}
         </FormField>
       </FormRow>
       <FormRow buttons="has">

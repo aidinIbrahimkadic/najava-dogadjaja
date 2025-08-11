@@ -42,6 +42,8 @@ export async function postInstitution({
   broj_telefona,
   adresa,
   web_stranica,
+  boja_pozadine_postera,
+  logo,
 }) {
   if (!naziv) throw new Error('Naziv institucije je obavezan');
 
@@ -52,13 +54,25 @@ export async function postInstitution({
     email,
     broj_telefona,
     adresa,
+    boja_pozadine_postera,
     web_stranica,
+    logo,
   });
   return response.data;
 }
 
 export async function updateInstitution({
-  data: { naziv, opis, ime_direktora, email, broj_telefona, adresa, web_stranica },
+  data: {
+    naziv,
+    opis,
+    ime_direktora,
+    email,
+    broj_telefona,
+    adresa,
+    web_stranica,
+    boja_pozadine_postera,
+    logo,
+  },
   editId: id,
 }) {
   if (!id) throw new Error('Institution ID is required');
@@ -73,16 +87,13 @@ export async function updateInstitution({
       broj_telefona,
       adresa,
       web_stranica,
+      boja_pozadine_postera,
+      logo,
     });
+
     return response.data;
   } catch (err) {
     console.log(err);
     throw err;
   }
 }
-
-// export async function checkIfCategoryIsUsed(categoryId) {
-//   const res = await fetch(`/events?category=${categoryId}`);
-//   const data = await res.json();
-//   return data.length > 0;
-// }

@@ -13,7 +13,7 @@ export function usePostCategory() {
     mutationFn: postCategoryAPI,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      toast.success('Uspješno dodan nova kategorija!');
+      toast.success('Uspješno dodana nova kategorija!');
       navigate('/categories', { replace: true });
     },
     onError: (error) => {

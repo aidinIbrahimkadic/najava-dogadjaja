@@ -39,7 +39,6 @@ export default function SettingsPage() {
     if (settings) {
       reset(settings);
       setExistingSlika(settings?.site_logo); // ⬅️ ako imaš slike inicijalno
-      setExistingIcon(settings?.favicon16x16);
     }
   }, [settings, reset]);
 
@@ -117,7 +116,7 @@ export default function SettingsPage() {
         </FormField>
       </FormRow>
       <FormRow columns="1fr 1fr">
-        <FormField label="Logotip" error={errors?.site_logo?.message} required>
+        <FormField label="Logotip" error={errors?.site_logo?.message}>
           {existingSlika ? (
             <div
               style={{
@@ -183,7 +182,7 @@ export default function SettingsPage() {
           )}
         </FormField>
 
-        <FormField label="Ikonica" error={errors?.favicon16x16?.message} required>
+        <FormField label="Ikonica" error={errors?.favicon16x16?.message}>
           {existingIcon ? (
             <div
               style={{

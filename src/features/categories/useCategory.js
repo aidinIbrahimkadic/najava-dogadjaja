@@ -1,9 +1,51 @@
+// import { useQuery } from '@tanstack/react-query';
+// import { useEffect } from 'react';
+// import toast from 'react-hot-toast';
+// import { getCategory } from '../../services/apiCategories';
+
+// export function useGetCategory(id) {
+//   const {
+//     isLoading,
+//     data: category,
+//     error,
+//   } = useQuery({
+//     queryKey: ['category', id],
+//     queryFn: () => getCategory(id),
+//     retry: 3, // 🔁 Retry 3 times before failing
+//     retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 3000), // optional: 1s, 2s, 4s
+//     refetchOnWindowFocus: false,
+//     enabled: !!id,
+//     onSuccess: () => {
+//       toast.success(`Category loaded`);
+//     },
+//   });
+//   useEffect(() => {
+//     if (error) {
+//       toast.error(`${error.message}`);
+//     }
+//   }, [error]);
+
+//   return { isLoading, category, error };
+// }
+
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getCategory } from '../../services/apiCategories';
 
-export function useGetCategory(id) {
+const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
+
+export function useGetCategory(id, options = {}) {
+  const isValidId = !!id && id !== ZERO_GUID;
+  const {
+    retry = 3,
+    retryDelay = (attempt) => Math.min(1000 * 2 ** attempt, 3000),
+    refetchOnWindowFocus = false,
+    enabled = true,
+    suppressToast = false, // custom opcija da ne spamamo toastove u tabeli
+    ...rest
+  } = options;
+
   const {
     isLoading,
     data: category,
@@ -11,19 +53,18 @@ export function useGetCategory(id) {
   } = useQuery({
     queryKey: ['category', id],
     queryFn: () => getCategory(id),
-    retry: 3, // 🔁 Retry 3 times before failing
-    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 3000), // optional: 1s, 2s, 4s
-    refetchOnWindowFocus: false,
-    enabled: !!id,
-    onSuccess: () => {
-      toast.success(`Category loaded`);
-    },
+    retry,
+    retryDelay,
+    refetchOnWindowFocus,
+    enabled: isValidId && enabled,
+    ...rest,
   });
+
   useEffect(() => {
-    if (error) {
+    if (error && !suppressToast) {
       toast.error(`${error.message}`);
     }
-  }, [error]);
+  }, [error, suppressToast]);
 
   return { isLoading, category, error };
 }

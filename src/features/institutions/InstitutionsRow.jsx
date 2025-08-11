@@ -54,7 +54,7 @@ function InstitutionRow({ institution, index }) {
             </Menus.List>
           </Menus.Menu>
           {hasPermission('events_institucije_save') && (
-            <Modal.Window name="Uredi instituciju" size="large">
+            <Modal.Window name="Uredi instituciju" size="extraLarge">
               <CreateInstitutionForm institutionToEdit={institution} />
             </Modal.Window>
           )}

@@ -12,17 +12,28 @@ import { usePostCategory } from './usePostCategory';
 import { useUpdateCategory } from './useUpdateCategory';
 import InputColor from '../../ui/InputColor';
 import { IconSelector } from './IconSelector';
+import { useGetCategories } from './useCategories';
+import Select from '../../ui/Select';
+import Spinner from '../../ui/Spinner';
 
 function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
   const { isCreating, postCategory } = usePostCategory();
   const { isEditing, updateCategory } = useUpdateCategory();
+
+  const { isLoading: isLoadingCategories, categories: categoriesAPI } = useGetCategories();
+
+  const categories = categoriesAPI?.filter((category) => {
+    if (category.parent_idguid === '00000000-0000-0000-0000-000000000000') {
+      return category;
+    }
+  });
 
   const isWorking = isCreating || isEditing;
 
   const { idguid: editId, ...editValues } = categoryToEdit;
   const isEditSession = Boolean(editId);
 
-  const { register, handleSubmit, reset, formState } = useForm({
+  const { register, handleSubmit, reset, formState, setValue, watch } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
   const { errors } = formState;
@@ -83,6 +94,27 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
       </FormRow>
 
       <FormRow columns="1fr 1fr">
+        <FormField label="Kategorija događaja" error={errors?.parent_idguid?.message}>
+          {isLoadingCategories ? (
+            <Spinner />
+          ) : (
+            <Select
+              id="parent_idguid"
+              name="parent_idguid"
+              options={categories.map((c) => ({
+                value: c.idguid,
+                label: c.naziv,
+              }))}
+              disabled={isWorking}
+              register={register}
+              setValue={setValue}
+              watch={watch}
+              // validation={{
+              //   required: 'Molimo odaberite odgovarajuću kategoriju',
+              // }}
+            />
+          )}
+        </FormField>
         <FormField label="Boja kategorije">
           <InputColor
             type="color"
@@ -91,7 +123,7 @@ function CreateCategoryForm({ categoryToEdit = {}, onCloseModal }) {
             disabled={isWorking}
             {...register('boja')}
           />
-        </FormField>{' '}
+        </FormField>
       </FormRow>
       <FormRow>
         <FormField label="Ikona kategorije">
