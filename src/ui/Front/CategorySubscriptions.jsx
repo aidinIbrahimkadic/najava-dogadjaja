@@ -192,8 +192,8 @@ const Toggle = styled.span`
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 1rem;
-  color: #374151;
+  font-size: 1.6rem;
+  color: ${(p) => (p.$active ? 'var(--color-brand-700)' : '#9ca3af')};
 
   .icon {
     width: 18px;
@@ -360,9 +360,9 @@ export default function CategorySubscriptions({
                 </IconWrap>
                 <Name>{c.naziv}</Name>
                 <Badge $show={active}>Pretplaćeno</Badge>
-                <Toggle>
+                <Toggle $active={active}>
                   <span className="icon">{active ? <FiBell /> : <FiBellOff />}</span>
-                  <span>{active ? 'Primam obavijesti' : 'Ne primam'}</span>
+                  {/* <span>{active ? 'Primam obavijesti' : 'Ne primam'}</span> */}
                 </Toggle>
               </Card>
             );
