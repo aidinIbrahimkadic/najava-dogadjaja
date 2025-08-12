@@ -1,10 +1,12 @@
-import { Calendar } from 'antd';
 import styled from 'styled-components';
+import AllEvents from '../ui/Front/AllEvents';
+import CategorySubscriptions from '../ui/Front/CategorySubscriptions';
+import LogoSlider from '../ui/Front/LogoSlider';
 import NextEvents from '../ui/Front/NextEvents';
 import PosterCarousel from '../ui/Front/PosterCarousel';
 
 const Container = styled.div`
-  background-color: var(--color-grey-50);
+  background-color: #fbfdff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,15 +14,11 @@ const Container = styled.div`
 `;
 
 const ContainerBox = styled.div`
-  width: 70%;
+  width: 80%;
   display: flex;
   gap: 2rem;
   justify-content: center;
   align-items: center;
-`;
-
-const CalendarWrapper = styled.div`
-  width: 30%;
 `;
 
 export default function HomePage() {
@@ -29,10 +27,17 @@ export default function HomePage() {
       <PosterCarousel />
       <ContainerBox>
         <NextEvents />
-        <CalendarWrapper>
-          <Calendar />
-        </CalendarWrapper>
       </ContainerBox>
+      <AllEvents />
+      <LogoSlider />
+      <CategorySubscriptions
+        isAuthenticated={true}
+        initialSelectedIds={['kultura', 'film']}
+        onSave={async (ids) => {
+          // npr. await fetch('/api/me/subscriptions', { method: 'POST', body: JSON.stringify({ categories: ids })})
+          console.log('Spremam na backend:', ids);
+        }}
+      />
     </Container>
   );
 }

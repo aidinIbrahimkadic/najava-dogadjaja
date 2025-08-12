@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { EyeOutlined, HeartOutlined } from '@ant-design/icons';
+import NextButton from './NextButton';
 
 const CarouselWrapper = styled.div`
   width: 100%;
@@ -58,16 +59,13 @@ const Overlay = styled.div`
 const PosterButton = styled(Button)`
   background-color: var(--color-grey-0) !important;
   color: var(--color-brand-700) !important;
-  /* border: 1px solid var(--color-brand-700); */
   border: none;
   border-radius: 5rem;
-  width: 15rem;
-  height: 4rem;
+  width: 12rem;
 
   &:hover {
     background-color: var(--color-brand-700) !important;
     color: var(--color-grey-0) !important;
-    /* border: var(--color-brand-700); */
   }
 `;
 
@@ -150,7 +148,8 @@ export default function PosterCarousel() {
           >
             <Overlay>
               <PosterButton icon={<EyeOutlined />}>Više</PosterButton>
-              <PosterButton icon={<HeartOutlined />}>Dolazim</PosterButton>
+              {/* <PosterButton icon={<HeartOutlined />}>Dolazim</PosterButton> */}
+              <NextButton>Dolazim</NextButton>
             </Overlay>
           </PosterCard>
         ))}
