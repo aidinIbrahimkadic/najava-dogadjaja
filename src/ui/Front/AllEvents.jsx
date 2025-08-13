@@ -208,6 +208,7 @@ const Card = styled.article`
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   overflow: hidden;
+  height: 100;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 
   @media (max-width: 1100px) {
@@ -237,12 +238,16 @@ const Poster = styled.div`
 
 const Body = styled.div`
   padding: 1.2rem 0.9rem 1.8rem 0.9rem;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: space-between;
+  /* display: grid;
   grid-template-columns: 1fr auto;
   grid-template-areas:
     'title like'
     'meta meta'
-    'extra extra';
+    'extra extra'; */
   gap: 0.4rem 0.75rem;
 `;
 
@@ -476,11 +481,12 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
             <Card key={e.id}>
               <Poster $image={e.poster} />
               <Body>
-                <Title>{e.title}</Title>{' '}
-                <Row>
-                  <Badge>{e.category}</Badge>
-                </Row>
+                <Title>{e.title}</Title>
                 <Meta>
+                  <Row>
+                    <Badge>{e.category}</Badge>
+                  </Row>
+
                   <Row>
                     <span>📍</span>
                     <span>{e.location}</span>
