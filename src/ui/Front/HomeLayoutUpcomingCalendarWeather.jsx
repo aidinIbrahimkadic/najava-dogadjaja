@@ -6,8 +6,8 @@ import { EventsCalendar } from './EventsCalendar';
 import { WeatherForecast3Day } from './WeatherForecast3Day';
 
 const Page = styled.div`
-  width: 90%;
-  min-height: 100vh;
+  width: 80%;
+  /* min-height: 100vh; */
   background: #fbfdff;
   display: grid;
   grid-template-columns: 3fr 1fr;

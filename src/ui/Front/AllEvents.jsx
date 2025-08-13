@@ -183,7 +183,7 @@ const Chip = styled.button`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(15, 1fr);
   gap: 1rem;
 
   @media (max-width: 1400px) {
