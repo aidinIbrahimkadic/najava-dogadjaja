@@ -64,9 +64,3 @@ export async function updateCategory({
     throw new Error(error.response?.data?.message || 'Greška pri ažuriranju kategorije');
   }
 }
-
-// export async function checkIfCategoryIsUsed(categoryId) {
-//   const res = await fetch(`/events?category=${categoryId}`);
-//   const data = await res.json();
-//   return data.length > 0;
-// }

@@ -1,8 +1,10 @@
 import styled from 'styled-components';
+import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
+import CalendarSpinner from '../ui/CalendarSpinner';
 import AllEvents from '../ui/Front/AllEvents';
 import CategorySubscriptions from '../ui/Front/CategorySubscriptions';
 import LogoSlider from '../ui/Front/LogoSlider';
-import NextEvents from '../ui/Front/NextEvents';
+// import NextEvents from '../ui/Front/NextEvents';
 import PosterCarousel from '../ui/Front/PosterCarousel';
 
 const Container = styled.div`
@@ -13,21 +15,25 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const ContainerBox = styled.div`
-  width: 80%;
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  align-items: center;
-`;
+// const ContainerBox = styled.div`
+//   width: 80%;
+//   display: flex;
+//   gap: 2rem;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 export default function HomePage() {
+  const { upcomingEvents, isLoading } = useGetUpcomingEvents();
+
+  console.log(upcomingEvents);
   return (
     <Container>
-      <PosterCarousel />
-      <ContainerBox>
+      {isLoading && <CalendarSpinner />}
+      <PosterCarousel upcomingEvents={upcomingEvents} />
+      {/* <ContainerBox>
         <NextEvents />
-      </ContainerBox>
+      </ContainerBox> */}
       <AllEvents />
       <LogoSlider />
       <CategorySubscriptions

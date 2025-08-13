@@ -69,13 +69,25 @@ const PosterButton = styled(Button)`
   }
 `;
 
-export default function PosterCarousel() {
+export default function PosterCarousel({ upcomingEvents = [] }) {
   const containerRef = useRef(null);
   const rafRef = useRef(null);
   const draggingRef = useRef(false);
   const dragStartX = useRef(0);
   const scrollStart = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  // console.log('Upcoming Events:', upcomingEvents);
+
+  const postersFromEvents = upcomingEvents.map((event) => {
+    if (event.slika !== '00000000-0000-0000-0000-000000000000') {
+      return `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`;
+    } else {
+      return `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
+    }
+  });
+
+  console.log('Posters from events:', postersFromEvents);
 
   // Tvoji posteri (A4 format), dupliramo niz radi seamless loopa
   const posters = [
@@ -139,7 +151,7 @@ export default function PosterCarousel() {
       onMouseMove={handleMouseMove}
     >
       <CarouselContent>
-        {[...posters, ...posters, ...posters, ...posters, ...posters].map((img, idx) => (
+        {[...postersFromEvents, ...postersFromEvents].map((img, idx) => (
           <PosterCard
             key={idx}
             $image={img}
