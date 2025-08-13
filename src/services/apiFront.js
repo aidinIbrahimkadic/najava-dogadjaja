@@ -29,6 +29,15 @@ export async function getEventById(id) {
   }
 }
 
+export async function getAllCategories() {
+  try {
+    const response = await axiosInstance.get(`/kategorije`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju kategorija');
+  }
+}
+
 // export async function deleteCategory(id) {
 //   if (!id) throw new Error('Category ID is required');
 

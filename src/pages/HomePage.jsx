@@ -1,10 +1,11 @@
 import styled from 'styled-components';
+import { useGetAllCategories } from '../features/front/useAllCategories';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import CalendarSpinner from '../ui/CalendarSpinner';
 import AllEvents from '../ui/Front/AllEvents';
 import CategorySubscriptions from '../ui/Front/CategorySubscriptions';
+import HomeLayoutUpcomingCalendarWeather from '../ui/Front/HomeLayoutUpcomingCalendarWeather';
 import LogoSlider from '../ui/Front/LogoSlider';
-// import NextEvents from '../ui/Front/NextEvents';
 import PosterCarousel from '../ui/Front/PosterCarousel';
 
 const Container = styled.div`
@@ -15,35 +16,35 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-// const ContainerBox = styled.div`
-//   width: 80%;
-//   display: flex;
-//   gap: 2rem;
-//   justify-content: center;
-//   align-items: center;
-// `;
-
 export default function HomePage() {
   const { upcomingEvents, isLoading } = useGetUpcomingEvents();
+  const { isLoading: isLoadingCategories, allCategories } = useGetAllCategories();
 
-  console.log(upcomingEvents);
   return (
     <Container>
-      {isLoading && <CalendarSpinner />}
-      <PosterCarousel upcomingEvents={upcomingEvents} />
-      {/* <ContainerBox>
-        <NextEvents />
-      </ContainerBox> */}
-      <AllEvents />
-      <LogoSlider />
-      <CategorySubscriptions
-        isAuthenticated={true}
-        initialSelectedIds={['kultura', 'film']}
-        onSave={async (ids) => {
-          // npr. await fetch('/api/me/subscriptions', { method: 'POST', body: JSON.stringify({ categories: ids })})
-          console.log('Spremam na backend:', ids);
-        }}
-      />
+      {isLoading || isLoadingCategories ? (
+        <CalendarSpinner />
+      ) : (
+        <>
+          <PosterCarousel upcomingEvents={upcomingEvents} />
+
+          <AllEvents upcomingEvents={upcomingEvents} allCategories={allCategories} />
+          <HomeLayoutUpcomingCalendarWeather />
+          <LogoSlider />
+          <CategorySubscriptions
+            isAuthenticated={true}
+            categories={allCategories}
+            initialSelectedIds={[
+              'e2967b0e-4dff-4fd1-a734-f34af5db1508',
+              'c43c30b6-a07f-4ff8-8519-132e8e41c550',
+            ]}
+            onSave={async (ids) => {
+              // npr. await fetch('/api/me/subscriptions', { method: 'POST', body: JSON.stringify({ categories: ids })})
+              console.log('Spremam na backend:', ids);
+            }}
+          />
+        </>
+      )}
     </Container>
   );
 }

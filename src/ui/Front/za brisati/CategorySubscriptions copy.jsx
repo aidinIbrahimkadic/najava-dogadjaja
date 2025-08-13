@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { FiBell, FiBellOff } from 'react-icons/fi';
 import { FaMusic } from 'react-icons/fa';
-import Heading from '../Heading';
+import Heading from '../../Heading';
 import * as FaIcons from 'react-icons/fa';
 
 /**
@@ -232,6 +232,18 @@ function withAlpha(hex, alpha = '22') {
   return `${hex}${alpha}`;
 }
 
+// const DEFAULT_CATEGORIES = [
+//   { id: 'kultura', naziv: 'Kultura', boja: '#3B82F6', Icon: FaMusic },
+//   { id: 'film', naziv: 'Film', boja: '#EF4444', Icon: FaFilm },
+//   { id: 'sport', naziv: 'Sport', boja: '#10B981', Icon: FaBasketballBall },
+//   { id: 'ekonomija', naziv: 'Ekonomija', boja: '#3B82F6', Icon: FaBriefcase },
+//   { id: 'edukacija', naziv: 'Edukacija', boja: '#8B5CF6', Icon: FaBookOpen },
+//   { id: 'umjetnost', naziv: 'Umjetnost', boja: '#F472B6', Icon: FaPaintBrush },
+//   { id: 'tehnologija', naziv: 'Tehnologija', boja: '#0EA5E9', Icon: FaLaptopCode },
+//   // nova / generisana
+//   { id: 'pozoriste', naziv: 'Pozorište', boja: '#46c890', Icon: FaTheaterMasks },
+// ];
+
 export default function CategorySubscriptions({
   categories,
   initialSelectedIds,
@@ -250,10 +262,17 @@ export default function CategorySubscriptions({
     };
   });
 
+  console.log(kategorije);
+
   const cats = useMemo(() => kategorije, [kategorije]);
   const defaultSelected = useMemo(() => {
     if (initialSelectedIds?.length) return new Set(initialSelectedIds);
-
+    // try {
+    //   const raw = localStorage.getItem(STORAGE_KEY);
+    //   if (raw) return new Set(JSON.parse(raw));
+    // } catch (e) {
+    //   console.log(e);
+    // }
     return new Set();
   }, [initialSelectedIds]);
 
@@ -261,6 +280,14 @@ export default function CategorySubscriptions({
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
   const selectedIds = useMemo(() => Array.from(selected), [selected]);
+
+  // useEffect(() => {
+  //   try {
+  //     localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedIds));
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }, [selectedIds]);
 
   const toggle = (id) => {
     if (!isAuthenticated) return;
@@ -361,3 +388,16 @@ export default function CategorySubscriptions({
     </Container>
   );
 }
+
+/*
+Primjer integracije:
+
+<CategorySubscriptions
+  isAuthenticated={true}
+  initialSelectedIds={["kultura", "film"]}
+  onSave={async (ids) => {
+    // npr. await fetch('/api/me/subscriptions', { method: 'POST', body: JSON.stringify({ categories: ids })})
+    console.log('Spremam na backend:', ids);
+  }}
+/>
+*/

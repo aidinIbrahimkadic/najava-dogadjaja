@@ -64,7 +64,7 @@ export async function getRolePermissions(id) {
   if (!id) throw new Error('Role ID is required');
 
   try {
-    const response = await axiosInstance.get(`/admin/role-permissions/${id}?limit=40`);
+    const response = await axiosInstance.get(`/admin/role-permissions/${id}?limit=100`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Greška pri dobavljanju role');

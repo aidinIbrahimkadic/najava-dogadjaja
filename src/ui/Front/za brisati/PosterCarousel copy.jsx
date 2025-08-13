@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { EyeOutlined, HeartOutlined } from '@ant-design/icons';
+import NextButton from '../NextButton';
 
 const CarouselWrapper = styled.div`
   width: 100%;
@@ -87,6 +88,16 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
     }
   });
 
+  // Tvoji posteri (A4 format), dupliramo niz radi seamless loopa
+  // const posters = [
+  //   '/images/poster.jpg',
+  //   '/images/poster1.jpg',
+  //   '/images/poster2.jpg',
+  //   '/images/poster3.jpg',
+  //   '/images/poster4.jpg',
+  //   '/images/poster6.jpg',
+  // ];
+
   useEffect(() => {
     const container = containerRef.current;
     const speed = 0.5; // px po frame (usporeno)
@@ -157,6 +168,8 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
           >
             <Overlay>
               <PosterButton icon={<EyeOutlined />}>Više</PosterButton>
+              {/* <PosterButton icon={<HeartOutlined />}>Dolazim</PosterButton> */}
+              <NextButton>Dolazim</NextButton>
             </Overlay>
           </PosterCard>
         ))}

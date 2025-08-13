@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
-import Heading from '../Heading';
+import Heading from '../../Heading';
 import * as FaIcons from 'react-icons/fa';
 // ---------------------------------------------
 // Dummy data
@@ -236,7 +236,7 @@ const Poster = styled.div`
 `;
 
 const Body = styled.div`
-  padding: 1.2rem 0.9rem 1.8rem 0.9rem;
+  padding: 0.9rem;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-areas:
@@ -254,6 +254,32 @@ const Title = styled.h3`
   line-height: 1.25;
   letter-spacing: 0.3px;
   color: var(--color-grey-700);
+`;
+
+const LikeBtn = styled.button`
+  grid-area: like;
+  justify-self: end;
+  align-self: start;
+  appearance: none;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #ef4444;
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+  &:hover {
+    background: #fff1f2;
+    border-color: #fecaca;
+  }
+  ${(p) =>
+    p.$active &&
+    css`
+      background: #fee2e2;
+      border-color: #fecaca;
+    `}
 `;
 
 const Meta = styled.div`
@@ -276,15 +302,27 @@ const Badge = styled.span`
   border: 1px solid #c7d2fe;
   border-radius: 999px;
   padding: 0.15rem 0.5rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
 `;
 
 const Extra = styled.div`
   grid-area: extra;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 0.3rem;
+`;
+
+const Pill = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 1.2rem;
+  color: #374151;
 `;
 
 const Price = styled.span`
@@ -300,6 +338,103 @@ const Select = styled.select`
   background: #fff;
 `;
 
+// const EVENTS = [
+//   {
+//     id: 'e101',
+//     title: 'Koncert klasične muzike',
+//     date: '2025-08-16',
+//     time: '19:30',
+//     location: 'Centar za kulturu',
+//     category: 'Kultura',
+//     institution: 'JU CKiO Tešanj',
+//     price: 10,
+//     going: 42,
+//     poster: '/images/poster1.jpg',
+//   },
+//   {
+//     id: 'e102',
+//     title: 'Ljetno kino: Dokumentarni film',
+//     date: '2025-08-17',
+//     time: '21:00',
+//     location: 'Amfiteatar parka',
+//     category: 'Film',
+//     institution: 'Film Klub Tešanj',
+//     price: 0,
+//     going: 85,
+//     poster: '/images/poster3.jpg',
+//   },
+//   {
+//     id: 'e103',
+//     title: 'Radionica za poduzetnike',
+//     date: '2025-08-20',
+//     time: '10:00',
+//     location: 'Poslovni inkubator',
+//     category: 'Edukacija',
+//     institution: 'RA Tešanj',
+//     price: 0,
+//     going: 19,
+//     poster: '/images/poster2.jpg',
+//   },
+//   {
+//     id: 'e104',
+//     title: 'Turnir u basketu 3x3',
+//     date: '2025-08-23',
+//     time: '17:00',
+//     location: 'Sportski teren Bukva',
+//     category: 'Sport',
+//     institution: 'Sportski savez',
+//     price: 5,
+//     going: 61,
+//     poster: '/images/poster4.jpg',
+//   },
+//   {
+//     id: 'e105',
+//     title: 'Slikarska kolonija',
+//     date: '2025-08-25',
+//     time: '11:00',
+//     location: 'Stari grad',
+//     category: 'Umjetnost',
+//     institution: 'Likovno Udruženje',
+//     price: 0,
+//     going: 24,
+//     poster: '/images/poster6.jpg',
+//   },
+//   {
+//     id: 'e106',
+//     title: 'Sajam domaćih proizvoda',
+//     date: '2025-08-18',
+//     time: '09:00',
+//     location: 'Gradski trg',
+//     category: 'Ekonomija',
+//     institution: 'Općina Tešanj',
+//     price: 0,
+//     going: 73,
+//     poster: '/images/poster.jpg',
+//   },
+//   {
+//     id: 'e107',
+//     title: 'Tech Meetup: React & Node',
+//     date: '2025-08-22',
+//     time: '18:00',
+//     location: 'Coworking Hub',
+//     category: 'Tehnologija',
+//     institution: 'iDevelop Studio',
+//     price: 0,
+//     going: 37,
+//     poster: '/images/poster5.jpg',
+//   },
+// ];
+
+// const CATEGORY_META = {
+//   Kultura: { color: '#F59E0B', icon: '🎵' },
+//   Film: { color: '#EF4444', icon: '🎬' },
+//   Sport: { color: '#10B981', icon: '⚽' },
+//   Ekonomija: { color: '#3B82F6', icon: '💼' },
+//   Edukacija: { color: '#8B5CF6', icon: '📚' },
+//   Umjetnost: { color: '#F472B6', icon: '🎨' },
+//   Tehnologija: { color: '#0EA5E9', icon: '💻' },
+// };
+
 // ---------------------------------------------
 // Component
 // ---------------------------------------------
@@ -311,6 +446,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
   const [filterFree, setFilterFree] = useState(false);
   const [filterWeekend, setFilterWeekend] = useState(false);
   const [inst, setInst] = useState(''); // '' = sve
+  const [goingSet, setGoingSet] = useState(new Set());
 
   //KATEGORIJE
   const CATEGORY_META = (allCategories ?? []).reduce((acc, cat) => {
@@ -361,7 +497,24 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
     };
   });
 
+  const [counts, setCounts] = useState(() => {
+    const m = new Map();
+    allEvents.forEach((e) => m.set(e.id, e.going || 0));
+    return m;
+  });
   const institutions = useMemo(() => uniq(allEvents.map((e) => e.institution)), [allEvents]);
+
+  const toggleLike = (id) => {
+    setGoingSet((prev) => {
+      const next = new Set(prev);
+      const active = next.has(id);
+      const delta = active ? -1 : 1;
+      if (active) next.delete(id);
+      else next.add(id);
+      setCounts((m) => new Map(m).set(id, (m.get(id) || 0) + delta));
+      return next;
+    });
+  };
 
   const weekend = thisWeekendRange();
 
@@ -407,7 +560,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
   return (
     <Page>
       {/* Categories strip */}
-      <Heading as="h2">Pregled svih nadolazećih događaja u Tešnju</Heading>
+      <Heading as="h2">Svi događaji</Heading>
       <SearchInput
         type="text"
         placeholder="Pronađi događaj..."
@@ -472,14 +625,22 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
       {/* Cards */}
       <Grid>
         {filtered.map((e) => {
+          //   const meta = getCategoryMeta(e.category);
+          const liked = goingSet.has(e.id);
           return (
             <Card key={e.id}>
               <Poster $image={e.poster} />
               <Body>
-                <Title>{e.title}</Title>{' '}
-                <Row>
-                  <Badge>{e.category}</Badge>
-                </Row>
+                <Title>{e.title}</Title>
+                <LikeBtn
+                  $active={liked}
+                  aria-label="Potvrdi prisustvo"
+                  title="Potvrdi prisustvo"
+                  onClick={() => toggleLike(e.id)}
+                >
+                  {liked ? '❤️' : '🤍'}
+                </LikeBtn>
+
                 <Meta>
                   <Row>
                     <span>📍</span>
@@ -492,11 +653,16 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                     </span>
                   </Row>
                   <Row>
-                    <span>🏛️</span>
+                    <Badge>{e.category}</Badge>
                     <span style={{ marginLeft: '0.35rem', color: '#6b7280' }}>{e.institution}</span>
                   </Row>
                 </Meta>
+
                 <Extra>
+                  <Pill>
+                    <span>👥</span>
+                    <span>{counts.get(e.id) || 0}</span>
+                  </Pill>
                   <Price>{e.price === 0 ? 'Besplatno' : `${e.price.toFixed(2)} KM`}</Price>
                 </Extra>
               </Body>
