@@ -24,9 +24,9 @@ function EventRow({ event, index }) {
   const { mutate: deleteEvent, isPending } = useDeleteEvent();
   const { isLoading, hasPermission } = useUserPermissions();
 
-  const { idguid, category_idguid, cijena, title, location, is_public, start_date } = event;
+  const { idguid, category_idguid, cijena, title, location_idguid, is_public, start_date } = event;
 
-  const { isLoading: isLoadingLocation, location: lokacija } = useGetLocation(location);
+  const { isLoading: isLoadingLocation, location: lokacija } = useGetLocation(location_idguid);
 
   function handleDelete(id) {
     deleteEvent(id);

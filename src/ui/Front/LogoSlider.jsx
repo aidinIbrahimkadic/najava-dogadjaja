@@ -162,6 +162,11 @@ export default function LogoSlider({
     ...institutionsData,
     ...institutionsData,
     ...institutionsData,
+    ...institutionsData,
+    ...institutionsData,
+    ...institutionsData,
+    ...institutionsData,
+    ...institutionsData,
   ]; // dupliramo radi seamless loop-a
 
   // Drag state/refs

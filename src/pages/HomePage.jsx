@@ -31,7 +31,7 @@ export default function HomePage() {
           <PosterCarousel upcomingEvents={upcomingEvents} />
 
           <AllEvents upcomingEvents={upcomingEvents} allCategories={allCategories} />
-          <HomeLayoutUpcomingCalendarWeather />
+          <HomeLayoutUpcomingCalendarWeather upcomingEvents={upcomingEvents} />
           <LogoSlider allInstitutions={allInstitutions} />
           <CategorySubscriptions
             isAuthenticated={true}

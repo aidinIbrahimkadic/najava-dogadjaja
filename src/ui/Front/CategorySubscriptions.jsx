@@ -343,7 +343,6 @@ export default function CategorySubscriptions({
                 <Badge $show={active}>Pretplaćeno</Badge>
                 <Toggle $active={active}>
                   <span className="icon">{active ? <FiBell /> : <FiBellOff />}</span>
-                  {/* <span>{active ? 'Primam obavijesti' : 'Ne primam'}</span> */}
                 </Toggle>
               </Card>
             );

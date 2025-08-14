@@ -1,6 +1,9 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { Calendar, Badge, Button } from 'antd';
+import { HiOutlineCalendarDateRange } from 'react-icons/hi2';
+import { Link } from 'react-router-dom';
+import Heading from '../Heading';
 
 const Square = styled.div`
   background: #fff;
@@ -30,7 +33,7 @@ export function EventsCalendar({ eventsByDate = {} }) {
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {items.map((e) => (
           <li key={e.id} style={{ marginBottom: 4 }}>
-            <Badge status="processing" text={e.title} />
+            <Badge status="processing" text={<Link to={`/dogadjaj/${e.id}`}>{e.title}</Link>} />
           </li>
         ))}
       </ul>
@@ -48,9 +51,12 @@ export function EventsCalendar({ eventsByDate = {} }) {
   return (
     <Square ref={ref}>
       <TitleRow>
-        <h2 style={{ margin: 0 }}>📅 Kalendar događaja</h2>
+        <div style={{ display: 'flex ', gap: '1rem', alignItems: 'center' }}>
+          <HiOutlineCalendarDateRange size={30} style={{ color: 'var(--color-brand-500)' }} />
+          <Heading as="h2">Kalendar događaja</Heading>
+        </div>
         <Button onClick={toggleFullscreen} type="default">
-          FullScreen
+          Proširi preko cijelog ekrana
         </Button>
       </TitleRow>
       <div style={{ flex: 1, minHeight: 0 }}>

@@ -394,7 +394,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
       category: event.category.naziv,
       category_idguid: event.category.idguid,
       poster: posterSlika,
-      location: 'Coworking Hub',
+      location: event.lokacija.naziv,
       institution: event.institucija.naziv,
       institution_idguid: event.institucija.idguid,
       going: 37,

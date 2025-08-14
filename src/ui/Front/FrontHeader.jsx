@@ -1,15 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Layout, Input, Button, Dropdown, Space, Badge, Avatar } from 'antd';
-import {
-  SearchOutlined,
-  DownOutlined,
-  HeartOutlined,
-  UserOutlined,
-  LoginOutlined,
-} from '@ant-design/icons';
+import { Layout, Input, Button, Dropdown, Space, Avatar } from 'antd';
+import { DownOutlined, UserOutlined, LoginOutlined } from '@ant-design/icons';
 import FrontLogo from './FrontLogo';
 import styled from 'styled-components';
-import { useState } from 'react';
 import { useLogout } from '../../features/authentication/useLogout';
 import { useUserPermissions } from '../../features/authentication/useUserPermissions';
 
@@ -30,19 +23,17 @@ const StyledHeader = styled(Header)`
 `;
 
 const CenterSection = styled.div`
-  flex: 1;
-  display: flex;
   height: 100%;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  max-width: 80rem;
-  gap: 3.2rem;
+  width: 60%;
+  gap: 10rem;
 `;
 
-const SearchContainer = styled.div`
-  flex: 1;
-  max-width: 40rem;
-`;
+// const SearchContainer = styled.div`
+//   flex: 1;
+//   max-width: 40rem;
+// `;
 
 const StyledSearch = styled(Input)`
   border-radius: 0.8rem;
@@ -74,14 +65,14 @@ const NavSection = styled.div`
 `;
 
 const NavLink = styled(Link)`
-  color: var(--color-grey-500);
+  color: var(--color-grey-700);
   text-decoration: none;
   font-weight: 500;
   border-radius: 6px;
   transition: all 0.2s ease;
 
   &:hover {
-    color: var(--color-brand-500);
+    color: var(--color-brand-700);
   }
 `;
 
@@ -156,7 +147,6 @@ const dropdownItems = [
 ];
 
 export default function FrontHeader() {
-  const [likedEvents] = useState(new Set([1, 3])); // Mock liked events
   const logout = useLogout();
   const { user } = useUserPermissions();
 
@@ -175,17 +165,14 @@ export default function FrontHeader() {
 
   return (
     <StyledHeader>
-      <LogoContainer>
-        <FrontLogo size="small" />
-      </LogoContainer>
-
       <CenterSection>
-        <SearchContainer>
+        {/* <SearchContainer>
           <StyledSearch placeholder="Pretraži..." prefix={<SearchOutlined />} size="large" />
-        </SearchContainer>
-
+        </SearchContainer> */}
+        <LogoContainer>
+          <FrontLogo size="small" />
+        </LogoContainer>
         <NavSection>
-          <NavLink to="/">Početna</NavLink>
           <Dropdown menu={{ items: dropdownItems }} trigger={['hover']} placement="bottom">
             <NavLink href="#" onClick={(e) => e.preventDefault()}>
               <Space>
@@ -194,20 +181,21 @@ export default function FrontHeader() {
               </Space>
             </NavLink>
           </Dropdown>
+          <Dropdown menu={{ items: dropdownItems }} trigger={['hover']} placement="bottom">
+            <NavLink href="#" onClick={(e) => e.preventDefault()}>
+              <Space>
+                Institucije
+                <DownOutlined />
+              </Space>
+            </NavLink>
+          </Dropdown>
+          <NavLink to="/">Kontakt</NavLink>
         </NavSection>
       </CenterSection>
 
       <RightSection>
         {user ? (
           <>
-            <Badge count={likedEvents.size} offset={[-5, 5]}>
-              <Button
-                type="text"
-                icon={<HeartOutlined />}
-                size="large"
-                style={{ color: 'var(--color-red-700)' }}
-              />
-            </Badge>
             <UserProfileLink>
               <Avatar icon={<UserOutlined />} style={{ background: 'var(--color-brand-600)' }} />
               {user.first_name} {user.last_name}

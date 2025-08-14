@@ -2,6 +2,9 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { FaMapMarkerAlt, FaClock, FaMoneyBillAlt, FaTicketAlt } from 'react-icons/fa';
 import { Calendar, Badge } from 'antd';
+import { Link } from 'react-router-dom';
+import { HiTicket } from 'react-icons/hi2';
+import Heading from '../Heading';
 
 const Card = styled.div`
   background: #fff;
@@ -11,8 +14,11 @@ const Card = styled.div`
 `;
 
 const Title = styled.h2`
-  margin: 0 0 0.75rem 0;
-  font-size: 1.2rem;
+  margin: 0 0 2rem 0;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   letter-spacing: 0.2px;
 `;
 
@@ -51,13 +57,18 @@ const Ticket = styled.div`
 const TicketStripe = styled.div`
   width: 6px;
   height: 100%;
-  background: linear-gradient(180deg, #8eb5ff 0%, #4f46e5 100%);
+  background: linear-gradient(180deg, var(--color-brand-300) 0%, var(--color-brand-500) 100%);
   border-radius: 8px;
 `;
 
 const TicketTitle = styled.div`
   font-weight: 600;
-  font-size: 0.98rem;
+  font-size: 1.2rem;
+
+  &:hover {
+    text-decoration: underline;
+    color: #4f46e5;
+  }
 `;
 
 const Meta = styled.div`
@@ -65,7 +76,7 @@ const Meta = styled.div`
   flex-wrap: wrap;
   gap: 0.65rem 1rem;
   color: #52525b;
-  font-size: 0.9rem;
+  font-size: 1rem;
 `;
 
 const MetaItem = styled.span`
@@ -129,7 +140,10 @@ export function UpcomingEvents({ events = [] }) {
 
   return (
     <Card>
-      <Title>🎟️ Predstojeći događaji</Title>
+      <Title>
+        <HiTicket style={{ color: 'var(--color-brand-500)' }} />
+        <Heading as="h3">Predstojeći događaji</Heading>
+      </Title>
       {groups.length === 0 && <div>Nema predstojećih događaja.</div>}
       {groups.map(([dateKey, items]) => (
         <div key={dateKey}>
@@ -141,7 +155,9 @@ export function UpcomingEvents({ events = [] }) {
               <Ticket key={e.id}>
                 <TicketStripe />
                 <div>
-                  <TicketTitle>{e.title}</TicketTitle>
+                  <TicketTitle>
+                    <Link to={`/dogadjaj/${e.id}`}>{e.title}</Link>
+                  </TicketTitle>
                   <Meta>
                     <MetaItem>
                       <FaClock /> {timeHM(e.date, e.time)}
