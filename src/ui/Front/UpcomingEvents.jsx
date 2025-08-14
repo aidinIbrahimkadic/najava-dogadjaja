@@ -13,7 +13,7 @@ const Card = styled.div`
   padding: 1rem;
 `;
 
-const Title = styled.h2`
+const Title = styled.div`
   margin: 0 0 2rem 0;
   font-size: 1.8rem;
   display: flex;

@@ -4,6 +4,7 @@ import { FiBell, FiBellOff } from 'react-icons/fi';
 import { FaMusic } from 'react-icons/fa';
 import Heading from '../Heading';
 import * as FaIcons from 'react-icons/fa';
+// import { useGetUserInterests } from '../../features/front/useUserInterests';
 
 /**
  * CategorySubscriptions
@@ -237,6 +238,7 @@ export default function CategorySubscriptions({
   initialSelectedIds,
   isAuthenticated = true,
   onSave,
+  isUpdating,
   autoSave = false,
 }) {
   const childrenOnly = (categories ?? []).flatMap((p) => p.children ?? []);
@@ -354,8 +356,8 @@ export default function CategorySubscriptions({
             Odaberite kategorije za koje želite dobivati push/email obavijesti. Možete promijeniti u
             bilo kojem trenutku.
           </Note>
-          <SaveBtn onClick={save} disabled={!dirty || saving || !isAuthenticated}>
-            {saving ? 'Spremam…' : 'Sačuvaj'}
+          <SaveBtn onClick={save} disabled={!dirty || saving || isUpdating || !isAuthenticated}>
+            {saving || isUpdating ? 'Spremam…' : 'Sačuvaj'}
           </SaveBtn>
         </SaveBar>
       </Wrapper>

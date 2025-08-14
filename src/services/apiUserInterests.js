@@ -27,10 +27,10 @@ export async function deleteUserInterests(id) {
   }
 }
 
-export async function postUserInterests({ categories_idguid }) {
+export async function postUserInterests({ category_idguids }) {
   try {
     const response = await axiosInstance.post(`/events/user-interests`, {
-      categories_idguid,
+      category_idguids,
     });
     return response.data;
   } catch (error) {
@@ -38,10 +38,13 @@ export async function postUserInterests({ categories_idguid }) {
   }
 }
 
-export async function updateUserInterests({ categories_idguid = [] }) {
+export async function updateUserInterests({ category_idguids = [] }) {
+  //OVDJE DOBIJEM []
+  console.log('User interests u apiju:', category_idguids);
+
   try {
-    const response = await axiosInstance.put(`/events/user-interests/`, {
-      categories_idguid,
+    const response = await axiosInstance.post(`/events/user-interests/update-all`, {
+      category_idguids: [...category_idguids],
     });
     return response.data;
   } catch (error) {

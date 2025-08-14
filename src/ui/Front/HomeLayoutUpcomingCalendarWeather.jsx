@@ -58,8 +58,6 @@ export default function HomeLayoutUpcomingCalendarWeather({ events = [], upcomin
     };
   });
 
-  console.log(allEvents);
-
   const data = Array.isArray(events) && events.length > 0 ? events : allEvents;
   const eventsByDate = toEventsByDate(data);
 
