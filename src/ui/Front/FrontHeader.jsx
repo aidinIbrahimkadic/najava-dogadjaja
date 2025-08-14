@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Layout, Input, Button, Dropdown, Space, Avatar } from 'antd';
 import { DownOutlined, UserOutlined, LoginOutlined } from '@ant-design/icons';
 import FrontLogo from './FrontLogo';
@@ -144,6 +144,7 @@ const dropdownItems = [
 export default function FrontHeader() {
   const logout = useLogout();
   const { user } = useUserPermissions();
+  const { pathname } = useLocation();
 
   return (
     <StyledHeader>
@@ -152,7 +153,20 @@ export default function FrontHeader() {
           <FrontLogo size="small" />
         </LogoContainer>
         <NavSection>
-          <NavLink to="/">Početna</NavLink>
+          <NavLink
+            to="/"
+            onClick={(e) => {
+              if (pathname === '/') {
+                e.preventDefault(); // već si na '/', spriječi re-navigaciju
+                (document.documentElement || document.body).scrollTo({
+                  top: 0,
+                  behavior: 'smooth',
+                });
+              }
+            }}
+          >
+            Početna
+          </NavLink>
           <Dropdown menu={{ items: dropdownItems }} trigger={['hover']} placement="bottom">
             <NavLink href="#" onClick={(e) => e.preventDefault()}>
               <Space>
