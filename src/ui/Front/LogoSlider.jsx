@@ -48,7 +48,7 @@ const Viewport = styled.div`
   user-select: none;
   -webkit-user-drag: none;
   touch-action: pan-y; /* dozvoli vertikalno skrolanje na mobilnim uređajima */
-  margin: 10rem 0;
+  margin: 10rem 0 6rem 0;
   ${(p) =>
     p.$pauseOnHover &&
     css`

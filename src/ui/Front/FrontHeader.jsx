@@ -30,11 +30,6 @@ const CenterSection = styled.div`
   gap: 10rem;
 `;
 
-// const SearchContainer = styled.div`
-//   flex: 1;
-//   max-width: 40rem;
-// `;
-
 const StyledSearch = styled(Input)`
   border-radius: 0.8rem;
   border: 1px solid var(--color-grey-300);
@@ -150,25 +145,9 @@ export default function FrontHeader() {
   const logout = useLogout();
   const { user } = useUserPermissions();
 
-  //   POPRAVITI Iz baze povlaciti liked events za korisnika
-  //   const toggleLike = (eventId) => {
-  //     setLikedEvents((prev) => {
-  //       const newLiked = new Set(prev);
-  //       if (newLiked.has(eventId)) {
-  //         newLiked.delete(eventId);
-  //       } else {
-  //         newLiked.add(eventId);
-  //       }
-  //       return newLiked;
-  //     });
-  //   };
-
   return (
     <StyledHeader>
       <CenterSection>
-        {/* <SearchContainer>
-          <StyledSearch placeholder="Pretraži..." prefix={<SearchOutlined />} size="large" />
-        </SearchContainer> */}
         <LogoContainer>
           <FrontLogo size="small" />
         </LogoContainer>

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useUserPermissions } from '../features/authentication/useUserPermissions';
 import { useGetAllCategories } from '../features/front/useAllCategories';
 import { useGetAllInstitutions } from '../features/front/useAllInstitutions';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
@@ -7,7 +8,7 @@ import { useGetUserInterests } from '../features/front/useUserInterests';
 import CalendarSpinner from '../ui/CalendarSpinner';
 import AllEvents from '../ui/Front/AllEvents';
 import CategorySubscriptions from '../ui/Front/CategorySubscriptions';
-import HomeLayoutUpcomingCalendarWeather from '../ui/Front/HomeLayoutUpcomingCalendarWeather';
+import LayoutUpcomingWeather from '../ui/Front/LayoutUpcomingWeather';
 import LogoSlider from '../ui/Front/LogoSlider';
 import PosterCarousel from '../ui/Front/PosterCarousel';
 
@@ -23,31 +24,46 @@ export default function HomePage() {
   const { upcomingEvents, isLoading } = useGetUpcomingEvents();
   const { isLoading: isLoadingCategories, allCategories } = useGetAllCategories();
   const { isLoading: isLoadingInstitutions, allInstitutions } = useGetAllInstitutions();
-  const { isLoading: isLoadingUserInterests, userInterests } = useGetUserInterests();
+  const { isLoading: isLoadingUser, user } = useUserPermissions();
+
+  const hasUser = !!user?.idguid;
+
+  const { isLoading: isLoadingUserInterests, userInterests } = useGetUserInterests({
+    enabled: hasUser,
+    userId: user?.idguid,
+  });
+
   const { isEditing: isUpdatingUserInterests, updateUserInterests } = useUpdateUserInterests();
 
-  const interests = userInterests?.map((interest) => interest.category_idguid);
+  // const interests = userInterests?.map((interest) => interest.category_idguid);
+  const interests = (userInterests ?? []).map((i) => i.category_idguid);
+
+  const showSpinner =
+    isLoading ||
+    isLoadingCategories ||
+    isLoadingInstitutions ||
+    isLoadingUser ||
+    (hasUser && isLoadingUserInterests);
 
   return (
     <Container>
-      {isLoading || isLoadingCategories || isLoadingInstitutions || isLoadingUserInterests ? (
+      {showSpinner ? (
         <CalendarSpinner />
       ) : (
         <>
           <PosterCarousel upcomingEvents={upcomingEvents} />
 
           <AllEvents upcomingEvents={upcomingEvents} allCategories={allCategories} />
-          <HomeLayoutUpcomingCalendarWeather upcomingEvents={upcomingEvents} />
+          <LayoutUpcomingWeather upcomingEvents={upcomingEvents} />
           <LogoSlider allInstitutions={allInstitutions} />
           <CategorySubscriptions
-            isAuthenticated={true}
+            isAuthenticated={hasUser}
             categories={allCategories}
             initialSelectedIds={interests}
             isUpdating={isUpdatingUserInterests}
             onSave={async (category_idguids) => {
-              console.log(category_idguids);
+              if (!hasUser) return;
               updateUserInterests({ category_idguids });
-              // npr. await fetch('/api/me/subscriptions', { method: 'POST', body: JSON.stringify({ categories: ids })})
             }}
           />
         </>

@@ -12,7 +12,6 @@ const Square = styled.div`
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  aspect-ratio: 1 / 1; /* ensure 1:1 */
   overflow: hidden;
 `;
 

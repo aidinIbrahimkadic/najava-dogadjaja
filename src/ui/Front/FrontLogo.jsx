@@ -1,22 +1,6 @@
-// POPRAVITI IZBRISATI
-// import styled from 'styled-components';
-
-// export const Logo = styled.div`
-//   width: 40px;
-//   height: 40px;
-//   background: linear-gradient(135deg, #f97316, #ea580c);
-//   border-radius: 8px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   color: white;
-//   font-weight: bold;
-//   font-size: 18px;
-//   margin-right: 24px;
-// `;
-
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Link, useLocation } from 'react-router-dom';
 
 const StyledLogo = styled.div`
   text-align: center;
@@ -35,9 +19,19 @@ const Img = styled.img.withConfig({
 export default function FrontLogo({ size }) {
   const src = '/Eventura_logotip.png';
 
+  const { pathname } = useLocation();
+
   return (
     <StyledLogo>
-      <Link to="/">
+      <Link
+        to="/"
+        onClick={(e) => {
+          if (pathname === '/') {
+            e.preventDefault(); // već si na '/', spriječi re-navigaciju
+            (document.documentElement || document.body).scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+      >
         <Img size={size} src={src} alt="Logo" />
       </Link>
     </StyledLogo>

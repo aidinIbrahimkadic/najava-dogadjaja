@@ -4,6 +4,7 @@ import { FiBell, FiBellOff } from 'react-icons/fi';
 import { FaMusic } from 'react-icons/fa';
 import Heading from '../Heading';
 import * as FaIcons from 'react-icons/fa';
+import toast from 'react-hot-toast';
 // import { useGetUserInterests } from '../../features/front/useUserInterests';
 
 /**
@@ -267,7 +268,12 @@ export default function CategorySubscriptions({
   const selectedIds = useMemo(() => Array.from(selected), [selected]);
 
   const toggle = (id) => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      toast.error('Morate biti prijavljeni da upravljate obavijestima');
+
+      return;
+    }
+
     setSelected((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);

@@ -3,10 +3,11 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getUserInterests } from '../../services/apiUserInterests';
 
-export function useGetUserInterests() {
+export function useGetUserInterests({ enabled = true, userId }) {
   const { isLoading, data, error } = useQuery({
-    queryKey: ['user_interests'],
+    queryKey: ['user_interests', userId],
     queryFn: getUserInterests,
+    enabled: Boolean(enabled && userId),
     onSuccess: () => {
       toast.success(`Događaji učitani`);
     },
