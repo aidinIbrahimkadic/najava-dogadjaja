@@ -152,14 +152,7 @@ export default function FrontHeader() {
           <FrontLogo size="small" />
         </LogoContainer>
         <NavSection>
-          <Dropdown menu={{ items: dropdownItems }} trigger={['hover']} placement="bottom">
-            <NavLink href="#" onClick={(e) => e.preventDefault()}>
-              <Space>
-                Kategorije
-                <DownOutlined />
-              </Space>
-            </NavLink>
-          </Dropdown>
+          <NavLink to="/">Početna</NavLink>
           <Dropdown menu={{ items: dropdownItems }} trigger={['hover']} placement="bottom">
             <NavLink href="#" onClick={(e) => e.preventDefault()}>
               <Space>

@@ -147,7 +147,7 @@ export default function LogoSlider({
   size = 48,
   gap = 28,
 }) {
-  const institutionsData = allInstitutions.map((institution) => {
+  const institutionsData = allInstitutions?.map((institution) => {
     return {
       label: institution.naziv,
       color: institution.boja_pozadine_postera,
@@ -275,9 +275,9 @@ export default function LogoSlider({
               <LogoLink
                 key={key}
                 to={href || '#'}
-                aria-label={label}
-                title={label}
-                $color={color}
+                aria-label={label || ''}
+                title={label || ''}
+                $color={color || ''}
                 onClick={handleLinkClick}
                 role="listitem"
               >

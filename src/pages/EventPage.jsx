@@ -4,6 +4,7 @@ import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import CalendarSpinner from '../ui/CalendarSpinner';
 import { Page } from '../ui/Front/Page';
 import { RightColumn } from '../ui/Front/RightColumn';
+import SingleEvent from '../ui/Front/SingleEvent';
 import { UpcomingEvents } from '../ui/Front/UpcomingEvents';
 import { WeatherForecast3Day } from '../ui/Front/WeatherForecast3Day';
 
@@ -47,7 +48,7 @@ export default function EventPage() {
 
   return (
     <Page>
-      <h1>{event?.data?.title}</h1>
+      <SingleEvent event={event?.data} />
       <RightColumn>
         <UpcomingEvents events={allEvents} />
         <WeatherForecast3Day />
