@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useGetAllCategories } from '../features/front/useAllCategories';
+import { useGetAllInstitutions } from '../features/front/useAllInstitutions';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import CalendarSpinner from '../ui/CalendarSpinner';
 import AllEvents from '../ui/Front/AllEvents';
@@ -19,10 +20,11 @@ const Container = styled.div`
 export default function HomePage() {
   const { upcomingEvents, isLoading } = useGetUpcomingEvents();
   const { isLoading: isLoadingCategories, allCategories } = useGetAllCategories();
+  const { isLoading: isLoadingInstitutions, allInstitutions } = useGetAllInstitutions();
 
   return (
     <Container>
-      {isLoading || isLoadingCategories ? (
+      {isLoading || isLoadingCategories || isLoadingInstitutions ? (
         <CalendarSpinner />
       ) : (
         <>
@@ -30,7 +32,7 @@ export default function HomePage() {
 
           <AllEvents upcomingEvents={upcomingEvents} allCategories={allCategories} />
           <HomeLayoutUpcomingCalendarWeather />
-          <LogoSlider />
+          <LogoSlider allInstitutions={allInstitutions} />
           <CategorySubscriptions
             isAuthenticated={true}
             categories={allCategories}

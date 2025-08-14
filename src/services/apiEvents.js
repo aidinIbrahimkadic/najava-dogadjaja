@@ -12,7 +12,7 @@ export async function getEvents() {
 export async function postEvent({
   title,
   description,
-  location,
+  location_idguid,
   start_date,
   end_date,
   is_public,
@@ -29,7 +29,7 @@ export async function postEvent({
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description || '');
-    formData.append('location', location || '');
+    formData.append('location_idguid', location_idguid || '');
     formData.append('start_date', start_date);
     formData.append('end_date', end_date || '');
     formData.append('cijena', cijena || '');
@@ -72,7 +72,7 @@ export async function updateEvent({
     description,
     start_date,
     end_date,
-    location,
+    location_idguid,
     user_idguid,
     category_idguid,
     is_public,
@@ -91,7 +91,7 @@ export async function updateEvent({
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description || '');
-    formData.append('location', location || '');
+    formData.append('location_idguid', location_idguid || '');
     formData.append('start_date', start_date);
     formData.append('end_date', end_date || '');
     formData.append('is_public', is_public);

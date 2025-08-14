@@ -38,6 +38,26 @@ export async function getAllCategories() {
   }
 }
 
+export async function getAllInstitutions() {
+  try {
+    const response = await axiosInstance.get(`/institucije`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju institucija');
+  }
+}
+
+export async function getSingleCategory({ id }) {
+  if (!id) throw new Error('Category ID is required');
+
+  try {
+    const response = await axiosInstance.get(`/kategorije/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju kategorije');
+  }
+}
+
 // export async function deleteCategory(id) {
 //   if (!id) throw new Error('Category ID is required');
 

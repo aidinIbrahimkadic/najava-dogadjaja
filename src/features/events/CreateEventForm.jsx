@@ -177,13 +177,13 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </FormField>
         </FormRow>
         <FormRow columns="1fr 1fr">
-          <FormField label="Lokacija događaja" required error={errors?.location?.message}>
+          <FormField label="Lokacija događaja" required error={errors?.location_idguid?.message}>
             {isLocationsLoading ? (
               <Spinner />
             ) : (
               <Select
-                id="location"
-                name="location"
+                id="location_idguid"
+                name="location_idguid"
                 options={locations.data.map((c) => ({
                   value: c.idguid,
                   label: c.naziv,

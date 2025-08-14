@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
-import { EyeOutlined, HeartOutlined } from '@ant-design/icons';
+import { EyeOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 const CarouselWrapper = styled.div`
   width: 100%;
@@ -77,14 +78,16 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
   const scrollStart = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // console.log('Upcoming Events:', upcomingEvents);
-
   const postersFromEvents = upcomingEvents.map((event) => {
+    let slika;
+
     if (event.slika !== '00000000-0000-0000-0000-000000000000') {
-      return `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`;
+      slika = `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`;
     } else {
-      return `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
+      slika = `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
     }
+
+    return { slika, idguid: event.idguid };
   });
 
   useEffect(() => {
@@ -148,7 +151,7 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
         ].map((img, idx) => (
           <PosterCard
             key={idx}
-            $image={img}
+            $image={img.slika}
             // dimujemo samo prvu i zadnju sliku iz originalnog seta
             $dimmed={
               idx % postersFromEvents.length === 0 ||
@@ -156,7 +159,9 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
             }
           >
             <Overlay>
-              <PosterButton icon={<EyeOutlined />}>Više</PosterButton>
+              <Link to={`/dogadjaj/${img.idguid}`}>
+                <PosterButton icon={<EyeOutlined />}>Više</PosterButton>
+              </Link>
             </Overlay>
           </PosterCard>
         ))}

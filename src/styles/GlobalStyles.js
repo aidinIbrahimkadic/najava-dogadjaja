@@ -231,8 +231,9 @@ img {
   .ant-picker-cell-selected .ant-picker-cell-inner,
   .ant-picker-cell-range-start .ant-picker-cell-inner,
   .ant-picker-cell-range-end .ant-picker-cell-inner {
-    background-color: var(--color-brand-500) !important;
-    color: var(--color-grey-0) !important;
+    background-color: var(--color-grey-0) !important;
+    border: 1px solid var(--color-brand-500) !important;
+    color: var(--color-grey-700) !important;
   }
 
 

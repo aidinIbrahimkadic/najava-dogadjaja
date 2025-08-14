@@ -129,8 +129,8 @@ export function UpcomingEvents({ events = [] }) {
 
   return (
     <Card>
-      <Title>🎟️ Nadolazeći događaji</Title>
-      {groups.length === 0 && <div>Nema nadolazećih događaja.</div>}
+      <Title>🎟️ Predstojeći događaji</Title>
+      {groups.length === 0 && <div>Nema predstojećih događaja.</div>}
       {groups.map(([dateKey, items]) => (
         <div key={dateKey}>
           <DateHeader>

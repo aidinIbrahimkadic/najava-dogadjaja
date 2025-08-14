@@ -111,13 +111,13 @@ function CreateInstitutionForm({ institutionToEdit = {}, onCloseModal }) {
           <Controller
             name="email"
             control={control}
-            rules={{
-              required: 'Molimo unesite email adresu!',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Molimo unesite validnu email adresu!',
-              },
-            }}
+            // rules={{
+            //   required: 'Molimo unesite email adresu!',
+            //   pattern: {
+            //     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            //     message: 'Molimo unesite validnu email adresu!',
+            //   },
+            // }}
             render={({ field }) => (
               <StyledInput
                 disabled={isEditing}

@@ -2,6 +2,9 @@ import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Heading from '../Heading';
 import * as FaIcons from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { HiBuildingLibrary, HiCalendarDateRange, HiMapPin } from 'react-icons/hi2';
+
 // ---------------------------------------------
 // Dummy data
 // ---------------------------------------------
@@ -211,6 +214,12 @@ const Card = styled.article`
   height: 100;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
   @media (max-width: 1100px) {
     grid-column: span 3;
   }
@@ -259,6 +268,11 @@ const Title = styled.h3`
   line-height: 1.25;
   letter-spacing: 0.3px;
   color: var(--color-grey-700);
+
+  &:hover {
+    color: var(--color-brand-500);
+    text-decoration: underline;
+  }
 `;
 
 const Meta = styled.div`
@@ -270,9 +284,13 @@ const Meta = styled.div`
 const Row = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   color: #374151;
   font-size: 1.4rem;
+`;
+
+const CategoryRow = styled(Row)`
+  margin-bottom: 1rem;
 `;
 
 const Badge = styled.span`
@@ -280,8 +298,12 @@ const Badge = styled.span`
   color: #3730a3;
   border: 1px solid #c7d2fe;
   border-radius: 999px;
-  padding: 0.15rem 0.5rem;
+  padding: 0.3rem 0.7rem;
   font-size: 1.2rem;
+
+  &:hover {
+    background: #dae0f3;
+  }
 `;
 
 const Extra = styled.div`
@@ -290,6 +312,15 @@ const Extra = styled.div`
   align-items: flex-end;
   justify-content: flex-end;
   margin-top: 0.3rem;
+`;
+
+const InstitutionBadge = styled.span`
+  margin-left: 0.2rem;
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--color-brand-500);
+  }
 `;
 
 const Price = styled.span`
@@ -317,8 +348,10 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
   const [filterWeekend, setFilterWeekend] = useState(false);
   const [inst, setInst] = useState(''); // '' = sve
 
+  const childrenOnly = (allCategories ?? []).flatMap((p) => p.children ?? []);
+
   //KATEGORIJE
-  const CATEGORY_META = (allCategories ?? []).reduce((acc, cat) => {
+  const CATEGORY_META = (childrenOnly ?? []).reduce((acc, cat) => {
     const IconComp = FaIcons[cat.ikona]; // npr. "FaFilm" -> komponenta
     acc[cat.naziv] = {
       color: cat.boja || '#9CA3AF',
@@ -359,9 +392,11 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
       date: formatedDate,
       time: formattedTime,
       category: event.category.naziv,
+      category_idguid: event.category.idguid,
       poster: posterSlika,
       location: 'Coworking Hub',
-      institution: 'CKO',
+      institution: event.institucija.naziv,
+      institution_idguid: event.institucija.idguid,
       going: 37,
     };
   });
@@ -412,7 +447,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
   return (
     <Page>
       {/* Categories strip */}
-      <Heading as="h2">Pregled svih nadolazećih događaja u Tešnju</Heading>
+      <Heading as="h2">Pregled svih predstojećih događaja u Tešnju</Heading>
       <SearchInput
         type="text"
         placeholder="Pronađi događaj..."
@@ -481,29 +516,53 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
             <Card key={e.id}>
               <Poster $image={e.poster} />
               <Body>
-                <Title>{e.title}</Title>
+                <Link to={`/dogadjaj/${e.id}`}>
+                  <Title>{e.title}</Title>
+                </Link>
                 <Meta>
+                  <CategoryRow>
+                    <Link to={`/category/${e.category_idguid}`}>
+                      <Badge>{e.category}</Badge>
+                    </Link>
+                  </CategoryRow>
                   <Row>
-                    <Badge>{e.category}</Badge>
-                  </Row>
-
-                  <Row>
-                    <span>📍</span>
+                    {/* <span>📍</span> */}
+                    <HiMapPin />
                     <span>{e.location}</span>
                   </Row>
                   <Row>
-                    <span>📅</span>
+                    {/* <span>📅</span> */}
+                    <HiCalendarDateRange />
                     <span>
                       {fmtDate(e.date)} u {e.time}h
                     </span>
                   </Row>
                   <Row>
-                    <span>🏛️</span>
-                    <span style={{ marginLeft: '0.35rem', color: '#6b7280' }}>{e.institution}</span>
+                    <HiBuildingLibrary />
+                    <Link to={`/institution/${e.institution_idguid}`}>
+                      {/* <span>🏛️</span> */}
+                      <InstitutionBadge>{e.institution}</InstitutionBadge>
+                      {/* <span style={{ marginLeft: '0.35rem', color: '#6b7280' }}></span> */}
+                    </Link>
                   </Row>
                 </Meta>
                 <Extra>
-                  <Price>{e.price === 0 ? 'Besplatno' : `${e.price.toFixed(2)} KM`}</Price>
+                  <Price>
+                    {e.price === 0 ? (
+                      <span
+                        style={{
+                          backgroundColor: 'var(--color-green-100)',
+                          padding: '.2rem 1rem',
+                          borderRadius: '5.25rem',
+                          color: 'var(--color-green-700)',
+                        }}
+                      >
+                        Besplatan ulaz
+                      </span>
+                    ) : (
+                      `${e.price.toFixed(2)} KM`
+                    )}
+                  </Price>
                 </Extra>
               </Body>
             </Card>

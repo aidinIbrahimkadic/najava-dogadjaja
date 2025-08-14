@@ -239,7 +239,9 @@ export default function CategorySubscriptions({
   onSave,
   autoSave = false,
 }) {
-  const kategorije = categories.map((category) => {
+  const childrenOnly = (categories ?? []).flatMap((p) => p.children ?? []);
+
+  const kategorije = childrenOnly.map((category) => {
     const IconComponent = FaIcons[category.ikona] || FaIcons.FaQuestion;
 
     return {
