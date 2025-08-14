@@ -9,7 +9,7 @@ import { WeatherForecast3Day } from '../ui/Front/WeatherForecast3Day';
 export default function CategoryPage() {
   const { isLoading: isLoadingEvents, upcomingEvents } = useGetUpcomingEvents();
 
-  const allEvents = upcomingEvents.map((event) => {
+  const allEvents = upcomingEvents?.map((event) => {
     const startDate = new Date(event.start_date);
     const formatedDate =
       startDate.getFullYear() +
@@ -45,14 +45,12 @@ export default function CategoryPage() {
   }
 
   return (
-    <>
-      <Page>
-        <h1>{id}</h1>
-        <RightColumn>
-          <UpcomingEvents events={allEvents} />
-          <WeatherForecast3Day />
-        </RightColumn>
-      </Page>
-    </>
+    <Page>
+      <h1>{id}</h1>
+      <RightColumn>
+        <UpcomingEvents events={allEvents} />
+        <WeatherForecast3Day />
+      </RightColumn>
+    </Page>
   );
 }

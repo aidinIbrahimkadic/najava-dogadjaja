@@ -447,7 +447,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
   return (
     <Page>
       {/* Categories strip */}
-      <Heading as="h2">Pregled svih predstojećih događaja u Tešnju</Heading>
+      <Heading as="h1">Pregled svih predstojećih događaja u Tešnju</Heading>
       <SearchInput
         type="text"
         placeholder="Pronađi događaj..."

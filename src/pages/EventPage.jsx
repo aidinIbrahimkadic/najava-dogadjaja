@@ -41,19 +41,17 @@ export default function EventPage() {
     };
   });
 
-  if (isLoadingEvents) {
+  if (isLoadingEvents || isLoadingEvent) {
     <CalendarSpinner />;
   }
 
   return (
-    <>
-      <Page>
-        <h1>{id}</h1>
-        <RightColumn>
-          <UpcomingEvents events={allEvents} />
-          <WeatherForecast3Day />
-        </RightColumn>
-      </Page>
-    </>
+    <Page>
+      <h1>{event?.data?.title}</h1>
+      <RightColumn>
+        <UpcomingEvents events={allEvents} />
+        <WeatherForecast3Day />
+      </RightColumn>
+    </Page>
   );
 }
