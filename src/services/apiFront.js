@@ -19,7 +19,7 @@ export async function getAllEvents() {
 }
 
 export async function getEventById(id) {
-  if (!id) throw new Error('Category ID is required');
+  if (!id) throw new Error('Event ID is required');
 
   try {
     const response = await axiosInstance.get(`/events/${id}`);

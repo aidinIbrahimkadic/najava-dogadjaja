@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { useGetEventById } from '../features/front/useEventById';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import CalendarSpinner from '../ui/CalendarSpinner';
 import { Page } from '../ui/Front/Page';
@@ -7,9 +8,12 @@ import { UpcomingEvents } from '../ui/Front/UpcomingEvents';
 import { WeatherForecast3Day } from '../ui/Front/WeatherForecast3Day';
 
 export default function EventPage() {
+  const { id } = useParams();
   const { isLoading: isLoadingEvents, upcomingEvents } = useGetUpcomingEvents();
+  const { isLoading: isLoadingEvent, event } = useGetEventById(id);
+  console.log(event, isLoadingEvent);
 
-  const allEvents = upcomingEvents.map((event) => {
+  const allEvents = upcomingEvents?.map((event) => {
     const startDate = new Date(event.start_date);
     const formatedDate =
       startDate.getFullYear() +
@@ -36,9 +40,6 @@ export default function EventPage() {
       institution_idguid: event.institucija.idguid,
     };
   });
-
-  const { id } = useParams();
-  console.log('Institution ID:', id);
 
   if (isLoadingEvents) {
     <CalendarSpinner />;
