@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import Heading from '../Heading';
 import * as FaIcons from 'react-icons/fa';
@@ -19,23 +19,52 @@ const fmtDateFromObj = (d) => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.
 const fmtTimeFromObj = (d) =>
   new Intl.DateTimeFormat('bs-BA', { hour: '2-digit', minute: '2-digit' }).format(d);
 
-const inRange = (isoYmd, from, to) => {
-  if (!from && !to) return true;
-  const t = new Date(isoYmd + 'T00:00:00').getTime();
-  if (from && t < new Date(from + 'T00:00:00').getTime()) return false;
-  if (to && t > new Date(to + 'T00:00:00').getTime()) return false;
+// string compare for YYYY-MM-DD
+const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+
+// da li se [s,e] (YYYY-MM-DD) preklapa sa [f,t]
+function overlapsDaySpan(s, e, f, t) {
+  const start = s;
+  const end = e || s;
+  if (f && t) return cmp(start, t) <= 0 && cmp(end, f) >= 0;
+  if (f && !t) return cmp(end, f) >= 0;
+  if (!f && t) return cmp(start, t) <= 0;
   return true;
-};
+}
+
+// ❗ Lokalno formatiranje, bez UTC pomaka
+const toLocalISODate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
 const thisWeekendRange = () => {
   const now = new Date();
-  const day = (now.getDay() + 6) % 7; // Mon=0..Sun=6
-  const saturday = new Date(now);
-  saturday.setDate(now.getDate() + ((5 - day + 7) % 7));
-  const sunday = new Date(saturday);
-  sunday.setDate(saturday.getDate() + 1);
-  const toISO = (d) => d.toISOString().slice(0, 10);
-  return { from: toISO(saturday), to: toISO(sunday) };
+  const dayOfWeek = now.getDay(); // 0=nedjelja, 1=ponedjeljak, ..., 6=subota
+
+  let saturday, sunday;
+
+  if (dayOfWeek === 0) {
+    // Danas je nedjelja - uzmi jučerašnju subotu i danas
+    saturday = new Date(now);
+    saturday.setDate(now.getDate() - 1);
+    sunday = new Date(now);
+  } else if (dayOfWeek === 6) {
+    // Danas je subota - uzmi danas i sutra
+    saturday = new Date(now);
+    sunday = new Date(now);
+    sunday.setDate(now.getDate() + 1);
+  } else {
+    // Ostali dani - uzmi narednu subotu i nedjelju
+    const daysUntilSaturday = 6 - dayOfWeek;
+    saturday = new Date(now);
+    saturday.setDate(now.getDate() + daysUntilSaturday);
+    sunday = new Date(saturday);
+    sunday.setDate(saturday.getDate() + 1);
+  }
+
+  // Reset sati na početak dana
+  saturday.setHours(0, 0, 0, 0);
+  sunday.setHours(0, 0, 0, 0);
+
+  return { from: toLocalISODate(saturday), to: toLocalISODate(sunday) };
 };
 
 const uniq = (arr) => Array.from(new Set(arr));
@@ -409,10 +438,70 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
   });
 
   const institutions = useMemo(() => uniq(allEvents.map((e) => e.institution)), [allEvents]);
+  const categories = useMemo(() => uniq(allEvents.map((e) => e.category)), [allEvents]);
 
   const weekend = thisWeekendRange();
 
-  const categories = useMemo(() => uniq(allEvents.map((e) => e.category)), [allEvents]);
+  // ISPRAVLJENA helper funkcija: da li event zadovoljava date-range/weekend filtere
+  const matchesDateFilters = useCallback(
+    (e) => {
+      // aktivni opseg
+      let f = from;
+      let t = to;
+      if (filterWeekend) {
+        f = weekend.from; // lokalni YYYY-MM-DD (subota)
+        t = weekend.to; // lokalni YYYY-MM-DD (nedjelja)
+      }
+
+      // bez opsega -> prolazi
+      if (!f && !t) return true;
+
+      if (e.ima_vise_termina) {
+        // Događaj sa više termina - provjeri da li bilo koji termin pada u željeni period
+        const termDates = (e.termini || [])
+          .map((tt) => (tt?.start_date ? String(tt.start_date).slice(0, 10) : null))
+          .filter(Boolean);
+
+        // Provjeri da li bilo koji od termina pada u weekend/date range
+        return termDates.some((termDate) => {
+          if (f && t) {
+            // Termin treba biti između f i t (uključivo)
+            return cmp(termDate, f) >= 0 && cmp(termDate, t) <= 0;
+          }
+          if (f && !t) {
+            // Termin treba biti >= f
+            return cmp(termDate, f) >= 0;
+          }
+          if (!f && t) {
+            // Termin treba biti <= t
+            return cmp(termDate, t) <= 0;
+          }
+          return true;
+        });
+      } else {
+        // Događaj sa jednim terminom ili range-om
+        // Provjeri da li se period događaja preklapa sa filter periodom
+        const eventStart = e.date;
+        const eventEnd = e.end_date || e.date;
+
+        return overlapsDaySpan(eventStart, eventEnd, f, t);
+      }
+    },
+    [from, to, filterWeekend, weekend.from, weekend.to]
+  );
+
+  // helper: sortiranje po "narednom nastupu"
+  const sortKey = useCallback((e) => {
+    if (e.ima_vise_termina) {
+      const nowMs = Date.now();
+      const future = (e.termini || [])
+        .map((tt) => (tt?.start_date ? new Date(tt.start_date) : null))
+        .filter((d) => d && d.getTime() >= nowMs)
+        .sort((a, b) => a - b);
+      if (future[0]) return future[0].toISOString();
+    }
+    return `${e.date}T${e.time || '00:00'}:00`;
+  }, []);
 
   const filtered = useMemo(() => {
     return allEvents
@@ -421,35 +510,20 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
         if (inst && e.institution !== inst) return false;
         if (filterFree && Number(e.price) > 0) return false;
 
+        // search
         const search = query.trim().toLowerCase();
         if (search) {
           const blob = `${e.title} ${e.location} ${e.institution}`.toLowerCase();
           if (!blob.includes(search)) return false;
         }
 
-        let f = from,
-          t = to;
-        if (filterWeekend) {
-          f = weekend.from;
-          t = weekend.to;
-        }
-        if (!inRange(e.date, f, t)) return false;
+        // date/weekend (preklapanje ili termini)
+        if (!matchesDateFilters(e)) return false;
 
         return true;
       })
-      .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
-  }, [
-    selectedCategory,
-    inst,
-    filterFree,
-    query,
-    from,
-    to,
-    filterWeekend,
-    weekend.from,
-    weekend.to,
-    allEvents,
-  ]);
+      .sort((a, b) => new Date(sortKey(a)) - new Date(sortKey(b)));
+  }, [selectedCategory, inst, filterFree, query, allEvents, matchesDateFilters, sortKey]);
 
   const now = new Date();
 
@@ -525,7 +599,8 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
       <Grid>
         {filtered.map((e) => {
           const isMultiDay = e.end_date && e.end_date !== e.date;
-          // Termini samo budući, sortirani, max 6; ostatak sumariziramo
+
+          // Termini samo budući, sortirani, max 6; ostatak sumarizujemo
           const futureTerms = (e.termini || [])
             .filter((t) => t?.start_date && new Date(t.start_date) > now)
             .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
@@ -552,6 +627,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                     <HiMapPin />
                     <span>{e.location}</span>
                   </Row>
+
                   {!e.ima_vise_termina && (
                     <Row>
                       <HiCalendarDateRange />
