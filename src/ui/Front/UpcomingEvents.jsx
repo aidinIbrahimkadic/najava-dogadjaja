@@ -4,6 +4,7 @@ import { FaMapMarkerAlt, FaClock, FaMoneyBillAlt, FaTicketAlt } from 'react-icon
 import { Link } from 'react-router-dom';
 import { HiTicket } from 'react-icons/hi2';
 import Heading from '../Heading';
+import { BROJ_EVENATA_ZA_PRIKAZ } from '../../utils/constants';
 
 const Card = styled.div`
   background: #fff;
@@ -243,7 +244,7 @@ export function UpcomingEvents({ events = [] }) {
     });
 
     // uzmi prvih 5 instanci
-    return out.slice(0, 7);
+    return out.slice(0, BROJ_EVENATA_ZA_PRIKAZ);
   }, [events]);
 
   // Grupisanje po danu prikaza (_dayKey)
