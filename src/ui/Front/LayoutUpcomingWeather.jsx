@@ -1,4 +1,3 @@
-// === File: HomeLayout.jsx ===
 import React from 'react';
 import { UpcomingEvents } from './UpcomingEvents';
 import { EventsCalendar } from './EventsCalendar';
