@@ -21,9 +21,11 @@ export async function postEvent({
   institucija_idguid,
   user_idguid,
   cijena,
+  ima_vise_termina = false, // Optional, if you want to handle multiple dates
+  termini = [], // Optional, if you want to handle multiple dates
 }) {
-  if (!title || !start_date || !category_idguid || !user_idguid)
-    throw new Error('Nedostaje neki od obaveznih podataka title, start date ili kategorija');
+  if (!title || !category_idguid || !user_idguid)
+    throw new Error('Nedostaje neki od obaveznih podataka title ili kategorija');
 
   try {
     const formData = new FormData();
@@ -37,6 +39,8 @@ export async function postEvent({
     formData.append('category_idguid', category_idguid);
     formData.append('user_idguid', user_idguid);
     formData.append('institucijaIdguid', institucija_idguid);
+    formData.append('ima_vise_termina', ima_vise_termina);
+    formData.append('termini', termini);
 
     // Append the file with field name 'image' or whatever your backend expects
     if (slika instanceof FileList) {
@@ -79,13 +83,14 @@ export async function updateEvent({
     slika,
     cijena,
     institucija_idguid,
+    ima_vise_termina,
+    termini,
   },
   editId: id,
   // Image url
 }) {
   if (!id) throw new Error('Event ID is required');
-  if (!title || !start_date)
-    throw new Error('Nedostaju neki od obaveznih podataka: title, start date, category, user');
+  if (!title) throw new Error('Nedostaju neki od obaveznih podataka');
 
   try {
     const formData = new FormData();
@@ -99,6 +104,8 @@ export async function updateEvent({
     formData.append('category_idguid', category_idguid);
     formData.append('institucijaIdguid', institucija_idguid);
     formData.append('user_idguid', user_idguid);
+    formData.append('ima_vise_termina', ima_vise_termina);
+    formData.append('termini', termini);
 
     if (slika instanceof FileList && slika.length > 0) {
       formData.append('slika', slika[0]);

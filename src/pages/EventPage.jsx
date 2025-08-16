@@ -12,38 +12,39 @@ export default function EventPage() {
   const { id } = useParams();
   const { isLoading: isLoadingEvents, upcomingEvents } = useGetUpcomingEvents();
   const { isLoading: isLoadingEvent, event } = useGetEventById(id);
-  console.log(event, isLoadingEvent);
 
-  const allEvents = upcomingEvents?.map((event) => {
-    const startDate = new Date(event.start_date);
-    const formatedDate =
-      startDate.getFullYear() +
-      '-' +
-      String(startDate.getMonth() + 1).padStart(2, '0') +
-      '-' +
-      String(startDate.getDate()).padStart(2, '0');
+  // Mapirajmo i start i end (fallback end=start)
+  const allEvents = (upcomingEvents || []).map((ev) => {
+    const start = new Date(ev.start_date);
+    const end = ev.end_date ? new Date(ev.end_date) : new Date(ev.start_date);
 
-    const formattedTime =
-      String(startDate.getHours()).padStart(2, '0') +
-      ':' +
-      String(startDate.getMinutes()).padStart(2, '0');
+    const fmtDate = (d) =>
+      [
+        d.getFullYear(),
+        String(d.getMonth() + 1).padStart(2, '0'),
+        String(d.getDate()).padStart(2, '0'),
+      ].join('-');
+    const fmtTime = (d) =>
+      [String(d.getHours()).padStart(2, '0'), String(d.getMinutes()).padStart(2, '0')].join(':');
 
     return {
-      id: event.idguid,
-      title: event.title,
-      price: parseFloat(event.cijena),
-      date: formatedDate,
-      time: formattedTime,
-      category: event.category.naziv,
-      category_idguid: event.category.idguid,
-      location: event.lokacija.naziv,
-      institution: event.institucija.naziv,
-      institution_idguid: event.institucija.idguid,
+      id: ev.idguid,
+      title: ev.title,
+      price: Number.isFinite(parseFloat(ev.cijena)) ? parseFloat(ev.cijena) : null,
+      date: fmtDate(start),
+      time: fmtTime(start),
+      end_date: fmtDate(end),
+      end_time: fmtTime(end),
+      category: ev.category?.naziv,
+      category_idguid: ev.category?.idguid,
+      location: ev.lokacija?.naziv,
+      institution: ev.institucija?.naziv,
+      institution_idguid: ev.institucija?.idguid,
     };
   });
 
   if (isLoadingEvents || isLoadingEvent) {
-    <CalendarSpinner />;
+    return <CalendarSpinner />;
   }
 
   return (
