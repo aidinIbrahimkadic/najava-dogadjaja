@@ -317,7 +317,7 @@ const Select = ({
       </StyledSelect>
       {isOpen && !disabled && (
         <OptionsList>
-          {options.map((option, index) => (
+          {options?.map((option, index) => (
             <OptionItem
               key={option.value}
               onClick={() => handleSelect(option)}

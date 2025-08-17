@@ -47,6 +47,32 @@ export async function getAllInstitutions() {
   }
 }
 
+export async function getInstitutionById(id) {
+  if (!id) throw new Error('Institution ID is required');
+
+  try {
+    const response = await axiosInstance.get(`/institucije/${id}`);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function getEventsByInstitution(id) {
+  if (!id) throw new Error('Institution ID is required');
+  const { data } = await axiosInstance.get('/events', {
+    params: {
+      institucija_idguid: id,
+      upcoming_only: 'true',
+      limit: 4,
+      sortBy: 'start_date',
+      sortOrder: 'ASC',
+    },
+  });
+  return data;
+}
+
 export async function getSingleCategory({ id }) {
   if (!id) throw new Error('Category ID is required');
 

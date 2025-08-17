@@ -218,7 +218,7 @@ export default function Header() {
                 <UserName>
                   {user.first_name} {user.last_name}
                 </UserName>
-                <UserRole>{role === 'Superadmin' ? role : user.institucija.naziv}</UserRole>
+                <UserRole>{role === 'Superadmin' ? role : user.institucija?.naziv}</UserRole>
               </UserInfo>
               <ChevronIcon $isOpen={isDropdownOpen} size={16} />
             </UserMenuButton>

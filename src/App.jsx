@@ -28,7 +28,6 @@ import VerifyEmail from './features/authentication/VerifyEmail';
 import ForgotPasswordForm from './features/authentication/ForgotPasswordForm';
 import ResetPasswordForm from './features/authentication/ResetPasswordForm';
 import ResendEmail from './features/authentication/ResendEmail';
-import CategoryPage from './pages/CategoryPage';
 import InstitutionPage from './pages/InstitutionPage';
 import EventPage from './pages/EventPage';
 
@@ -121,7 +120,6 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordForm />} />
               <Route path="/reset-password" element={<ResetPasswordForm />} />
               <Route path="/auth/verify-email" element={<VerifyEmail />} />
-              <Route path="/category/:id" element={<CategoryPage />} />
               <Route path="/institution/:id" element={<InstitutionPage />} />
               <Route path="/dogadjaj/:id" element={<EventPage />} />
               <Route index path="/" element={<HomePage />} />

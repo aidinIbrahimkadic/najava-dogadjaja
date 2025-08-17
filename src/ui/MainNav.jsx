@@ -133,7 +133,7 @@ export default function MainNav() {
           </li>
         )}
 
-        {hasPermission('events_institucije_pregled') && (
+        {hasPermission('events_institucije_save') && (
           <li>
             <StyledNavLink to="/institutions">
               <IconWrapper>
@@ -144,7 +144,7 @@ export default function MainNav() {
           </li>
         )}
 
-        {hasPermission('admin_settings_pregled') && (
+        {hasPermission('admin_settings_save') && (
           <li>
             <StyledNavLink to="/settings">
               <IconWrapper>

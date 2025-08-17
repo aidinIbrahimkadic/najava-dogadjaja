@@ -1,13 +1,21 @@
 import { useParams } from 'react-router-dom';
+import { useGetEventsByInstitution } from '../features/front/useGetEventsByInstitution';
+import { useGetInstitutionById } from '../features/front/useSingleInstitution';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import CalendarSpinner from '../ui/CalendarSpinner';
 import { Page } from '../ui/Front/Page';
 import { RightColumn } from '../ui/Front/RightColumn';
+import SingleInstitution from '../ui/Front/SingleInstitution';
 import { UpcomingEvents } from '../ui/Front/UpcomingEvents';
 import { WeatherForecast3Day } from '../ui/Front/WeatherForecast3Day';
 
 export default function InstitutionPage() {
+  const { id } = useParams();
+
   const { isLoading: isLoadingEvents, upcomingEvents } = useGetUpcomingEvents();
+  const { isLoading: isLoadingInstitution, singleInstitution } = useGetInstitutionById(id);
+  const { isLoading: isLoadingEventsByInstitution, eventsByInstitution } =
+    useGetEventsByInstitution(id);
 
   const allEvents = upcomingEvents?.map((event) => {
     const startDate = new Date(event.start_date);
@@ -37,16 +45,13 @@ export default function InstitutionPage() {
     };
   });
 
-  const { id } = useParams();
-  console.log('Institution ID:', id);
-
-  if (isLoadingEvents) {
+  if (isLoadingEvents || isLoadingInstitution || isLoadingEventsByInstitution) {
     <CalendarSpinner />;
   }
 
   return (
     <Page>
-      <h1>{id}</h1>
+      <SingleInstitution inst={singleInstitution?.data} upcomingEvents={eventsByInstitution} />
       <RightColumn>
         <UpcomingEvents events={allEvents} />
         <WeatherForecast3Day />

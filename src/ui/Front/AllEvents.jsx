@@ -618,9 +618,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
 
                 <Meta>
                   <CategoryRow>
-                    <Link to={`/category/${e.category_idguid}`}>
-                      <Badge>{e.category}</Badge>
-                    </Link>
+                    <Badge>{e.category}</Badge>
                   </CategoryRow>
 
                   <Row>
