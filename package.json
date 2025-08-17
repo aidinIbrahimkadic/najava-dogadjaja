@@ -30,7 +30,8 @@
     "react-router-dom": "^7.6.2",
     "recharts": "^3.1.2",
     "styled-component": "^2.8.0",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

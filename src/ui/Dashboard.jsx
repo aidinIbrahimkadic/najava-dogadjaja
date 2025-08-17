@@ -13,6 +13,7 @@ import {
   Line,
 } from 'recharts';
 import * as Fa from 'react-icons/fa';
+import * as XLSX from 'xlsx';
 import Heading from './Heading';
 
 /**
@@ -42,8 +43,7 @@ const Page = styled.div`
   --ink: ${INK};
   --muted: ${MUTED};
 
-  padding: 1rem 0rem;
-  /* background: #f8fafc; */
+  padding: 1rem 0;
   color: var(--ink);
   min-height: 100vh;
   display: flex;
@@ -707,18 +707,31 @@ function yearsFromEvents(list) {
   return Array.from(s).sort((a, b) => a - b);
 }
 
-function monthlyCounts(list, year) {
+function monthlyCounts(list, year, mode = 'events') {
   const months = Array.from({ length: 12 }, (_, i) => ({ month: MONTHS_BA[i], count: 0 }));
 
   for (const e of list) {
-    if (e.ima_vise_termina && e.termini && e.termini.length) {
+    const hasTerms = !!(e.ima_vise_termina && e.termini && e.termini.length);
+
+    if (mode === 'termini' && hasTerms) {
+      // Broji svaki termin zasebno
       for (const t of e.termini) {
         const d = toDate(t.start_date);
         if (d.getFullYear() === year) months[d.getMonth()].count += 1;
       }
+      // Ako ima termine, ne brojimo osnovni start_date posebno (da izbjegnemo duplo računanje)
     } else {
-      const d = toDate(e.start_date);
-      if (d.getFullYear() === year) months[d.getMonth()].count += 1;
+      // "Događaji" režim — brojimo događaj jednom u prvom mjesecu u kojem se pojavljuje u toj godini
+      const candidates = [e.start_date, ...(e.termini || []).map((t) => t.start_date)]
+        .filter(Boolean)
+        .map(toDate)
+        .filter((d) => d.getFullYear() === year)
+        .sort((a, b) => a - b);
+
+      if (candidates.length) {
+        const m = candidates[0].getMonth();
+        months[m].count += 1;
+      }
     }
   }
   return months;
@@ -728,7 +741,7 @@ function monthlyCounts(list, year) {
 // Component
 // ————————————————————————————————————————————————————
 
-export default function Dashboard({ events = DUMMY_EVENTS }) {
+export default function EventsStatsDashboard({ events = DUMMY_EVENTS }) {
   const now = useMemo(() => new Date(), []);
 
   // —— Filters state ——
@@ -738,6 +751,8 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [exportFormat, setExportFormat] = useState('xlsx');
+  const [monthMode, setMonthMode] = useState('events');
 
   // Options
   const institutions = useMemo(
@@ -778,7 +793,7 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
 
   const source = filteredEvents;
 
-  // Export helpers (backend url + CSV fallback)
+  // Export helpers (backend url + Excel export)
   const BACKEND_EXPORT_URL = '/api/events/export-excel'; // replace when wiring backend
   const getCurrentFilters = () => ({
     query,
@@ -796,46 +811,31 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
     });
     return `${base}?${q.toString()}`;
   };
-  const downloadCSV = (rows, filename = 'events-export.csv') => {
-    const headers = [
-      'id',
-      'title',
-      'category',
-      'institution',
-      'start_date',
-      'end_date',
-      'price',
-      'status',
-    ];
-    const lines = [headers.join(',')];
-    rows.forEach((e) => {
+  const exportToExcel = (rows, fmt = exportFormat) => {
+    const data = rows.map((e) => {
       const { end } = eventRange(e);
       const status = end && end < now ? 'past' : 'active';
-      const vals = [
-        e.idguid,
-        e.title || '',
-        e.category?.naziv || '',
-        e.institucija?.naziv || '',
-        e.start_date || '',
-        e.end_date || '',
-        e.cijena || '',
-        status,
-      ];
-      lines.push(vals.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+      return {
+        ID: e.idguid,
+        Naslov: e.title || '',
+        Kategorija: e.category?.naziv || '',
+        Institucija: e.institucija?.naziv || '',
+        Pocetak: e.start_date || '',
+        Kraj: e.end_date || '',
+        Cijena: e.cijena || '',
+        Status: status,
+      };
     });
-    const blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(wb, ws, 'Događaji');
+    const ext = fmt === 'xls' ? 'xls' : 'xlsx';
+    XLSX.writeFile(wb, `events-export.${ext}`, { bookType: ext });
   };
   const handleExport = () => {
     const url = buildExportUrl(BACKEND_EXPORT_URL, getCurrentFilters());
     console.log('Export URL:', url);
-    downloadCSV(source);
+    exportToExcel(source, exportFormat);
   };
 
   // Metrics from filtered source
@@ -870,7 +870,7 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
     () => groupActivePastBy(source, (e) => e.category?.naziv || 'Bez kategorije', now),
     [source, now]
   );
-  const monthly = useMemo(() => monthlyCounts(source, year), [source, year]);
+  const monthly = useMemo(() => monthlyCounts(source, year, monthMode), [source, year, monthMode]);
 
   return (
     <Page>
@@ -879,14 +879,14 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
       </TitleRow>
 
       <FilterBar>
-        <Field style={{ gridColumn: 'span 3' }}>
+        {/* <Field style={{ gridColumn: 'span 3' }}>
           <label>Pretraga (naslov)</label>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="npr. koncert, film..."
           />
-        </Field>
+        </Field> */}
         <Field>
           <label>Institucija</label>
           <select value={insFilter} onChange={(e) => setInsFilter(e.target.value)}>
@@ -918,14 +918,6 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
           </select>
         </Field>
         <Field>
-          <label>Od datuma</label>
-          <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
-        </Field>
-        <Field>
-          <label>Do datuma</label>
-          <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
-        </Field>
-        <Field>
           <label>Godina (za mjesece)</label>
           <select value={year} onChange={(e) => setYear(Number(e.target.value))}>
             {yearOptions.map((y) => (
@@ -935,7 +927,26 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
             ))}
           </select>
         </Field>
+        <Field>
+          <label>Od datuma</label>
+          <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+        </Field>
+        <Field>
+          <label>Do datuma</label>
+          <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+        </Field>
+        <Field>
+          <label>Brojanje</label>
+          <select value={monthMode} onChange={(e) => setMonthMode(e.target.value)}>
+            <option value="events">Događaji</option>
+            <option value="termini">Termini</option>
+          </select>
+        </Field>
         <Actions>
+          <select value={exportFormat} onChange={(e) => setExportFormat(e.target.value)}>
+            <option value="xlsx">.xlsx</option>
+            <option value="xls">.xls</option>
+          </select>
           <Btn
             data-variant="ghost"
             onClick={() => {
@@ -950,7 +961,7 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
             Reset
           </Btn>
           <Btn onClick={handleExport}>
-            <Fa.FaFileExport style={{ marginRight: '.4rem' }} /> Export u Excel
+            <Fa.FaFileExport style={{ marginRight: '.4rem' }} /> Export
           </Btn>
         </Actions>
       </FilterBar>
@@ -1005,7 +1016,9 @@ export default function Dashboard({ events = DUMMY_EVENTS }) {
 
       <Grid>
         <Card style={{ gridColumn: 'span 12' }}>
-          <CardTitle>Broj događaja po mjesecima ({year})</CardTitle>
+          <CardTitle>
+            Broj {monthMode === 'termini' ? 'termina' : 'događaja'} po mjesecima ({year})
+          </CardTitle>
           <ChartLine data={monthly} dataKeyA="count" labelA="Događaji" xKey="month" />
         </Card>
         <Card style={{ gridColumn: 'span 6' }}>

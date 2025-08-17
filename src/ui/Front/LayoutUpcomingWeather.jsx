@@ -1,7 +1,7 @@
 import React from 'react';
 import { UpcomingEvents } from './UpcomingEvents';
 import { EventsCalendar } from './EventsCalendar';
-// import { WeatherForecast3Day } from './WeatherForecast3Day';
+import { WeatherForecast3Day } from './WeatherForecast3Day';
 import { Page } from './Page';
 import { RightColumn } from './RightColumn';
 
@@ -48,7 +48,7 @@ export default function LayoutUpcomingWeather({ upcomingEvents }) {
       <EventsCalendar eventsByDate={eventsByDate} />
       <RightColumn>
         <UpcomingEvents events={allEvents} />
-        {/* <WeatherForecast3Day /> */}
+        <WeatherForecast3Day />
       </RightColumn>
     </Page>
   );
