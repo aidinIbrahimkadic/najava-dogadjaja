@@ -84,7 +84,7 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
     if (event.slika !== '00000000-0000-0000-0000-000000000000') {
       slika = `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`;
     } else {
-      slika = `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
+      slika = `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}?height=300`;
     }
 
     return { slika, idguid: event.idguid };
