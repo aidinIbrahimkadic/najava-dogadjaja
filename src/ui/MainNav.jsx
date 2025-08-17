@@ -97,7 +97,7 @@ export default function MainNav() {
             <IconWrapper>
               <HiOutlineHome />
             </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Početna</Label>
+            <Label isCollapsed={isCollapsed}>Dashboard</Label>
           </StyledNavLink>
         </li>
         {hasPermission('events_pregled') && (
