@@ -30,6 +30,7 @@ import ResetPasswordForm from './features/authentication/ResetPasswordForm';
 import ResendEmail from './features/authentication/ResendEmail';
 import InstitutionPage from './pages/InstitutionPage';
 import EventPage from './pages/EventPage';
+import PageNotFoundAdmin from './pages/PageNotFoundAdmin';
 
 const queryClient = new QueryClient();
 
@@ -111,7 +112,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="*" element={<PageNotFound />} />
             </Route>
             <Route element={<AppLayoutFront />}>
               <Route path="/login" element={<Login />} />

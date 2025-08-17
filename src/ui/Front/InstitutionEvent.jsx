@@ -42,7 +42,8 @@ const Title = styled.h3`
     color: inherit;
     text-decoration: none;
   }
-  a:hover {
+  &:hover {
+    color: var(--color-brand-500);
     text-decoration: underline;
   }
 `;
