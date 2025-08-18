@@ -40,7 +40,6 @@ function initialsFromName(name = '') {
 // —— Styled Components ——
 const Card = styled.div`
   width: 100%;
-  max-width: 980px;
   background: #fff;
   border-radius: 1.25rem; /* ~2xl */
   box-shadow: 0 20px 50px rgba(2, 6, 23, 0.08);
