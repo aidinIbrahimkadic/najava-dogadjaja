@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const StyledLogo = styled.div`
   text-align: center;
-  height: 100%;
+  /* height: 100%; */
 `;
 
 const Img = styled.img.withConfig({

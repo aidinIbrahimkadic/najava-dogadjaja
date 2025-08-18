@@ -1,8 +1,14 @@
 import styled from 'styled-components';
 import { Layout } from 'antd';
+import { Link } from 'react-router-dom';
 import FrontLogo from './FrontLogo';
 
+import { useGetUpcomingEvents } from '../../features/front/useUpcomingEvents';
+
 const { Footer } = Layout;
+
+// —— Theme
+const BRAND = '#f97316';
 
 const StyledFooter = styled(Footer)`
   background: #001529;
@@ -12,96 +18,221 @@ const StyledFooter = styled(Footer)`
 const FooterContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 48px 0;
+  padding: 40px 0 28px;
 `;
 
 const FooterGrid = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 32px;
+  grid-template-columns: 0.5fr 1fr;
+  gap: 40px;
+  margin-bottom: 24px;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 28px;
   }
 `;
 
-const FooterSection = styled.div`
+const BrandBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+
+  p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin: 0;
+  }
+`;
+
+const Section = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
   h3 {
     color: #fff;
     font-size: 16px;
     font-weight: 600;
-    margin-bottom: 16px;
-  }
-
-  p {
-    color: rgba(255, 255, 255, 0.65);
-    line-height: 1.6;
-    margin-bottom: 16px;
+    margin: 0 0 12px 0;
   }
 `;
 
-const FooterLink = styled.a`
-  display: block;
-  color: rgba(255, 255, 255, 0.65);
+const InstList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+const InstItem = styled.li`
+  margin: 0;
+  a {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    padding: 6px 0;
+    transition: color 0.2s ease;
+  }
+  a:hover {
+    color: ${BRAND};
+  }
+`;
+
+const NextEventCard = styled(Link)`
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
   text-decoration: none;
-  padding: 4px 0;
-  transition: color 0.2s ease;
 
   &:hover {
-    color: #f97316;
+    border-color: ${BRAND};
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const Poster = styled.img`
+  width: 92px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #0b1220;
+`;
+
+const EventMeta = styled.div`
+  display: grid;
+  gap: 6px;
+
+  .title {
+    color: #fff;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .date {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.92rem;
   }
 `;
 
 const FooterBottom = styled.div`
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 24px;
+  padding-top: 18px;
   text-align: center;
   color: rgba(255, 255, 255, 0.45);
+  font-size: 0.92rem;
 `;
 
-export default function FrontFooter() {
+/**
+ * FrontFooter
+ * @param {Object} props
+ * @param {string} props.description - Kratki opis (ispod logotipa)
+ * @param {Array<{name: string, href: string}>} props.institutions - Lista institucija
+ * @param {Object} [props.nextEvent] - Opcionalno: naredni događaj
+ * @param {string} props.nextEvent.title
+ * @param {string} props.nextEvent.dateISO - ISO datum (npr. "2025-08-19T18:00:00.000Z")
+ * @param {string} props.nextEvent.imageUrl
+ * @param {string} [props.nextEvent.href] - Link do stranice događaja (ako izostane, koristi /dogadjaj/:id)
+ * @param {string} [props.nextEvent.id] - Id za fallback rutu /dogadjaj/:id
+ */
+export default function FrontFooter({ description = '', institucije = [] }) {
+  const { upcomingEvents } = useGetUpcomingEvents();
+
+  const posterSlika =
+    upcomingEvents?.[0]?.slika && upcomingEvents[0].slika !== '00000000-0000-0000-0000-000000000000'
+      ? `https://events-opcina.poruci.ba/api/image/${upcomingEvents[0].slika}?height=300`
+      : `https://events-opcina.poruci.ba/api/events/slika/${upcomingEvents?.[0]?.idguid}`;
+
+  const nextEvent = {
+    id: upcomingEvents?.[0]?.idguid,
+    title: upcomingEvents?.[0]?.title,
+    dateISO: upcomingEvents?.[0]?.start_date,
+    imageUrl: posterSlika,
+    institucija: upcomingEvents?.[0]?.institucija.naziv,
+    institucijaUrl: `/institution/${upcomingEvents?.[0]?.institucija_idguid}`,
+  };
+
+  const formatDate = (iso) => {
+    try {
+      const d = new Date(iso);
+      const dan = String(d.getDate()).padStart(2, '0');
+      const mjesec = String(d.getMonth() + 1).padStart(2, '0');
+      const godina = d.getFullYear();
+      const sati = String(d.getHours()).padStart(2, '0');
+      const minute = String(d.getMinutes()).padStart(2, '0');
+
+      return `${dan}.${mjesec}.${godina} - ${sati}:${minute}`;
+    } catch {
+      return '';
+    }
+  };
+
+  let institutions = institucije.map((i) => {
+    return {
+      name: i.naziv || 'Nepoznato',
+      href: `/institution/${i.idguid}`,
+    };
+  });
+  const eventHref = nextEvent?.href || (nextEvent?.id ? `/dogadjaj/${nextEvent.id}` : '#');
+
   return (
     <StyledFooter>
       <FooterContent>
         <FooterGrid>
-          <FooterSection>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-              <FrontLogo />
+          {/* Logo + opis */}
+          <BrandBlock>
+            <FrontLogo />
+            <p>{description}</p>
+          </BrandBlock>
+
+          {/* Desna kolona: institucije + (opcionalno) naredni događaj */}
+          <Section>
+            <div>
+              <h3>Institucije</h3>
+              <InstList>
+                {institutions?.slice(0, 8).map((inst) => (
+                  <InstItem key={inst.href ?? inst.name}>
+                    <a href={inst.href} target="_blank" rel="noopener noreferrer">
+                      {inst.name}
+                    </a>
+                  </InstItem>
+                ))}
+                {(!institutions || institutions.length === 0) && (
+                  <InstItem style={{ color: 'rgba(255,255,255,0.45)' }}>
+                    Trenutno nema unesenih institucija.
+                  </InstItem>
+                )}
+              </InstList>
             </div>
-            <p>
-              Kratki opis vaše kompanije i onoga što radite. Ovo je mjesto gdje možete objasniti
-              svoju misiju i viziju u modernom digitalnom svijetu.
-            </p>
-          </FooterSection>
 
-          <FooterSection>
-            <h3>Proizvodi</h3>
-            <FooterLink href="#">Proizvod 1</FooterLink>
-            <FooterLink href="#">Proizvod 2</FooterLink>
-            <FooterLink href="#">Proizvod 3</FooterLink>
-            <FooterLink href="#">Proizvod 4</FooterLink>
-          </FooterSection>
-
-          <FooterSection>
-            <h3>Kompanija</h3>
-            <FooterLink href="#">O nama</FooterLink>
-            <FooterLink href="#">Karijere</FooterLink>
-            <FooterLink href="#">Blog</FooterLink>
-            <FooterLink href="#">Kontakt</FooterLink>
-          </FooterSection>
-
-          <FooterSection>
-            <h3>Podrška</h3>
-            <FooterLink href="#">Help Center</FooterLink>
-            <FooterLink href="#">Dokumentacija</FooterLink>
-            <FooterLink href="#">API Reference</FooterLink>
-            <FooterLink href="#">Status</FooterLink>
-          </FooterSection>
+            {nextEvent && (
+              <div>
+                <h3 style={{ marginTop: 16 }}>Naredni događaj</h3>
+                <NextEventCard to={eventHref}>
+                  <Poster
+                    src={nextEvent.imageUrl}
+                    alt={nextEvent.title || 'Događaj'}
+                    loading="lazy"
+                  />
+                  <EventMeta>
+                    <div className="title">{nextEvent.title}</div>
+                    {nextEvent.dateISO && (
+                      <div className="date">{formatDate(nextEvent.dateISO)}</div>
+                    )}
+                    <div>{nextEvent?.institucija}</div>
+                  </EventMeta>
+                </NextEventCard>
+              </div>
+            )}
+          </Section>
         </FooterGrid>
 
-        <FooterBottom>© 2024 Vaša Kompanija. Sva prava zadržana.</FooterBottom>
+        <FooterBottom>
+          © {new Date().getFullYear()} Općina Tešanj. Sva prava zadržana.
+        </FooterBottom>
       </FooterContent>
     </StyledFooter>
   );

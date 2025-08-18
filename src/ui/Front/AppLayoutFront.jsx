@@ -7,6 +7,7 @@ import FrontFooter from './FrontFooter';
 import FrontHeader from './FrontHeader';
 import { useEffect } from 'react';
 import { setRedirectHandler } from '../../utils/redirectService';
+import { useGetAllInstitutions } from '../../features/front/useAllInstitutions';
 const { Content } = Layout;
 
 const StyledLayout = styled(Layout)`
@@ -40,6 +41,8 @@ const StyledBackTop = styled(FloatButton.BackTop)`
 `;
 
 export default function AppLayoutFront() {
+  const { isLoading: isLoadingInstitutions, allInstitutions } = useGetAllInstitutions();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,7 +56,10 @@ export default function AppLayoutFront() {
 
   return (
     <StyledLayout>
-      <FrontHeader />
+      <FrontHeader
+        allInstitutions={allInstitutions}
+        isLoadingInstitutions={isLoadingInstitutions}
+      />
       <StyledContent>
         <Outlet />
       </StyledContent>
@@ -65,7 +71,16 @@ export default function AppLayoutFront() {
         icon={<HiArrowUp />}
       />
 
-      <FrontFooter />
+      <FrontFooter
+        description="Platforma za najavu događaja Općine Tešanj."
+        institucije={allInstitutions}
+        nextEvent={{
+          id: 'abab107e-2a93-4cd5-aea7-b4ad2446b10e', // ili href: '/dogadjaj/...'
+          title: 'Promocija knjige: Neki dugi naziv',
+          dateISO: '2025-08-19T18:00:00.000Z',
+          imageUrl: 'https://events-opcina.poruci.ba/api/image/POSTER_ID?height=200',
+        }}
+      />
     </StyledLayout>
   );
 }

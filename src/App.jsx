@@ -30,7 +30,6 @@ import ResetPasswordForm from './features/authentication/ResetPasswordForm';
 import ResendEmail from './features/authentication/ResendEmail';
 import InstitutionPage from './pages/InstitutionPage';
 import EventPage from './pages/EventPage';
-import PageNotFoundAdmin from './pages/PageNotFoundAdmin';
 
 const queryClient = new QueryClient();
 

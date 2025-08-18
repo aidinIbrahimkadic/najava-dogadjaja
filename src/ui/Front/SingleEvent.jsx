@@ -382,18 +382,46 @@ export default function SingleEvent({ event }) {
               <HeaderRow>
                 <Title>{event?.title}</Title>
                 <MetaItem>
-                  <Fa.FaCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
                   <div>
-                    <Label>Status</Label>
-                    <Strong>
-                      {event?.is_ongoing
-                        ? 'U toku'
-                        : event?.is_upcoming
-                          ? 'Uskoro'
-                          : event?.is_past
-                            ? 'Završeno'
-                            : '—'}
-                    </Strong>
+                    <Label>Podijeli događaj</Label>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <FacebookShareButton url={window.location.href} quote={event?.title}>
+                        <FacebookIcon size={36} round />
+                      </FacebookShareButton>
+                      <TwitterShareButton url={window.location.href} title={event?.title}>
+                        <TwitterIcon size={36} round />
+                      </TwitterShareButton>
+                      <LinkedinShareButton
+                        url={window.location.href}
+                        title={event?.title}
+                        summary={event?.description}
+                      >
+                        <LinkedinIcon size={36} round />
+                      </LinkedinShareButton>
+                      <WhatsappShareButton url={window.location.href} title={event?.title}>
+                        <WhatsappIcon size={36} round />
+                      </WhatsappShareButton>
+
+                      {/* Copy link dugme */}
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(window.location.href);
+                          alert('Link kopiran u clipboard!');
+                        }}
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: '50%',
+                          border: '1px solid var(--color-grey-300)',
+                          background: '#fff',
+                          cursor: 'pointer',
+                          display: 'grid',
+                          placeItems: 'center',
+                        }}
+                      >
+                        <Fa.FaLink size={18} color="var(--color-grey-600)" />
+                      </button>
+                    </div>
                   </div>
                 </MetaItem>
               </HeaderRow>
@@ -463,7 +491,6 @@ export default function SingleEvent({ event }) {
                       {terms.map((t, idx) => {
                         const sd = new Date(t.startISO);
                         const disabledGoogleCalendarButton = new Date(t.endISO) < new Date();
-                        // const ed = t.endISO ? new Date(t.endISO) : null;
                         const href = buildGCalHref(event, t.startISO, t.endISO);
                         return (
                           <div
@@ -514,9 +541,6 @@ export default function SingleEvent({ event }) {
                   <div>
                     <Label>Lokacija</Label>
                     <Strong>{event?.lokacija?.naziv || '—'}</Strong>
-                    {/* <div style={{ color: MUTED, fontSize: '0.9rem' }}>
-                      {event?.lokacija?.adresa || event?.location || '—'}
-                    </div> */}
                   </div>
                 </MetaItem>
               </MetaGrid>
@@ -586,47 +610,6 @@ export default function SingleEvent({ event }) {
             )}
 
             {/* Share buttons */}
-            <div>
-              <Label>Podijeli događaj</Label>
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <FacebookShareButton url={window.location.href} quote={event?.title}>
-                  <FacebookIcon size={36} round />
-                </FacebookShareButton>
-                <TwitterShareButton url={window.location.href} title={event?.title}>
-                  <TwitterIcon size={36} round />
-                </TwitterShareButton>
-                <LinkedinShareButton
-                  url={window.location.href}
-                  title={event?.title}
-                  summary={event?.description}
-                >
-                  <LinkedinIcon size={36} round />
-                </LinkedinShareButton>
-                <WhatsappShareButton url={window.location.href} title={event?.title}>
-                  <WhatsappIcon size={36} round />
-                </WhatsappShareButton>
-
-                {/* Copy link dugme */}
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert('Link kopiran u clipboard!');
-                  }}
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: '50%',
-                    border: '1px solid var(--color-grey-300)',
-                    background: '#fff',
-                    cursor: 'pointer',
-                    display: 'grid',
-                    placeItems: 'center',
-                  }}
-                >
-                  <Fa.FaLink size={18} color="var(--color-grey-600)" />
-                </button>
-              </div>
-            </div>
           </InfoCard>
         </div>
       </PageWrap>

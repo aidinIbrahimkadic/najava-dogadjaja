@@ -321,7 +321,6 @@ import { useUserPermissions } from '../../features/authentication/useUserPermiss
 import { useEffect, useRef, useState } from 'react';
 import { HiOutlineUser, HiChevronDown } from 'react-icons/hi2';
 import { BiUser, BiLogOut, BiBuilding } from 'react-icons/bi';
-import { useGetAllInstitutions } from '../../features/front/useAllInstitutions';
 import Spinner from '../Spinner';
 
 const { Header } = Layout;
@@ -535,9 +534,7 @@ const RegisterButton = styled(Button)`
 `;
 
 /* --------------------------------- View --------------------------------- */
-export default function FrontHeader() {
-  const { isLoading: isLoadingInstitutions, allInstitutions } = useGetAllInstitutions();
-
+export default function FrontHeader({ allInstitutions, isLoadingInstitutions }) {
   const institucije = allInstitutions?.map((inst) => ({
     id: inst.idguid,
     naziv: inst.naziv,
@@ -642,8 +639,6 @@ export default function FrontHeader() {
               </DropdownPanel>
             )}
           </DropdownWrap>
-
-          <NavLink to="/kontakt">Kontakt</NavLink>
         </NavSection>
       </CenterSection>
 
