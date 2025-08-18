@@ -7,6 +7,17 @@ import 'leaflet/dist/leaflet.css';
 import { Link } from 'react-router-dom';
 import Heading from '../Heading';
 
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  LinkedinIcon,
+  WhatsappIcon,
+} from 'react-share';
+
 // —— Theme ——
 const BRAND = '#f97316';
 const BRAND_DARK = '#c75a0f';
@@ -570,8 +581,52 @@ export default function SingleEvent({ event }) {
                     </Button>
                   )}
                 </Actions>
+                {/* Share buttons */}
               </div>
             )}
+
+            {/* Share buttons */}
+            <div>
+              <Label>Podijeli događaj</Label>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <FacebookShareButton url={window.location.href} quote={event?.title}>
+                  <FacebookIcon size={36} round />
+                </FacebookShareButton>
+                <TwitterShareButton url={window.location.href} title={event?.title}>
+                  <TwitterIcon size={36} round />
+                </TwitterShareButton>
+                <LinkedinShareButton
+                  url={window.location.href}
+                  title={event?.title}
+                  summary={event?.description}
+                >
+                  <LinkedinIcon size={36} round />
+                </LinkedinShareButton>
+                <WhatsappShareButton url={window.location.href} title={event?.title}>
+                  <WhatsappIcon size={36} round />
+                </WhatsappShareButton>
+
+                {/* Copy link dugme */}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert('Link kopiran u clipboard!');
+                  }}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    border: '1px solid var(--color-grey-300)',
+                    background: '#fff',
+                    cursor: 'pointer',
+                    display: 'grid',
+                    placeItems: 'center',
+                  }}
+                >
+                  <Fa.FaLink size={18} color="var(--color-grey-600)" />
+                </button>
+              </div>
+            </div>
           </InfoCard>
         </div>
       </PageWrap>

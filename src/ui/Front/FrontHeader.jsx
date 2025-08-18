@@ -1,25 +1,341 @@
+// import { Link, useLocation } from 'react-router-dom';
+// import { Layout, Input, Button } from 'antd';
+// import { LoginOutlined } from '@ant-design/icons';
+// import FrontLogo from './FrontLogo';
+// import styled from 'styled-components';
+// import { useLogout } from '../../features/authentication/useLogout';
+// import { useUserPermissions } from '../../features/authentication/useUserPermissions';
+// import { useEffect, useRef, useState } from 'react';
+// import { HiOutlineUser, HiChevronDown } from 'react-icons/hi2';
+// import { BiUser, BiLogOut } from 'react-icons/bi';
+
+// const { Header } = Layout;
+
+// const CenterSection = styled.div`
+//   height: 100%;
+//   display: flex;
+//   align-items: center;
+//   width: 60%;
+//   gap: 10rem;
+// `;
+
+// const NavSection = styled.div`
+//   display: flex;
+//   height: 100%;
+//   align-items: center;
+//   gap: 24px;
+// `;
+
+// const StyledHeader = styled.header`
+//   grid-area: header;
+//   background-color: var(--color-grey-0);
+//   border-bottom: 1px solid var(--color-grey-100);
+//   display: flex;
+//   justify-content: space-around;
+//   align-items: center;
+// `;
+
+// const UserMenu = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 2rem;
+//   position: relative; /* važan za absolute dropdown */
+// `;
+
+// const UserMenuButton = styled.button`
+//   display: flex;
+//   background-color: var(--color-grey-0);
+//   padding: 0.8rem 1.2rem;
+//   border-radius: 1rem;
+//   align-items: center;
+//   gap: 1.2rem;
+//   border: 1px solid transparent;
+//   cursor: pointer;
+//   transition: all 0.2s ease;
+
+//   &:hover {
+//     background-color: var(--color-grey-100);
+//     border-color: var(--color-grey-200);
+//   }
+
+//   &:focus {
+//     outline: 2px solid var(--color-brand-500);
+//     outline-offset: 2px;
+//   }
+// `;
+
+// const UserInfo = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+//   text-align: left;
+// `;
+
+// const UserName = styled.div`
+//   font-weight: 600;
+//   color: var(--color-grey-700);
+//   font-size: 1.4rem;
+//   line-height: 1.2;
+// `;
+
+// const ChevronIcon = styled(HiChevronDown)`
+//   transition: transform 0.2s ease;
+//   color: var(--color-grey-500);
+//   ${({ $isOpen }) => $isOpen && `transform: rotate(180deg);`}
+// `;
+
+// const NavLink = styled(Link)`
+//   color: var(--color-grey-700);
+//   text-decoration: none;
+//   font-weight: 500;
+//   border-radius: 6px;
+//   transition: all 0.2s ease;
+
+//   &:hover {
+//     color: var(--color-brand-700);
+//   }
+// `;
+
+// const RightSection = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 2rem;
+// `;
+
+// const LoginButton = styled(Button)`
+//   color: var(--color-grey-600);
+//   border: none;
+//   background: transparent;
+//   box-shadow: none;
+
+//   &:hover {
+//     color: var(--color-brand-500) !important;
+//     background: rgba(249, 115, 22, 0.05) !important;
+//   }
+// `;
+
+// const RegisterButton = styled(Button)`
+//   background: var(--color-brand-500);
+//   border-color: var(--color-brand-500);
+//   border-radius: 8px;
+//   font-weight: 500;
+
+//   &:hover {
+//     background: var(--color-brand-600) !important;
+//     border-color: var(--color-brand-600) !important;
+//   }
+// `;
+
+// const LogoContainer = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   height: 100%;
+// `;
+
+// const Dropdown = styled.div`
+//   position: absolute;
+//   top: calc(100% + 0.8rem);
+//   right: 0;
+//   background-color: var(--color-grey-0);
+//   border: 1px solid var(--color-grey-200);
+//   border-radius: 1rem;
+//   box-shadow:
+//     0 4px 6px -1px rgba(0, 0, 0, 0.1),
+//     0 2px 4px -1px rgba(0, 0, 0, 0.06);
+//   min-width: 18rem;
+//   z-index: 1000;
+//   overflow: hidden;
+// `;
+
+// const DropdownItemButton = styled.button`
+//   width: 100%;
+//   display: flex;
+//   align-items: center;
+//   gap: 1rem;
+//   padding: 1.2rem 1.6rem;
+//   background: none;
+//   border: none;
+//   cursor: pointer;
+//   text-align: left;
+//   font-size: 1.4rem;
+//   color: var(--color-grey-700);
+//   transition: background-color 0.2s ease;
+
+//   &:hover {
+//     background-color: var(--color-grey-50);
+//   }
+//   &:first-child {
+//     border-bottom: 1px solid var(--color-grey-100);
+//   }
+//   svg {
+//     color: var(--color-grey-500);
+//   }
+// `;
+
+// // Link varijanta za dropdown (isti stil, ali <Link>)
+// const DropdownItemLink = styled(Link)`
+//   display: flex;
+//   align-items: center;
+//   gap: 1rem;
+//   padding: 1.2rem 1.6rem;
+//   font-size: 1.4rem;
+//   color: var(--color-grey-700);
+//   text-decoration: none;
+//   transition: background-color 0.2s ease;
+
+//   &:hover {
+//     background-color: var(--color-grey-50);
+//   }
+//   &:first-child {
+//     border-bottom: 1px solid var(--color-grey-100);
+//   }
+//   svg {
+//     color: var(--color-grey-500);
+//   }
+// `;
+
+// export default function FrontHeader() {
+//   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+//   const menuRef = useRef(null);
+
+//   const logout = useLogout();
+//   const { user, roles } = useUserPermissions();
+//   const { pathname } = useLocation();
+
+//   const isAdmin = roles[0]?.name !== 'Public';
+
+//   // Zatvori na klik izvan menija
+//   useEffect(() => {
+//     function handleClickOutside(event) {
+//       if (menuRef.current && !menuRef.current.contains(event.target)) {
+//         setIsDropdownOpen(false);
+//       }
+//     }
+//     function handleEsc(event) {
+//       if (event.key === 'Escape') setIsDropdownOpen(false);
+//     }
+//     document.addEventListener('mousedown', handleClickOutside);
+//     document.addEventListener('keydown', handleEsc);
+//     return () => {
+//       document.removeEventListener('mousedown', handleClickOutside);
+//       document.removeEventListener('keydown', handleEsc);
+//     };
+//   }, []);
+
+//   // Zatvori na promjenu rute
+//   useEffect(() => {
+//     setIsDropdownOpen(false);
+//   }, [pathname]);
+
+//   const handleDropdownToggle = () => setIsDropdownOpen((v) => !v);
+
+//   const handleLogout = () => {
+//     setIsDropdownOpen(false);
+//     logout();
+//   };
+
+//   return (
+//     <StyledHeader>
+//       <CenterSection>
+//         <LogoContainer>
+//           <FrontLogo size="small" />
+//         </LogoContainer>
+//         <NavSection>
+//           <NavLink
+//             to="/"
+//             onClick={(e) => {
+//               if (pathname === '/') {
+//                 e.preventDefault();
+//                 (document.documentElement || document.body).scrollTo({
+//                   top: 0,
+//                   behavior: 'smooth',
+//                 });
+//               }
+//             }}
+//           >
+//             Početna
+//           </NavLink>
+//           <NavLink to="/kontakt">Kontakt</NavLink>
+//         </NavSection>
+//       </CenterSection>
+
+//       <RightSection>
+//         {user ? (
+//           <UserMenu ref={menuRef}>
+//             <UserMenuButton
+//               onClick={handleDropdownToggle}
+//               aria-haspopup="menu"
+//               aria-expanded={isDropdownOpen}
+//               aria-label="Korisnički meni"
+//             >
+//               <HiOutlineUser size={30} />
+//               <UserInfo>
+//                 <UserName>
+//                   {user.first_name} {user.last_name}
+//                 </UserName>
+//               </UserInfo>
+//               <ChevronIcon $isOpen={isDropdownOpen} size={16} />
+//             </UserMenuButton>
+
+//             {isDropdownOpen && (
+//               <Dropdown role="menu" aria-label="Korisnički meni">
+//                 <DropdownItemLink
+//                   to={isAdmin ? '/me' : '/userProfile'}
+//                   onClick={() => setIsDropdownOpen(false)}
+//                   role="menuitem"
+//                 >
+//                   <BiUser size={18} />
+//                   Uredi korisnika
+//                 </DropdownItemLink>
+
+//                 <DropdownItemButton onClick={handleLogout} role="menuitem">
+//                   <BiLogOut size={18} />
+//                   Logout
+//                 </DropdownItemButton>
+//               </Dropdown>
+//             )}
+//           </UserMenu>
+//         ) : (
+//           <>
+//             <NavLink to="/login">
+//               <LoginButton icon={<LoginOutlined />}>Prijava</LoginButton>
+//             </NavLink>
+//             <NavLink to="/register">
+//               <RegisterButton type="primary">Registracija</RegisterButton>
+//             </NavLink>
+//           </>
+//         )}
+//       </RightSection>
+//     </StyledHeader>
+//   );
+// }
+
 import { Link, useLocation } from 'react-router-dom';
-import { Layout, Input, Button, Dropdown, Space, Avatar } from 'antd';
-import { DownOutlined, UserOutlined, LoginOutlined } from '@ant-design/icons';
+import { Layout, Button } from 'antd';
+import { LoginOutlined } from '@ant-design/icons';
 import FrontLogo from './FrontLogo';
 import styled from 'styled-components';
 import { useLogout } from '../../features/authentication/useLogout';
 import { useUserPermissions } from '../../features/authentication/useUserPermissions';
+import { useEffect, useRef, useState } from 'react';
+import { HiOutlineUser, HiChevronDown } from 'react-icons/hi2';
+import { BiUser, BiLogOut, BiBuilding } from 'react-icons/bi';
+import { useGetAllInstitutions } from '../../features/front/useAllInstitutions';
+import Spinner from '../Spinner';
 
 const { Header } = Layout;
 
-const StyledHeader = styled(Header)`
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  width: 100%;
-  background: var(--color-grey-0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border-bottom: 1px solid var(--color-grey-50);
-  padding: 0 2.4rem;
+/* ----------------------------- Styled Blocks ----------------------------- */
+const StyledHeader = styled.header`
+  grid-area: header;
+  background-color: var(--color-grey-0);
+  border-bottom: 1px solid var(--color-grey-100);
   display: flex;
-  align-items: center;
   justify-content: space-around;
+  align-items: center;
+  height: 7rem;
+  padding: 1rem 4rem 1rem 1rem;
 `;
 
 const CenterSection = styled.div`
@@ -30,29 +346,14 @@ const CenterSection = styled.div`
   gap: 10rem;
 `;
 
-const StyledSearch = styled(Input)`
-  border-radius: 0.8rem;
-  border: 1px solid var(--color-grey-300);
-  transition: all 0.3s;
-  color: var(--color-grey-500);
-
-  &:hover {
-    border-color: var(--color-brand-500) !important;
-  }
-
-  &:focus,
-  &.ant-input-focused {
-    border-color: var(--color-brand-500) !important;
-    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
-    outline: none;
-  }
-  &.ant-input-affix-wrapper-focused {
-    border-color: var(--color-brand-500) !important;
-    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
-  }
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 `;
 
-const NavSection = styled.div`
+const NavSection = styled.nav`
   display: flex;
   height: 100%;
   align-items: center;
@@ -77,6 +378,138 @@ const RightSection = styled.div`
   gap: 2rem;
 `;
 
+/* ------------------------------ Dropdown UI ----------------------------- */
+const DropdownWrap = styled.div`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+`;
+
+const DropdownPanel = styled.div`
+  position: absolute;
+  top: calc(100% + 1.2rem);
+  right: ${({ $alignRight }) => ($alignRight ? 0 : 'auto')};
+  left: ${({ $alignRight }) => ($alignRight ? 'auto' : 0)};
+  background-color: var(--color-grey-0);
+  border: 1px solid var(--color-grey-200);
+  border-radius: 1rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 20rem;
+  z-index: 1000;
+  overflow: hidden;
+`;
+
+const DropdownToggle = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--color-grey-700);
+
+  &:hover {
+    color: var(--color-brand-700);
+  }
+`;
+
+const DropdownItemLink = styled(Link)`
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  font-size: 1.4rem;
+  color: var(--color-grey-700);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-grey-50);
+    color: var(--color-grey-700);
+  }
+  svg {
+    /* color: var(--color-brand-500); */
+  }
+`;
+
+const DropdownItemButton = styled.button`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1.4rem;
+  color: var(--color-grey-700);
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-grey-50);
+  }
+  svg {
+    color: var(--color-grey-500);
+  }
+`;
+
+/* ----------------------------- User Menu Bits --------------------------- */
+const UserMenu = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+`;
+
+const UserMenuButton = styled.button`
+  display: flex;
+  background-color: var(--color-grey-0);
+  padding: 0.8rem 1.2rem;
+  border-radius: 1rem;
+  align-items: center;
+  gap: 1.2rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-grey-100);
+    border-color: var(--color-grey-200);
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+`;
+
+const UserName = styled.div`
+  font-weight: 600;
+  color: var(--color-grey-700);
+  font-size: 1.4rem;
+  line-height: 1.2;
+`;
+
+const ChevronIcon = styled(HiChevronDown)`
+  transition: transform 0.2s ease;
+  color: var(--color-grey-500);
+  ${({ $isOpen }) => $isOpen && `transform: rotate(180deg);`}
+`;
+
+/* ----------------------------- Auth Buttons ----------------------------- */
 const LoginButton = styled(Button)`
   color: var(--color-grey-600);
   border: none;
@@ -86,17 +519,6 @@ const LoginButton = styled(Button)`
   &:hover {
     color: var(--color-brand-500) !important;
     background: rgba(249, 115, 22, 0.05) !important;
-  }
-`;
-
-const LogoutButton = styled(Button)`
-  color: var(--color-grey-600);
-  background: transparent;
-  box-shadow: none;
-
-  &:hover {
-    color: var(--color-brand-500) !important;
-    border-color: var(--color-brand-500) !important;
   }
 `;
 
@@ -112,39 +534,62 @@ const RegisterButton = styled(Button)`
   }
 `;
 
-const LogoContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-`;
-
-const UserProfileLink = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--color-grey-600);
-`;
-
-const dropdownItems = [
-  {
-    key: '1',
-    label: <Link to="/category/1">Kategorija 1</Link>,
-  },
-  {
-    key: '2',
-    label: <Link to="/category/2">Kategorija 2</Link>,
-  },
-  {
-    key: '3',
-    label: <Link to="/category/3">Kategorija 3</Link>,
-  },
-];
-
+/* --------------------------------- View --------------------------------- */
 export default function FrontHeader() {
+  const { isLoading: isLoadingInstitutions, allInstitutions } = useGetAllInstitutions();
+
+  const institucije = allInstitutions?.map((inst) => ({
+    id: inst.idguid,
+    naziv: inst.naziv,
+    link: `/institution/${inst.idguid}`, // Adjust based on your routing
+  }));
+  // Dropdown states
+  const [isInstOpen, setIsInstOpen] = useState(false);
+  const [isUserOpen, setIsUserOpen] = useState(false);
+
+  // Refs
+  const instRef = useRef(null);
+  const userRef = useRef(null);
+
+  // App state
   const logout = useLogout();
-  const { user } = useUserPermissions();
+  const { user, roles = [] } = useUserPermissions();
   const { pathname } = useLocation();
+
+  const isAdmin = roles[0]?.name !== 'Public';
+
+  /* ---------------------------- Global handlers --------------------------- */
+  useEffect(() => {
+    function onDocClick(e) {
+      if (instRef.current && !instRef.current.contains(e.target)) setIsInstOpen(false);
+      if (userRef.current && !userRef.current.contains(e.target)) setIsUserOpen(false);
+    }
+    function onEsc(e) {
+      if (e.key === 'Escape') {
+        setIsInstOpen(false);
+        setIsUserOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onEsc);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onEsc);
+    };
+  }, []);
+
+  // Zatvori oba dropdowna na promjenu rute
+  useEffect(() => {
+    setIsInstOpen(false);
+    setIsUserOpen(false);
+  }, [pathname]);
+
+  const handleLogout = () => {
+    setIsUserOpen(false);
+    logout();
+  };
+
+  if (isLoadingInstitutions) return <Spinner />;
 
   return (
     <StyledHeader>
@@ -152,12 +597,13 @@ export default function FrontHeader() {
         <LogoContainer>
           <FrontLogo size="small" />
         </LogoContainer>
+
         <NavSection>
           <NavLink
             to="/"
             onClick={(e) => {
               if (pathname === '/') {
-                e.preventDefault(); // već si na '/', spriječi re-navigaciju
+                e.preventDefault();
                 (document.documentElement || document.body).scrollTo({
                   top: 0,
                   behavior: 'smooth',
@@ -167,29 +613,76 @@ export default function FrontHeader() {
           >
             Početna
           </NavLink>
-          <Dropdown menu={{ items: dropdownItems }} trigger={['hover']} placement="bottom">
-            <NavLink href="#" onClick={(e) => e.preventDefault()}>
-              <Space>
-                Institucije
-                <DownOutlined />
-              </Space>
-            </NavLink>
-          </Dropdown>
-          <NavLink to="/">Kontakt</NavLink>
+
+          {/* Dropdown: Institucije */}
+          <DropdownWrap ref={instRef}>
+            <DropdownToggle
+              onClick={() => setIsInstOpen((v) => !v)}
+              aria-haspopup="menu"
+              aria-expanded={isInstOpen}
+              aria-label="Institucije meni"
+            >
+              Institucije
+              <ChevronIcon $isOpen={isInstOpen} size={16} />
+            </DropdownToggle>
+
+            {isInstOpen && (
+              <DropdownPanel role="menu" aria-label="Institucije meni" $alignRight={false}>
+                {institucije.map((inst) => (
+                  <DropdownItemLink
+                    key={inst.id}
+                    to={inst.link}
+                    onClick={() => setIsInstOpen(false)}
+                    role="menuitem"
+                  >
+                    <BiBuilding size={18} />
+                    {inst.naziv}
+                  </DropdownItemLink>
+                ))}
+              </DropdownPanel>
+            )}
+          </DropdownWrap>
+
+          <NavLink to="/kontakt">Kontakt</NavLink>
         </NavSection>
       </CenterSection>
 
       <RightSection>
         {user ? (
-          <>
-            <UserProfileLink>
-              <Avatar icon={<UserOutlined />} style={{ background: 'var(--color-brand-600)' }} />
-              {user.first_name} {user.last_name}
-            </UserProfileLink>
-            <LogoutButton variation="secondary" size="small" onClick={() => logout()}>
-              Logout
-            </LogoutButton>
-          </>
+          <UserMenu ref={userRef}>
+            <UserMenuButton
+              onClick={() => setIsUserOpen((v) => !v)}
+              aria-haspopup="menu"
+              aria-expanded={isUserOpen}
+              aria-label="Korisnički meni"
+            >
+              <HiOutlineUser size={30} />
+              <UserInfo>
+                <UserName>
+                  {user.first_name} {user.last_name}
+                </UserName>
+              </UserInfo>
+              <ChevronIcon $isOpen={isUserOpen} size={16} />
+            </UserMenuButton>
+
+            {isUserOpen && (
+              <DropdownPanel role="menu" aria-label="Korisnički meni" $alignRight>
+                <DropdownItemLink
+                  to={isAdmin ? '/me' : '/userProfile'}
+                  onClick={() => setIsUserOpen(false)}
+                  role="menuitem"
+                >
+                  <BiUser size={18} />
+                  Uredi korisnika
+                </DropdownItemLink>
+
+                <DropdownItemButton onClick={handleLogout} role="menuitem">
+                  <BiLogOut size={18} />
+                  Logout
+                </DropdownItemButton>
+              </DropdownPanel>
+            )}
+          </UserMenu>
         ) : (
           <>
             <NavLink to="/login">
