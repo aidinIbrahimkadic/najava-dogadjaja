@@ -12,11 +12,14 @@ import {
   TwitterShareButton,
   LinkedinShareButton,
   WhatsappShareButton,
+  ViberShareButton,
+  ViberIcon,
   FacebookIcon,
   TwitterIcon,
   LinkedinIcon,
   WhatsappIcon,
 } from 'react-share';
+import toast from 'react-hot-toast';
 
 // —— Theme ——
 const BRAND = '#f97316';
@@ -385,28 +388,47 @@ export default function SingleEvent({ event }) {
                   <div>
                     <Label>Podijeli događaj</Label>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <FacebookShareButton url={window.location.href} quote={event?.title}>
+                      <FacebookShareButton
+                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        quote={event?.title}
+                      >
                         <FacebookIcon size={36} round />
                       </FacebookShareButton>
-                      <TwitterShareButton url={window.location.href} title={event?.title}>
+                      <ViberShareButton
+                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        quote={event?.title}
+                      >
+                        <ViberIcon size={36} round />
+                      </ViberShareButton>
+                      {/* Copy link dugme ViberShareButton*/}
+
+                      <TwitterShareButton
+                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        title={event?.title}
+                      >
                         <TwitterIcon size={36} round />
                       </TwitterShareButton>
                       <LinkedinShareButton
-                        url={window.location.href}
+                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
                         title={event?.title}
                         summary={event?.description}
                       >
                         <LinkedinIcon size={36} round />
                       </LinkedinShareButton>
-                      <WhatsappShareButton url={window.location.href} title={event?.title}>
+                      <WhatsappShareButton
+                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        title={event?.title}
+                      >
                         <WhatsappIcon size={36} round />
                       </WhatsappShareButton>
 
                       {/* Copy link dugme */}
                       <button
                         onClick={() => {
-                          navigator.clipboard.writeText(window.location.href);
-                          alert('Link kopiran u clipboard!');
+                          navigator.clipboard.writeText(
+                            `https://events-opcina.poruci.ba/api/events-share/${event.idguid}`
+                          );
+                          toast.success('Link kopiran u međuspremnik!');
                         }}
                         style={{
                           width: 36,
