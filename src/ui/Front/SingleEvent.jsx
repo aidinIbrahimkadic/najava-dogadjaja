@@ -360,6 +360,23 @@ export default function SingleEvent({ event }) {
   const lng = event?.lokacija?.longitude;
   const hasCoords = typeof lat === 'number' && typeof lng === 'number';
 
+  const now = new Date();
+  let status = 'Uskoro';
+  let StatusIcon = Fa.FaClock; // default ikona
+
+  if (startD && endD) {
+    if (now < startD) {
+      status = 'Uskoro';
+      StatusIcon = Fa.FaClock;
+    } else if (now >= startD && now <= endD) {
+      status = 'U toku';
+      StatusIcon = Fa.FaHourglassStart;
+    } else if (now > endD) {
+      status = 'Završen';
+      StatusIcon = Fa.FaCheckCircle;
+    }
+  }
+
   return (
     <div>
       <Heading as="h1">Informacije o događaju</Heading>
@@ -451,7 +468,15 @@ export default function SingleEvent({ event }) {
                 <CatIcon /> {event?.category?.naziv || 'Kategorija'}
               </Pill>
             </div>
-
+            {!hasMulti && (
+              <MetaItem>
+                <StatusIcon size={26} style={{ marginTop: 2, color: BRAND }} />
+                <div>
+                  <Label>Status</Label>
+                  {status}
+                </div>
+              </MetaItem>
+            )}
             <div
               style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}
             >

@@ -25,8 +25,7 @@ function InstitutionRow({ institution, index }) {
   {
     isLoading && <Spinner />;
   }
-
-  if (roles[0].name === 'superadmin' || user.institucija_idguid === idguid) {
+  if (roles[0].name === 'Superadmin' || user.institucija_idguid === idguid) {
     return (
       <Table.Row>
         <Cell>{index + 1}</Cell>

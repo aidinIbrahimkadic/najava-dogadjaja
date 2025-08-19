@@ -3,10 +3,10 @@ import { Input, Button, Card, Typography, Spin } from 'antd';
 import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import CalendarSpinner from '../../ui/CalendarSpinner';
-import { useLogin } from './useLogin';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useActivateMe } from './useActivateMe';
 
 const { Title, Text } = Typography;
 
@@ -119,43 +119,6 @@ const LoginButton = styled(Button)`
   }
 `;
 
-const ForgotPassword = styled(Link)`
-  display: block;
-  text-align: center;
-  color: #f97316;
-  text-decoration: none;
-  margin-top: 16px;
-  font-weight: 500;
-
-  &:hover {
-    color: #ea580c;
-    text-decoration: underline;
-  }
-`;
-
-const RegisterLink = styled.div`
-  text-align: center;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #f0f0f0;
-
-  span {
-    color: #8c8c8c;
-    margin-right: 8px;
-  }
-
-  a {
-    color: #f97316;
-    font-weight: 600;
-    text-decoration: none;
-
-    &:hover {
-      color: #ea580c;
-      text-decoration: underline;
-    }
-  }
-`;
-
 const SpinnerContainer = styled.div`
   display: flex;
   align-items: center;
@@ -163,8 +126,9 @@ const SpinnerContainer = styled.div`
   min-height: calc(100vh - 140px);
 `;
 
-export default function LoginPage() {
-  const { login, isPending, isError } = useLogin();
+export default function ActivateForm() {
+  const { isPending, activate, isError } = useActivateMe();
+  //   const [searchParams] = useSearchParams();
   const location = useLocation();
 
   useEffect(() => {
@@ -175,19 +139,22 @@ export default function LoginPage() {
     }
   }, [location]);
 
+  //   const email = searchParams.get('email');
+
+  const email = location.state?.email || '';
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      email: email,
     },
   });
 
   const onSubmit = (data) => {
-    login({ email: data.email, password: data.password });
+    activate({ data });
   };
 
   if (isPending) {
@@ -201,8 +168,8 @@ export default function LoginPage() {
   return (
     <LoginContainer>
       <LoginCard>
-        <StyledTitle level={2}>Dobrodošli</StyledTitle>
-        <Subtitle>Prijavite se na svoj račun</Subtitle>
+        <StyledTitle level={2}>Aktivirajte račun</StyledTitle>
+        <Subtitle>Unesite Vaš email</Subtitle>
 
         <StyledForm onSubmit={handleSubmit(onSubmit)}>
           <FormItem>
@@ -233,46 +200,16 @@ export default function LoginPage() {
           </FormItem>
 
           <FormItem>
-            <Controller
-              name="password"
-              control={control}
-              rules={{
-                required: 'Molimo unesite lozinku!',
-              }}
-              render={({ field }) => (
-                <>
-                  <Input.Password
-                    {...field}
-                    prefix={<LockOutlined />}
-                    placeholder="Lozinka"
-                    size="large"
-                    status={errors.password ? 'error' : ''}
-                  />
-                  {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
-                </>
-              )}
-            />
-          </FormItem>
-
-          <FormItem>
             <LoginButton
               type="primary"
               htmlType="submit"
               icon={<LoginOutlined />}
               disabled={isPending}
             >
-              {isPending ? 'Prijavljivanje...' : 'Prijavite se'}
+              {isPending ? 'Aktiviram...' : 'Aktiviraj'}
             </LoginButton>
           </FormItem>
         </StyledForm>
-
-        <ForgotPassword to="/forgot-password">Zaboravili ste lozinku?</ForgotPassword>
-        <ForgotPassword to="/aktivacija-racuna">Reaktiviraj račun</ForgotPassword>
-
-        <RegisterLink>
-          <span>Nemate račun?</span>
-          <Link to="/register">Registrujte se</Link>
-        </RegisterLink>
       </LoginCard>
     </LoginContainer>
   );

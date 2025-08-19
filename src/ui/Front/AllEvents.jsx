@@ -231,6 +231,7 @@ const Card = styled.article`
   grid-column: span 3;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
@@ -271,6 +272,7 @@ const Poster = styled.div`
 const Body = styled.div`
   padding: 1.2rem 0.9rem 1.8rem 0.9rem;
   display: flex;
+  height: 50%;
   flex-direction: column;
   justify-content: space-between;
   gap: 0.4rem 0.75rem;
@@ -389,6 +391,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
 
   const childrenOnly = (allCategories ?? []).flatMap((p) => p.children ?? []);
 
+  console.log(upcomingEvents);
   // KATEGORIJE
   const CATEGORY_META = (childrenOnly ?? []).reduce((acc, cat) => {
     const IconComp = FaIcons[cat.ikona];
@@ -416,7 +419,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
     const posterSlika =
       event.slika !== '00000000-0000-0000-0000-000000000000'
         ? `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`
-        : `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
+        : `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}?height=300`;
 
     return {
       id: event.idguid,
@@ -600,6 +603,27 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
         {filtered.map((e) => {
           const isMultiDay = e.end_date && e.end_date !== e.date;
 
+          const startObj = new Date(`${e.date}T${e.time || '00:00'}:00`);
+          const endObj = new Date(`${e.end_date || e.date}T${e.end_time || e.time || '23:59'}:00`);
+
+          const hasStarted = now >= startObj;
+          const hasEnded = now > endObj;
+          const isOngoing = hasStarted && !hasEnded;
+
+          let statusLabel = 'Uskoro';
+          let StatusIcon = FaIcons.FaHourglassStart;
+          let statusColor = '#6b7280'; // siva za default
+
+          if (hasEnded) {
+            statusLabel = 'Završen';
+            StatusIcon = FaIcons.FaCheckCircle;
+            statusColor = '#16a34a'; // zelena
+          } else if (hasStarted) {
+            statusLabel = 'Live';
+            StatusIcon = FaIcons.FaHourglassHalf;
+            statusColor = '#f97316'; // brand narančasta
+          }
+
           // Termini samo budući, sortirani, max 6; ostatak sumarizujemo
           const futureTerms = (e.termini || [])
             .filter((t) => t?.start_date && new Date(t.start_date) > now)
@@ -612,15 +636,31 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
             <Card key={e.id}>
               <Poster $image={e.poster} />
               <Body>
-                <Link to={`/dogadjaj/${e.id}`}>
-                  <Title>{e.title}</Title>
-                </Link>
-
-                <Meta>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Link to={`/dogadjaj/${e.id}`}>
+                      <Title>{e.title}</Title>
+                    </Link>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        marginLeft: '0.75rem',
+                        fontSize: '1.2rem',
+                        fontWeight: 600,
+                        color: statusColor,
+                      }}
+                    >
+                      <StatusIcon /> {statusLabel}
+                    </span>
+                  </div>
                   <CategoryRow>
                     <Badge>{e.category}</Badge>
                   </CategoryRow>
+                </div>
 
+                <Meta>
                   <Row>
                     <HiMapPin />
                     <span>{e.location}</span>
@@ -629,11 +669,22 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                   {!e.ima_vise_termina && (
                     <Row>
                       <HiCalendarDateRange />
-                      <span>
-                        {isMultiDay
-                          ? `${fmtDate(e.date)} (${e.time}h) – ${fmtDate(e.end_date)} (${e.end_time}h)`
-                          : `${fmtDate(e.date)} u ${e.time}h`}
-                      </span>
+
+                      {/* Ako je u toku (počeo, a nije završio): zadrži startni datum/vrijeme,
+        dodaj ⌛ i oboji tekst sivo. Inače prikaži standardno. */}
+                      {isOngoing ? (
+                        <span style={{ color: '#6b7280' }}>
+                          {isMultiDay
+                            ? `${fmtDate(e.date)} (${e.time}h) – ${fmtDate(e.end_date)} (${e.end_time}h)`
+                            : `${fmtDate(e.date)} u ${e.time}h`}
+                        </span>
+                      ) : (
+                        <span>
+                          {isMultiDay
+                            ? `${fmtDate(e.date)} (${e.time}h) – ${fmtDate(e.end_date)} (${e.end_time}h)`
+                            : `${fmtDate(e.date)} u ${e.time}h`}
+                        </span>
+                      )}
                     </Row>
                   )}
 
@@ -679,7 +730,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                         Besplatan ulaz
                       </span>
                     ) : (
-                      `${Number(e.price).toFixed(2)} KM`
+                      `Cijena ulaznice: ${Number(e.price).toFixed(2)} KM`
                     )}
                   </Price>
                 </Extra>

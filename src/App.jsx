@@ -31,6 +31,8 @@ import ResendEmail from './features/authentication/ResendEmail';
 import InstitutionPage from './pages/InstitutionPage';
 import EventPage from './pages/EventPage';
 import UserProfilePage from './pages/UserProfilePage';
+import ActivateForm from './features/authentication/ActivateForm';
+import ActivateAccount from './features/authentication/ActivateAccount';
 
 const queryClient = new QueryClient();
 
@@ -119,10 +121,19 @@ function App() {
               <Route path="/resend-email" element={<ResendEmail />} />
               <Route path="/forgot-password" element={<ForgotPasswordForm />} />
               <Route path="/reset-password" element={<ResetPasswordForm />} />
+              <Route path="/aktivacija-racuna" element={<ActivateForm />} />
               <Route path="/auth/verify-email" element={<VerifyEmail />} />
+              <Route path="/activate-account" element={<ActivateAccount />} />
               <Route path="/institution/:id" element={<InstitutionPage />} />
               <Route path="/dogadjaj/:id" element={<EventPage />} />
-              <Route path="/userProfile" element={<UserProfilePage />} />
+              <Route
+                path="/userProfile"
+                element={
+                  <ProtectedRoute requiredPermission="events_user_interests_save">
+                    <UserProfilePage />
+                  </ProtectedRoute>
+                }
+              />
               <Route index path="/" element={<HomePage />} />
               <Route path="*" element={<PageNotFound />} />
             </Route>

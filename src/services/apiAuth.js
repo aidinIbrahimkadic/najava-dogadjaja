@@ -104,6 +104,24 @@ export async function postDeactivateMe({ data: { current_password } }) {
   }
 }
 
+//Aktivacija
+export async function postActivateMe({ data: { email } }) {
+  try {
+    const response = await axiosInstance.post(`/auth/request-activation`, { email });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri verifikaciji korisnika');
+  }
+}
+
+export async function postActivateMeFinal({ token }) {
+  try {
+    const response = await axiosInstance.post(`/auth/activate-account`, { token });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri verifikaciji korisnika');
+  }
+}
 //FORGOT PASSWORD
 export async function postForgotPassword({ data: { email } }) {
   try {
