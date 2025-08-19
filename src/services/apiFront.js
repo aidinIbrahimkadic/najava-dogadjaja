@@ -18,6 +18,15 @@ export async function getAllEvents() {
   }
 }
 
+export async function getAllSettings() {
+  try {
+    const response = await axiosInstance.get(`/settings`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju postavki');
+  }
+}
+
 export async function getEventById(id) {
   if (!id) throw new Error('Event ID is required');
 

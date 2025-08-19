@@ -15,6 +15,11 @@ const Card = styled.div`
   width: 100%;
   display: grid;
   grid-template-rows: 180px auto;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
 `;
 
 const Poster = styled.div`

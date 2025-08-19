@@ -133,7 +133,7 @@ export default function MainNav() {
           </li>
         )}
 
-        {hasPermission('events_institucije_save') && (
+        {hasPermission('events_institucije_pregled') && (
           <li>
             <StyledNavLink to="/institutions">
               <IconWrapper>

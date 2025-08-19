@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import FrontLogo from './FrontLogo';
+import { HiOutlineMail } from 'react-icons/hi';
 
 import { useGetUpcomingEvents } from '../../features/front/useUpcomingEvents';
 
@@ -22,9 +23,9 @@ const FooterContent = styled.div`
 `;
 
 const FooterGrid = styled.div`
-  display: grid;
-  grid-template-columns: 0.5fr 1fr;
-  gap: 40px;
+  display: flex;
+  justify-content: space-between;
+  /* grid-template-columns: 0.5fr 1fr; */
   margin-bottom: 24px;
 
   @media (max-width: 768px) {
@@ -47,8 +48,9 @@ const BrandBlock = styled.div`
 `;
 
 const Section = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  justify-content: space-between;
+  gap: 5rem;
 
   h3 {
     color: #fff;
@@ -138,7 +140,7 @@ const FooterBottom = styled.div`
  * @param {string} [props.nextEvent.href] - Link do stranice događaja (ako izostane, koristi /dogadjaj/:id)
  * @param {string} [props.nextEvent.id] - Id za fallback rutu /dogadjaj/:id
  */
-export default function FrontFooter({ description = '', institucije = [] }) {
+export default function FrontFooter({ description = '', institucije = [], settings }) {
   const { upcomingEvents } = useGetUpcomingEvents();
 
   const posterSlika =
@@ -182,13 +184,19 @@ export default function FrontFooter({ description = '', institucije = [] }) {
     <StyledFooter>
       <FooterContent>
         <FooterGrid>
-          {/* Logo + opis */}
           <BrandBlock>
-            <FrontLogo />
+            <FrontLogo site_logo={settings?.site_logo} />
             <p>{description}</p>
+            {settings.email && (
+              <EventMeta>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <HiOutlineMail />
+                  <a href={`mailto:${settings?.email}`}>{settings?.email}</a>
+                </div>
+              </EventMeta>
+            )}
           </BrandBlock>
 
-          {/* Desna kolona: institucije + (opcionalno) naredni događaj */}
           <Section>
             <div>
               <h3>Institucije</h3>
@@ -231,7 +239,7 @@ export default function FrontFooter({ description = '', institucije = [] }) {
         </FooterGrid>
 
         <FooterBottom>
-          © {new Date().getFullYear()} Općina Tešanj. Sva prava zadržana.
+          © {new Date().getFullYear()} {settings.site_copyright}
         </FooterBottom>
       </FooterContent>
     </StyledFooter>

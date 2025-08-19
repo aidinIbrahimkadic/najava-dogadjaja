@@ -12,12 +12,12 @@ const Img = styled.img.withConfig({
 })`
   width: auto;
   height: ${(props) =>
-    props.size === 'small' ? '6rem' : props.size === 'medium' ? '9rem' : '12rem'};
+    props.$size === 'small' ? '6rem' : props.size === 'medium' ? '9rem' : '12rem'};
   transition: height 0.3s ease;
 `;
 
-export default function FrontLogo({ size }) {
-  const src = '/Eventura_logotip.png';
+export default function FrontLogo({ size, site_logo }) {
+  const src = site_logo ? site_logo : '/Eventura_logotip.png';
 
   const { pathname } = useLocation();
 
@@ -32,7 +32,7 @@ export default function FrontLogo({ size }) {
           }
         }}
       >
-        <Img size={size} src={src} alt="Logo" />
+        <Img $size={size} src={src} alt="Logo" />
       </Link>
     </StyledLogo>
   );

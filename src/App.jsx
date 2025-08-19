@@ -30,6 +30,7 @@ import ResetPasswordForm from './features/authentication/ResetPasswordForm';
 import ResendEmail from './features/authentication/ResendEmail';
 import InstitutionPage from './pages/InstitutionPage';
 import EventPage from './pages/EventPage';
+import UserProfilePage from './pages/UserProfilePage';
 
 const queryClient = new QueryClient();
 
@@ -121,6 +122,7 @@ function App() {
               <Route path="/auth/verify-email" element={<VerifyEmail />} />
               <Route path="/institution/:id" element={<InstitutionPage />} />
               <Route path="/dogadjaj/:id" element={<EventPage />} />
+              <Route path="/userProfile" element={<UserProfilePage />} />
               <Route index path="/" element={<HomePage />} />
               <Route path="*" element={<PageNotFound />} />
             </Route>

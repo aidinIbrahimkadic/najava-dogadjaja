@@ -53,7 +53,7 @@ function RoleRow({ role, index }) {
             </Menus.List>
           </Menus.Menu>
           {hasPermission('admin_roles_save') && (
-            <Modal.Window name="Uredi rolu" size="xl">
+            <Modal.Window name="Uredi rolu" size="extraLarge">
               <CreateRoleForm roleToEdit={role} />
             </Modal.Window>
           )}

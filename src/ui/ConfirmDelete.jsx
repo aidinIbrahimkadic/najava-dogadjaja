@@ -18,20 +18,24 @@ const StyledConfirmDelete = styled.div`
   }
 `;
 
-function ConfirmDelete({ resourceName, onConfirm, disabled, onCloseModal }) {
+function ConfirmDelete({ resourceName, onConfirm, disabled, onCloseModal, children }) {
   return (
     <StyledConfirmDelete>
-      <p>
-        Da li ste sigurni da želite obrisati trajno ovaj {resourceName}? Jednom obrisana ova stavka
-        se više ne može vratiti.
-      </p>
+      {children ? (
+        children
+      ) : (
+        <p>
+          Da li ste sigurni da želite obrisati trajno ovaj {resourceName}? Jednom obrisana ova
+          stavka se više ne može vratiti.
+        </p>
+      )}
 
       <div>
         <Button variation="secondary" size="small" disabled={disabled} onClick={onCloseModal}>
-          Cancel
+          Odustani
         </Button>
         <Button variation="danger" size="small" disabled={disabled} onClick={onConfirm}>
-          Delete
+          {children ? 'Deaktiviraj' : 'Izbriši'}
         </Button>
       </div>
     </StyledConfirmDelete>
