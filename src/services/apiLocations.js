@@ -1,12 +1,24 @@
 import axiosInstance from './axiosInstance';
 
-export async function getLocations() {
-  try {
-    const response = await axiosInstance.get(`/events/lokacije`);
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju lokacija');
+export async function getLocations(query = {}) {
+  const { page = 1, limit = 10, search, sort, filters = {} } = query;
+
+  const params = { page, limit };
+
+  if (search) params.search = search;
+  if (sort?.field && sort?.order) {
+    params.sortBy = sort.field;
+    params.sortOrder = sort.order; // 'ASC' | 'DESC'
   }
+
+  // očekivani ključevi filtera: npr. naziv, adresa, mjesto (ili kako već)
+  for (const [k, v] of Object.entries(filters)) {
+    if (v === undefined || v === null || v === '') continue;
+    params[k] = v;
+  }
+
+  const res = await axiosInstance.get('/events/lokacije', { params });
+  return res.data; // očekuje: { total, page, limit, data: [...] }
 }
 
 export async function getLocation(id) {

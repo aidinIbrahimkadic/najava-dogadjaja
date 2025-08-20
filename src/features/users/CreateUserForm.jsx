@@ -259,7 +259,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
             <Select
               id="institucija"
               name="institucija"
-              options={institutions?.data?.map((inst) => ({
+              options={institutions?.map((inst) => ({
                 value: inst.idguid,
                 label: inst.naziv,
               }))}

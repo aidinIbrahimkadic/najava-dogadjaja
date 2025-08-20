@@ -52,6 +52,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
     if (category.parent_idguid !== '00000000-0000-0000-0000-000000000000') return category;
   });
 
+  console.log('INSTITUCIJE', institutions);
   // KORISNIK KOJI JE LOGOVAN
   const { isLoading: isLoadingPermission, hasPermission, user: userCreate } = useUserPermissions();
 
@@ -249,7 +250,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
               <Select
                 id="location_idguid"
                 name="location_idguid"
-                options={locations.data.map((c) => ({ value: c.idguid, label: c.naziv }))}
+                options={locations.map((c) => ({ value: c.idguid, label: c.naziv }))}
                 disabled={isWorking}
                 register={register}
                 setValue={setValue}
@@ -283,7 +284,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
               <Select
                 id="institucija_idguid"
                 name="institucija_idguid"
-                options={institutions?.data?.map((inst) => ({
+                options={institutions?.map((inst) => ({
                   value: inst.idguid,
                   label: inst.naziv,
                 }))}

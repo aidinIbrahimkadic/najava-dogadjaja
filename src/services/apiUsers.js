@@ -1,12 +1,23 @@
 import axiosInstance from './axiosInstance';
 
-export async function getUsers() {
-  try {
-    const response = await axiosInstance.get(`/admin/users`);
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju korisnika');
+export async function getUsers(query = {}) {
+  const { page = 1, limit = 10, search, sort, filters = {} } = query;
+
+  const params = { page, limit };
+  if (search) params.search = search;
+
+  if (sort?.field && sort?.order) {
+    params.sortBy = sort.field; // npr. 'email' | 'first_name'
+    params.sortOrder = sort.order; // 'ASC' | 'DESC'
   }
+
+  for (const [k, v] of Object.entries(filters)) {
+    if (v === undefined || v === null || v === '') continue;
+    params[k] = v;
+  }
+
+  const res = await axiosInstance.get('/admin/users', { params });
+  return res.data; // očekuje: { success, message, data: { users: [...], pagination: { total, pages } } }
 }
 
 export async function getUser(id) {

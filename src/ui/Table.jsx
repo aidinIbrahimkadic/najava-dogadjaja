@@ -229,6 +229,15 @@ const SearchInput = styled.input`
   border-radius: 6px;
   font-size: 1.4rem;
   background: var(--color-grey-0);
+
+  &:hover {
+    border: 1px solid var(--color-brand-300);
+  }
+
+  &:focus {
+    border: 1px solid var(--color-brand-700);
+    outline: none;
+  }
 `;
 
 const FilterRowWrap = styled(CommonRow)`
@@ -250,6 +259,14 @@ const FilterCell = styled.div`
     border: 1px solid var(--color-grey-200);
     border-radius: 6px;
     font-size: 1.35rem;
+
+    &:hover {
+      border: 1px solid var(--color-brand-500);
+    }
+
+    &:focus {
+      border: 1px solid var(--color-brand-500);
+    }
   }
 
   .range {

@@ -3,7 +3,6 @@ import axiosInstance from './axiosInstance';
 export async function getEvents(query = {}) {
   const { page = 1, limit = 10, search, sort, filters = {} } = query;
 
-  console.log('Q', query);
   const params = { page, limit };
 
   if (search) params.search = search;
@@ -13,7 +12,7 @@ export async function getEvents(query = {}) {
     params.sortBy = sort.field || 'start_date';
     params.sortOrder = sort.order || 'DESC'; // 'ASC' | 'DESC'
     // Ako backend koristi jedan ključ "sort=field:order", nema štete ostaviti oba:
-    params.sort = `${sort.field}:${sort.order}`;
+    // params.sort = `${sort.field}:${sort.order}`;
     // params.sort = `${sort.field}`;
   }
 

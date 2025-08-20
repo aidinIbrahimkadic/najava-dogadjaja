@@ -34,7 +34,7 @@ export default function EventsTable() {
     };
   });
 
-  const locationOptions = locations.data.map((l) => {
+  const locationOptions = locations?.map((l) => {
     return {
       value: l.idguid,
       label: l.naziv,
@@ -60,13 +60,13 @@ export default function EventsTable() {
               label: 'Naziv',
               field: 'title',
               sortable: true,
-              filter: { type: 'text', placeholder: 'Naziv' },
+              // filter: { type: 'text', placeholder: 'Naziv' },
             },
             {
               id: 'cijena',
               label: 'Cijena',
               field: 'cijena',
-              sortable: true,
+              sortable: false,
               // filter: { type: 'numberRange' },
             },
             {
@@ -107,7 +107,7 @@ export default function EventsTable() {
               id: 'title',
               label: 'Naziv',
               field: 'title',
-              filter: { type: 'text', placeholder: 'Naziv' },
+              // filter: { type: 'text', placeholder: 'Naziv' },
             },
             { id: 'cijena', label: 'Cijena', field: 'cijena' },
             {

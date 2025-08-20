@@ -38,9 +38,9 @@ function UserRow({ user, index }) {
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
-      <Cell>{email}</Cell>
       <Cell>{first_name}</Cell>
       <Cell>{last_name}</Cell>
+      <Cell>{email}</Cell>
       <Cell>{institucija?.naziv}</Cell>
       <Cell>
         {isLoadingMoreOnUser ? <Spinner size="small" /> : moreOnUser?.data?.roles[0]?.name}
