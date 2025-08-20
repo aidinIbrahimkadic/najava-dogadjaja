@@ -35,6 +35,8 @@ const toISOZ = (val) => {
   return d.second(0).millisecond(0).toDate().toISOString();
 };
 
+// Lokalno vrijeme → ISO sa offsetom (npr. ...20:00:00+02:00), BEZ 'Z'
+
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const [existingSlika, setExistingSlika] = useState(null);
   const { mutate: deleteImage } = useDeleteImage();
@@ -144,7 +146,6 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
     if (data.start_date) data.start_date = toISOZ(data.start_date);
     if (data.end_date) data.end_date = toISOZ(data.end_date);
 
-    // Pripremi termine (uvijek end = start)
     const preparedTermini = ima_vise_termina
       ? (data.termini || [])
           .filter((t) => t?.start_datetime || t?.start_date)
@@ -153,21 +154,19 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             return { start_date: s, end_date: s };
           })
       : data.start_date
-        ? [{ start_date: data.start_date, end_date: data.start_date }]
+        ? // single-termin slučaj ostaje kao i do sada (UTC), jer ti radi dobro
+          [{ start_date: data.start_date, end_date: data.start_date }]
         : [];
 
-    // >>> KLJUČNO: ako ima više termina, root start_date = najraniji termin
     if (ima_vise_termina && preparedTermini.length > 0) {
       const earliestISO = preparedTermini
-        .map((t) => dayjs(t.start_date))
+        .map((t) => dayjs(t.start_date)) // već je offset-aware (…+02:00)
         .filter((d) => d.isValid())
         .sort((a, b) => a.valueOf() - b.valueOf())[0]
         .toDate()
         .toISOString();
 
       data.start_date = earliestISO;
-
-      // Ako nema posebnog end_date, postavi ga na isti trenutak kao prvi termin
       if (!data.end_date) data.end_date = earliestISO;
     }
 
@@ -175,11 +174,12 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
     // Stringify da ne završi kao [object Object]
     data.termini = JSON.stringify(preparedTermini);
-    data.is_public = data.is_public ? 'true' : 'false';
-    data.ima_vise_termina = data.ima_vise_termina ? 'true' : 'false';
+    data.is_public = data.is_public ? true : false;
+    data.ima_vise_termina = data.ima_vise_termina ? true : false;
 
     data.cijena = parseFloat(Number(data.cijena || 0).toFixed(2));
 
+    console.log('pred submit', data);
     const payload = { ...data };
 
     if (isEditSession)

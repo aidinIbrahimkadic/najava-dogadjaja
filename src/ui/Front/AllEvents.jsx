@@ -4,6 +4,7 @@ import Heading from '../Heading';
 import * as FaIcons from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { HiBuildingLibrary, HiCalendarDateRange, HiMapPin } from 'react-icons/hi2';
+import { URL } from '../../utils/constants';
 
 // Utils
 // ---------------------------------------------
@@ -389,9 +390,10 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
   const [filterWeekend, setFilterWeekend] = useState(false);
   const [inst, setInst] = useState('');
 
+  console.log('upcomingEvents', upcomingEvents);
+
   const childrenOnly = (allCategories ?? []).flatMap((p) => p.children ?? []);
 
-  console.log(upcomingEvents);
   // KATEGORIJE
   const CATEGORY_META = (childrenOnly ?? []).reduce((acc, cat) => {
     const IconComp = FaIcons[cat.ikona];
@@ -415,11 +417,10 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
     const end = event.end_date ? new Date(event.end_date) : new Date(event.start_date);
     const endDateStr = [end.getFullYear(), pad(end.getMonth() + 1), pad(end.getDate())].join('-');
     const endTimeStr = [pad(end.getHours()), pad(end.getMinutes())].join(':');
-
     const posterSlika =
       event.slika !== '00000000-0000-0000-0000-000000000000'
-        ? `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`
-        : `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}?height=300`;
+        ? `${URL}/api/image/${event.slika}?height=300`
+        : `${URL}/api/events/slika/${event.idguid}?height=300`;
 
     return {
       id: event.idguid,
@@ -439,6 +440,8 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
       termini: Array.isArray(event.termini) ? event.termini : [],
     };
   });
+
+  console.log(allEvents);
 
   const institutions = useMemo(() => uniq(allEvents.map((e) => e.institution)), [allEvents]);
   const categories = useMemo(() => uniq(allEvents.map((e) => e.category)), [allEvents]);
@@ -498,7 +501,9 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
     if (e.ima_vise_termina) {
       const nowMs = Date.now();
       const future = (e.termini || [])
-        .map((tt) => (tt?.start_date ? new Date(tt.start_date) : null))
+        .map((tt) => {
+          return tt?.start_date ? new Date(tt.start_date) : null;
+        })
         .filter((d) => d && d.getTime() >= nowMs)
         .sort((a, b) => a - b);
       if (future[0]) return future[0].toISOString();
@@ -610,19 +615,20 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
           const hasEnded = now > endObj;
           const isOngoing = hasStarted && !hasEnded;
 
-          let statusLabel = 'Uskoro';
-          let StatusIcon = FaIcons.FaHourglassStart;
-          let statusColor = '#6b7280'; // siva za default
+          //STATUS POPRAVITI
+          // let statusLabel = 'Uskoro';
+          // let StatusIcon = FaIcons.FaHourglassStart;
+          // let statusColor = '#6b7280'; // siva za default
 
-          if (hasEnded) {
-            statusLabel = 'Završen';
-            StatusIcon = FaIcons.FaCheckCircle;
-            statusColor = '#16a34a'; // zelena
-          } else if (hasStarted) {
-            statusLabel = 'Live';
-            StatusIcon = FaIcons.FaHourglassHalf;
-            statusColor = '#f97316'; // brand narančasta
-          }
+          // if (hasEnded) {
+          //   statusLabel = 'Završen';
+          //   StatusIcon = FaIcons.FaCheckCircle;
+          //   statusColor = '#16a34a'; // zelena
+          // } else if (hasStarted) {
+          //   statusLabel = 'Live';
+          //   StatusIcon = FaIcons.FaHourglassHalf;
+          //   statusColor = '#f97316'; // brand narančasta
+          // }
 
           // Termini samo budući, sortirani, max 6; ostatak sumarizujemo
           const futureTerms = (e.termini || [])
@@ -641,7 +647,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                     <Link to={`/dogadjaj/${e.id}`}>
                       <Title>{e.title}</Title>
                     </Link>
-                    <span
+                    {/* <span
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -653,7 +659,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                       }}
                     >
                       <StatusIcon /> {statusLabel}
-                    </span>
+                    </span> */}
                   </div>
                   <CategoryRow>
                     <Badge>{e.category}</Badge>

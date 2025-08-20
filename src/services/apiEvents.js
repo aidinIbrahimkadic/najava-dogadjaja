@@ -1,8 +1,29 @@
 import axiosInstance from './axiosInstance';
 
-export async function getEvents() {
+export async function getEvents(query = {}) {
+  const { page = 1, limit = 10, search, sort, filters = {} } = query;
+
+  console.log('Q', query);
+  const params = { page, limit };
+
+  if (search) params.search = search;
+
+  if (sort?.field && sort?.order) {
+    // Ako tvoj backend voli 2 ključa:
+    params.sortBy = sort.field || 'start_date';
+    params.sortOrder = sort.order || 'DESC'; // 'ASC' | 'DESC'
+    // Ako backend koristi jedan ključ "sort=field:order", nema štete ostaviti oba:
+    params.sort = `${sort.field}:${sort.order}`;
+    // params.sort = `${sort.field}`;
+  }
+
+  for (const [k, v] of Object.entries(filters)) {
+    if (v === undefined || v === null || v === '') continue;
+    params[k] = v;
+  }
+
   try {
-    const response = await axiosInstance.get(`/events/events`);
+    const response = await axiosInstance.get(`/events/events`, { params });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Greška pri dobavljanju događaja');

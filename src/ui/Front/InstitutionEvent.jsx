@@ -311,7 +311,7 @@ export default function InstitutionEvent({ event }) {
         </Meta>
 
         <Extra>
-          <Price>{priceText(cijena)}</Price>
+          <Price>{cijena == 0 ? 'Besplatan ulaz' : `Cijena ulaznice: ${priceText(cijena)}`}</Price>
         </Extra>
       </Body>
     </Card>

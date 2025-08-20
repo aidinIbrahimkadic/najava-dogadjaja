@@ -5,6 +5,7 @@ import FrontLogo from './FrontLogo';
 import { HiOutlineMail } from 'react-icons/hi';
 
 import { useGetUpcomingEvents } from '../../features/front/useUpcomingEvents';
+import { URL } from '../../utils/constants';
 
 const { Footer } = Layout;
 
@@ -23,9 +24,8 @@ const FooterContent = styled.div`
 `;
 
 const FooterGrid = styled.div`
-  display: flex;
-  justify-content: space-between;
-  /* grid-template-columns: 0.5fr 1fr; */
+  display: grid;
+  grid-template-columns: 0.8fr 1fr;
   margin-bottom: 24px;
 
   @media (max-width: 768px) {
@@ -39,6 +39,7 @@ const BrandBlock = styled.div`
   flex-direction: column;
   gap: 16px;
   align-items: center;
+  justify-self: flex-start;
 
   p {
     color: rgba(255, 255, 255, 0.7);
@@ -49,7 +50,8 @@ const BrandBlock = styled.div`
 
 const Section = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  /* justify-self: flex-end; */
   gap: 5rem;
 
   h3 {
@@ -145,8 +147,8 @@ export default function FrontFooter({ description = '', institucije = [], settin
 
   const posterSlika =
     upcomingEvents?.[0]?.slika && upcomingEvents[0].slika !== '00000000-0000-0000-0000-000000000000'
-      ? `https://events-opcina.poruci.ba/api/image/${upcomingEvents[0].slika}?height=300`
-      : `https://events-opcina.poruci.ba/api/events/slika/${upcomingEvents?.[0]?.idguid}`;
+      ? `${URL}/api/image/${upcomingEvents[0].slika}?height=300`
+      : `${URL}/api/events/slika/${upcomingEvents?.[0]?.idguid}`;
 
   const nextEvent = {
     id: upcomingEvents?.[0]?.idguid,

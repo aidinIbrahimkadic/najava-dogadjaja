@@ -20,6 +20,7 @@ import {
   WhatsappIcon,
 } from 'react-share';
 import toast from 'react-hot-toast';
+import { URL } from '../../utils/constants';
 
 // —— Theme ——
 const BRAND = '#f97316';
@@ -33,9 +34,9 @@ const RADIUS = '18px';
 const getImageUrl = (event) => {
   if (!event) return '';
   if (event.slika && event.slika !== '00000000-0000-0000-0000-000000000000') {
-    return `https://events-opcina.poruci.ba/api/image/${event.slika}?height=400`;
+    return `${URL}/api/image/${event.slika}?height=400`;
   }
-  return `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
+  return `${URL}/api/events/slika/${event.idguid}`;
 };
 
 // —— Leaflet marker fix ——
@@ -360,22 +361,22 @@ export default function SingleEvent({ event }) {
   const lng = event?.lokacija?.longitude;
   const hasCoords = typeof lat === 'number' && typeof lng === 'number';
 
-  const now = new Date();
-  let status = 'Uskoro';
-  let StatusIcon = Fa.FaClock; // default ikona
+  // const now = new Date();
+  // let status = 'Uskoro';
+  // let StatusIcon = Fa.FaClock; // default ikona
 
-  if (startD && endD) {
-    if (now < startD) {
-      status = 'Uskoro';
-      StatusIcon = Fa.FaClock;
-    } else if (now >= startD && now <= endD) {
-      status = 'U toku';
-      StatusIcon = Fa.FaHourglassStart;
-    } else if (now > endD) {
-      status = 'Završen';
-      StatusIcon = Fa.FaCheckCircle;
-    }
-  }
+  // if (startD && endD) {
+  //   if (now < startD) {
+  //     status = 'Uskoro';
+  //     StatusIcon = Fa.FaClock;
+  //   } else if (now >= startD && now <= endD) {
+  //     status = 'U toku';
+  //     StatusIcon = Fa.FaHourglassStart;
+  //   } else if (now > endD) {
+  //     status = 'Završen';
+  //     StatusIcon = Fa.FaCheckCircle;
+  //   }
+  // }
 
   return (
     <div>
@@ -406,13 +407,13 @@ export default function SingleEvent({ event }) {
                     <Label>Podijeli događaj</Label>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <FacebookShareButton
-                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        url={`${URL}/api/events-share/${event.idguid}`}
                         quote={event?.title}
                       >
                         <FacebookIcon size={36} round />
                       </FacebookShareButton>
                       <ViberShareButton
-                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        url={`${URL}/api/events-share/${event.idguid}`}
                         quote={event?.title}
                       >
                         <ViberIcon size={36} round />
@@ -420,20 +421,20 @@ export default function SingleEvent({ event }) {
                       {/* Copy link dugme ViberShareButton*/}
 
                       <TwitterShareButton
-                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        url={`${URL}/api/events-share/${event.idguid}`}
                         title={event?.title}
                       >
                         <TwitterIcon size={36} round />
                       </TwitterShareButton>
                       <LinkedinShareButton
-                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        url={`${URL}/api/events-share/${event.idguid}`}
                         title={event?.title}
                         summary={event?.description}
                       >
                         <LinkedinIcon size={36} round />
                       </LinkedinShareButton>
                       <WhatsappShareButton
-                        url={`https://events-opcina.poruci.ba/api/events-share/${event.idguid}`}
+                        url={`${URL}/api/events-share/${event.idguid}`}
                         title={event?.title}
                       >
                         <WhatsappIcon size={36} round />
@@ -442,9 +443,7 @@ export default function SingleEvent({ event }) {
                       {/* Copy link dugme */}
                       <button
                         onClick={() => {
-                          navigator.clipboard.writeText(
-                            `https://events-opcina.poruci.ba/api/events-share/${event.idguid}`
-                          );
+                          navigator.clipboard.writeText(`${URL}/api/events-share/${event.idguid}`);
                           toast.success('Link kopiran u međuspremnik!');
                         }}
                         style={{
@@ -468,7 +467,7 @@ export default function SingleEvent({ event }) {
                 <CatIcon /> {event?.category?.naziv || 'Kategorija'}
               </Pill>
             </div>
-            {!hasMulti && (
+            {/* {!hasMulti && (
               <MetaItem>
                 <StatusIcon size={26} style={{ marginTop: 2, color: BRAND }} />
                 <div>
@@ -476,7 +475,7 @@ export default function SingleEvent({ event }) {
                   {status}
                 </div>
               </MetaItem>
-            )}
+            )} */}
             <div
               style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}
             >
@@ -592,7 +591,11 @@ export default function SingleEvent({ event }) {
                 </MetaItem>
               </MetaGrid>
 
-              <Price>{formatMoney(event?.cijena)}</Price>
+              <Price>
+                {event?.cijena == 0.0
+                  ? 'Besplatan ulaz'
+                  : `Cijena ulaznice: ${formatMoney(event?.cijena)}`}{' '}
+              </Price>
             </div>
 
             <Divider />

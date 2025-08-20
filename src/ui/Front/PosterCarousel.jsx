@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { URL } from '../../utils/constants';
 
 const CarouselWrapper = styled.div`
   width: 100%;
@@ -82,9 +83,9 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
     let slika;
 
     if (event.slika !== '00000000-0000-0000-0000-000000000000') {
-      slika = `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`;
+      slika = `${URL}/api/image/${event.slika}?height=300`;
     } else {
-      slika = `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}?height=300`;
+      slika = `${URL}/api/events/slika/${event.idguid}?height=300`;
     }
 
     return { slika, idguid: event.idguid };
