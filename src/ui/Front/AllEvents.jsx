@@ -145,14 +145,14 @@ const CatDot = styled.div`
   }
 
   @media (max-width: 550px) {
-    width: 4rem;
-    height: 4rem;
-    font-size: 1.8rem;
+    width: 5rem;
+    height: 5rem;
+    font-size: 2rem;
   }
 `;
 
 const CatLabel = styled.div`
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: var(--color-grey-500);
   text-align: center;
   line-height: 1.1;
@@ -252,8 +252,8 @@ const Chip = styled.button`
     `}
 
   @media (max-width: 550px) {
-    font-size: 1rem;
-    height: 25px;
+    font-size: 1.2rem;
+    height: 30px;
     margin-bottom: 1rem;
   }
 `;
@@ -279,6 +279,11 @@ const Grid = styled.div`
     grid-template-columns: repeat(12, 1fr);
   }
   @media (max-width: 440px) {
+    width: 80%;
+    grid-template-columns: repeat(6, 1fr);
+  }
+  @media (max-width: 350px) {
+    width: 100%;
     grid-template-columns: repeat(6, 1fr);
   }
 `;
@@ -665,11 +670,11 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
         </Select>
 
         <DateRange>
-          <div style={{ display: 'flex', gap: '1rem', fontSize: '1.2rem' }}>
+          <div style={{ display: 'flex', gap: '1rem', fontSize: '1.2rem', alignItems: 'center' }}>
             <span>Datum početka</span>
             <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
           </div>
-          <div style={{ display: 'flex', gap: '1rem', fontSize: '1.2rem' }}>
+          <div style={{ display: 'flex', gap: '1rem', fontSize: '1.2rem', alignItems: 'center' }}>
             <span>Datum kraja</span>
             <input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
           </div>
