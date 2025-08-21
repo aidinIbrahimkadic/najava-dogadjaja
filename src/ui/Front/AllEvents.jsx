@@ -84,7 +84,7 @@ const Page = styled.div`
     margin-top: 2rem;
     gap: 0;
     width: 90%;
-    margin: 0;
+    margin: 0 0 5rem 0;
   }
 `;
 
