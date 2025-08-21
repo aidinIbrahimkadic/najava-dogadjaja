@@ -48,15 +48,6 @@ export default function CategoriesTable() {
               label: 'Naziv',
               field: 'naziv',
               sortable: true,
-              filter: {
-                type: 'select',
-                key: 'parent_idguid',
-                options: [
-                  { value: ZERO, label: 'Samo grupe' },
-                  // { value: !ZERO, label: 'Samo podkategorije' },
-                ],
-                placeholder: '— Sve —',
-              },
             },
             {
               id: 'ikona',
@@ -69,6 +60,15 @@ export default function CategoriesTable() {
               label: 'Grupa',
               field: 'parent_idguid',
               sortable: false,
+              filter: {
+                type: 'select',
+                key: 'parent_idguid',
+                options: [
+                  { value: ZERO, label: 'Samo grupe' },
+                  // { value: !ZERO, label: 'Samo podkategorije' },
+                ],
+                placeholder: '— Sve —',
+              },
               // filter: {
               //   type: 'select',
               //   key: 'parent_idguid',
@@ -90,15 +90,6 @@ export default function CategoriesTable() {
               id: 'naziv',
               label: 'Naziv',
               field: 'naziv',
-              filter: {
-                type: 'select',
-                key: 'parent_idguid',
-                options: [
-                  { value: ZERO, label: 'Samo grupe' },
-                  // { value: !ZERO, label: 'Samo podkategorije' },
-                ],
-                placeholder: '— Sve —',
-              },
             },
             {
               id: 'ikona',
@@ -109,6 +100,15 @@ export default function CategoriesTable() {
               id: 'grupa',
               label: 'Grupa',
               field: 'parent_idguid',
+              filter: {
+                type: 'select',
+                key: 'parent_idguid',
+                options: [
+                  { value: ZERO, label: 'Samo grupe' },
+                  // { value: !ZERO, label: 'Samo podkategorije' },
+                ],
+                placeholder: '— Sve —',
+              },
               // filter: {
               //   type: 'select',
               //   key: 'parent_idguid',

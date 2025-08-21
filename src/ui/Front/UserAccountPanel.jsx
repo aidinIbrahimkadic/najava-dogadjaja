@@ -20,6 +20,10 @@ const Panel = styled.div`
   width: 90%;
   justify-self: center;
   margin-bottom: 24px;
+
+  @media (max-width: 400px) {
+    width: 100%;
+  }
 `;
 
 const Header = styled.div`
@@ -27,6 +31,10 @@ const Header = styled.div`
   grid-template-columns: 1fr auto;
   align-items: start;
   gap: 16px;
+
+  @media (max-width: 400px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Title = styled.h3`

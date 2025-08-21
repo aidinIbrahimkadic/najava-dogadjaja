@@ -35,9 +35,9 @@ const RADIUS = '18px';
 const getImageUrl = (event) => {
   if (!event) return '';
   if (event.slika && event.slika !== '00000000-0000-0000-0000-000000000000') {
-    return `${URL}/api/image/${event.slika}?height=400`;
+    return `${URL}/api/image/${event.slika}?height=600`;
   }
-  return `${URL}/api/events/slika/${event.idguid}`;
+  return `${URL}/api/events/slika/${event.idguid}?height=600`;
 };
 
 // —— Leaflet marker fix ——
@@ -166,12 +166,13 @@ const Price = styled.div`
   color: var(--brand);
   font-weight: 800;
   font-size: 1.6rem;
+  text-align: end;
 `;
 
 const MetaGrid = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%;
   gap: 1rem;
   margin-top: 0.25rem;
   @media (max-width: 680px) {
@@ -184,6 +185,14 @@ const MetaItem = styled.div`
   align-items: center;
   gap: 1rem;
   color: var(--text);
+`;
+
+const OpisItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
 `;
 
 const Label = styled.div`
@@ -697,13 +706,20 @@ export default function SingleEvent({ event }) {
                       <Strong>{event?.lokacija?.naziv || '—'}</Strong>
                     </div>
                   </MetaItem>
-                </MetaGrid>
+                  <div>
+                    <OpisItem>
+                      <Fa.FaRegFileAlt size={26} style={{ marginTop: 2, color: BRAND }} />
 
-                <Price>
-                  {event?.cijena == 0.0
-                    ? 'Besplatan ulaz'
-                    : `Cijena ulaznice: ${formatMoney(event?.cijena)}`}{' '}
-                </Price>
+                      <Strong>Opis</Strong>
+                    </OpisItem>
+                    <span>{event?.description || '—'}</span>
+                  </div>
+                  <Price>
+                    {event?.cijena == 0.0
+                      ? 'Besplatan ulaz'
+                      : `Cijena ulaznice: ${formatMoney(event?.cijena)}`}{' '}
+                  </Price>
+                </MetaGrid>
               </DatumiCijena>
 
               {/* Share buttons */}

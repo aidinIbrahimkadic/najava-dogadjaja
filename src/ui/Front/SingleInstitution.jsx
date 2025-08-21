@@ -61,6 +61,10 @@ const TopRow = styled.div`
   display: flex;
   gap: 1rem;
   align-items: center;
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+  }
 `;
 
 const LogoWrap = styled.div`
@@ -72,6 +76,7 @@ const LogoWrap = styled.div`
   overflow: hidden;
   display: grid;
   place-items: center;
+  padding: 1rem;
 
   img {
     width: 100%;
@@ -108,6 +113,14 @@ const TitleBlock = styled.div`
   p {
     margin: 0;
     color: ${SUBTLE};
+  }
+
+  @media (max-width: 400px) {
+    align-items: center;
+
+    p {
+      text-align: center;
+    }
   }
 `;
 
@@ -253,6 +266,22 @@ const UpcomingEventsContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1.5rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 430px) {
+    grid-template-columns: 1fr;
+    width: 80%;
+    /* justify-self: center; */
+  }
+  @media (max-width: 300px) {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
 `;
 
 // —— Component ——

@@ -60,6 +60,10 @@ const BrandBlock = styled.div`
 
   @media (max-width: 770px) {
     justify-self: center;
+
+    p {
+      text-align: center;
+    }
   }
 `;
 
