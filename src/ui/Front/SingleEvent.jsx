@@ -21,6 +21,7 @@ import {
 } from 'react-share';
 import toast from 'react-hot-toast';
 import { URL } from '../../utils/constants';
+import Poster from './Poster';
 
 // —— Theme ——
 const BRAND = '#f97316';
@@ -58,41 +59,70 @@ const PageWrap = styled.div`
   --text: ${TEXT};
   --muted: ${MUTED};
   --card-bg: ${CARD_BG};
-
-  display: grid;
-  grid-template-columns: 0.4fr 1fr;
+  background-color: #ffffff;
+  /* display: grid;
+  grid-template-columns: 0.4fr 1fr; */
   align-items: start;
-  padding: 2rem 0;
-  margin-bottom: 7rem;
+  border-radius: 2rem;
+  margin: 4rem 0 7rem 0;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
 
+  overflow: hidden;
   @media (max-width: 680px) {
     grid-template-columns: 1fr;
   }
 `;
 
-const Poster = styled.div`
-  background: #fff;
-  border-radius: ${RADIUS} 0 0 ${RADIUS};
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  position: sticky;
-  top: 16px;
+// const Poster = styled.div`
+//   grid-area: poster;
+//   background: #fff;
+//   /* border-radius: ${RADIUS} 0 0 ${RADIUS}; */
+//   /* box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08); */
+//   overflow: hidden;
+//   position: sticky;
+//   top: 16px;
 
-  @media (max-width: 980px) {
-    position: static;
-  }
+//   @media (max-width: 980px) {
+//     position: static;
+//   }
+//   @media (max-width: 700px) {
+//     height: 400px;
+//     width: auto;
+//     background-position: center;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: space-around;
+//     object-fit: cover;
+//   }
+//   @media (max-width: 400px) {
+//     height: 300px;
+//     width: auto;
+//   }
+// `;
+
+const InfoWrap = styled.section`
+  grid-area: info;
+`;
+
+const OrgSection = styled.section`
+  grid-area: org;
 `;
 
 const PosterImg = styled.img`
-  width: 100%;
-  height: auto;
-  display: block;
+  height: 100%;
+  width: auto;
+
+  @media (max-width: 700px) {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 const InfoCard = styled.section`
   background: #fff;
-  border-radius: 0 ${RADIUS} ${RADIUS} 0;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.06);
+  /* border-radius: 0 ${RADIUS} ${RADIUS} 0; */
+  /* box-shadow: 0 16px 36px rgba(0, 0, 0, 0.06); */
   padding: 1.5rem;
   display: grid;
   height: 100%;
@@ -102,6 +132,12 @@ const InfoCard = styled.section`
 const HeaderRow = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
+
+  @media (max-width: 650px) {
+    flex-direction: column;
+    gap: 1.4rem;
+  }
 `;
 
 const Pill = styled.span`
@@ -115,7 +151,7 @@ const Pill = styled.span`
   border: 1px solid rgba(0, 0, 0, 0.06);
   padding: 0.4rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   font-weight: 600;
 `;
 
@@ -171,6 +207,10 @@ const Actions = styled.div`
   align-items: center;
   gap: 0.75rem;
   margin-top: 0.5rem;
+
+  @media (max-width: 340px) {
+    flex-direction: column;
+  }
 `;
 
 const Button = styled.button`
@@ -212,6 +252,10 @@ const OrgRow = styled.div`
   grid-template-columns: 44px 1fr;
   gap: 0.75rem;
   align-items: center;
+
+  @media (max-width: 850px) {
+    /* Mobile: poster, institucija, info (svaki u svom redu) */
+  }
 `;
 
 const OrgLogo = styled.img`
@@ -255,6 +299,61 @@ const MapBody = styled.div`
   width: 100%;
   @media (max-width: 680px) {
     height: 320px;
+  }
+`;
+
+const DatumiCijena = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  @media (max-width: 900px) {
+    align-items: flex-start;
+    gap: 1rem;
+    flex-direction: column;
+  }
+`;
+
+const Container = styled.div`
+  display: grid;
+  gap: 1rem;
+
+  /* Desktop (≥900px): poster lijevo, desno info pa institucija */
+  grid-template-columns: 0.45fr 1fr;
+  grid-template-areas:
+    'poster info'
+    'poster org';
+
+  @media (max-width: 850px) {
+    /* Mobile: poster, institucija, info (svaki u svom redu) */
+    grid-template-columns: 0.4fr 1fr;
+    grid-template-areas:
+      'poster info'
+      'org org';
+  }
+
+  @media (max-width: 700px) {
+    /* Mobile: poster, institucija, info (svaki u svom redu) */
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'poster'
+      'info'
+      'org';
+  }
+`;
+
+const OrgContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 1rem;
+
+  @media (max-width: 850px) {
+    padding: 1rem;
+  }
+  @media (max-width: 700px) {
+    flex-direction: column;
+    gap: 2rem;
   }
 `;
 
@@ -383,91 +482,100 @@ export default function SingleEvent({ event }) {
       <Heading as="h1">Informacije o događaju</Heading>
       <PageWrap>
         {/* Left: Poster */}
-        <Poster>
-          {imageUrl ? (
-            <PosterImg src={imageUrl} alt={event?.title || 'Poster'} />
-          ) : (
-            <PosterImg
-              src={`https://placehold.co/800x1100/fff7ed/262626?text=${encodeURIComponent(
-                event?.title || 'Događaj'
-              )}`}
-              alt="Poster placeholder"
-            />
-          )}
-        </Poster>
+        <Container>
+          {/* <Poster>
+            {imageUrl ? (
+              <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+                <PosterImg src={imageUrl} alt="Poster" />
+              </a>
+            ) : (
+              // <PosterImg src={imageUrl} alt={event?.title || 'Poster'} />
+              <PosterImg
+                src={`https://placehold.co/800x1100/fff7ed/262626?text=${encodeURIComponent(
+                  event?.title || 'Događaj'
+                )}`}
+                alt="Poster placeholder"
+              />
+            )}
+          </Poster> */}
 
-        {/* Right: Info */}
-        <div style={{ height: '100%' }}>
-          <InfoCard>
-            <div>
-              <HeaderRow>
-                <Title>{event?.title}</Title>
-                <MetaItem>
-                  <div>
-                    <Label>Podijeli događaj</Label>
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <FacebookShareButton
-                        url={`${URL}/api/events-share/${event.idguid}`}
-                        quote={event?.title}
-                      >
-                        <FacebookIcon size={36} round />
-                      </FacebookShareButton>
-                      <ViberShareButton
-                        url={`${URL}/api/events-share/${event.idguid}`}
-                        quote={event?.title}
-                      >
-                        <ViberIcon size={36} round />
-                      </ViberShareButton>
-                      {/* Copy link dugme ViberShareButton*/}
-
-                      <TwitterShareButton
-                        url={`${URL}/api/events-share/${event.idguid}`}
-                        title={event?.title}
-                      >
-                        <TwitterIcon size={36} round />
-                      </TwitterShareButton>
-                      <LinkedinShareButton
-                        url={`${URL}/api/events-share/${event.idguid}`}
-                        title={event?.title}
-                        summary={event?.description}
-                      >
-                        <LinkedinIcon size={36} round />
-                      </LinkedinShareButton>
-                      <WhatsappShareButton
-                        url={`${URL}/api/events-share/${event.idguid}`}
-                        title={event?.title}
-                      >
-                        <WhatsappIcon size={36} round />
-                      </WhatsappShareButton>
-
-                      {/* Copy link dugme */}
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(`${URL}/api/events-share/${event.idguid}`);
-                          toast.success('Link kopiran u međuspremnik!');
-                        }}
-                        style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: '50%',
-                          border: '1px solid var(--color-grey-300)',
-                          background: '#fff',
-                          cursor: 'pointer',
-                          display: 'grid',
-                          placeItems: 'center',
-                        }}
-                      >
-                        <Fa.FaLink size={18} color="var(--color-grey-600)" />
-                      </button>
-                    </div>
+          <Poster imageUrl={imageUrl} alt={event?.title} />
+          {/* Right: Info */}
+          <InfoWrap>
+            <InfoCard>
+              <div>
+                <HeaderRow>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '.8rem' }}>
+                    <Title>{event?.title}</Title>
+                    <Pill $bg={catColor}>
+                      <CatIcon /> {event?.category?.naziv || 'Kategorija'}
+                    </Pill>
                   </div>
-                </MetaItem>
-              </HeaderRow>
-              <Pill $bg={catColor}>
-                <CatIcon /> {event?.category?.naziv || 'Kategorija'}
-              </Pill>
-            </div>
-            {/* {!hasMulti && (
+                  <MetaItem>
+                    <div>
+                      <Label>Podijeli događaj</Label>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <FacebookShareButton
+                          url={`${URL}/api/events-share/${event.idguid}`}
+                          quote={event?.title}
+                        >
+                          <FacebookIcon size={36} round />
+                        </FacebookShareButton>
+                        <ViberShareButton
+                          url={`${URL}/api/events-share/${event.idguid}`}
+                          quote={event?.title}
+                        >
+                          <ViberIcon size={36} round />
+                        </ViberShareButton>
+                        {/* Copy link dugme ViberShareButton*/}
+
+                        <TwitterShareButton
+                          url={`${URL}/api/events-share/${event.idguid}`}
+                          title={event?.title}
+                        >
+                          <TwitterIcon size={36} round />
+                        </TwitterShareButton>
+                        <LinkedinShareButton
+                          url={`${URL}/api/events-share/${event.idguid}`}
+                          title={event?.title}
+                          summary={event?.description}
+                        >
+                          <LinkedinIcon size={36} round />
+                        </LinkedinShareButton>
+                        <WhatsappShareButton
+                          url={`${URL}/api/events-share/${event.idguid}`}
+                          title={event?.title}
+                        >
+                          <WhatsappIcon size={36} round />
+                        </WhatsappShareButton>
+
+                        {/* Copy link dugme */}
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              `${URL}/api/events-share/${event.idguid}`
+                            );
+                            toast.success('Link kopiran u međuspremnik!');
+                          }}
+                          style={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: '50%',
+                            border: '1px solid var(--color-grey-300)',
+                            background: '#fff',
+                            cursor: 'pointer',
+                            display: 'grid',
+                            placeItems: 'center',
+                          }}
+                        >
+                          <Fa.FaLink size={18} color="var(--color-grey-600)" />
+                        </button>
+                      </div>
+                    </div>
+                  </MetaItem>
+                </HeaderRow>
+              </div>
+              {/* {!hasMulti && (
               <MetaItem>
                 <StatusIcon size={26} style={{ marginTop: 2, color: BRAND }} />
                 <div>
@@ -476,135 +584,137 @@ export default function SingleEvent({ event }) {
                 </div>
               </MetaItem>
             )} */}
-            <div
-              style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}
-            >
-              <MetaGrid>
-                {/* === DATUM/VRIJEME: 3 slučaja === */}
-                {!hasMulti && differentDay && startD && endD && (
-                  <>
-                    <MetaItem>
-                      <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
-                      <div>
-                        <Label>Početak</Label>
-                        <Strong>
-                          {fmtDate(startD)} - {fmtTime(startD)}
-                        </Strong>
-                      </div>
-                    </MetaItem>
-                    <MetaItem>
-                      <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
-                      <div>
-                        <Label>Kraj</Label>
-                        <Strong>
-                          {fmtDate(endD)} - {fmtTime(endD)}
-                        </Strong>
-                      </div>
-                    </MetaItem>
-                  </>
-                )}
+              <DatumiCijena>
+                <MetaGrid>
+                  {/* === DATUM/VRIJEME: 3 slučaja === */}
+                  {!hasMulti && differentDay && startD && endD && (
+                    <>
+                      <MetaItem>
+                        <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <div>
+                          <Label>Početak</Label>
+                          <Strong>
+                            {fmtDate(startD)} - {fmtTime(startD)}
+                          </Strong>
+                        </div>
+                      </MetaItem>
+                      <MetaItem>
+                        <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <div>
+                          <Label>Kraj</Label>
+                          <Strong>
+                            {fmtDate(endD)} - {fmtTime(endD)}
+                          </Strong>
+                        </div>
+                      </MetaItem>
+                    </>
+                  )}
 
-                {!hasMulti && !differentDay && startD && (
-                  <>
-                    <MetaItem>
-                      <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
-                      <div>
-                        <Label>Datum</Label>
-                        <Strong>{fmtDate(startD)}</Strong>
-                      </div>
-                    </MetaItem>
-                    <MetaItem>
-                      <Fa.FaClock size={26} style={{ marginTop: 2, color: BRAND }} />
-                      <div>
-                        <Label>Vrijeme</Label>
-                        <Strong>{fmtTime(startD)}</Strong>
-                      </div>
-                    </MetaItem>
-                  </>
-                )}
+                  {!hasMulti && !differentDay && startD && (
+                    <>
+                      <MetaItem>
+                        <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <div>
+                          <Label>Datum</Label>
+                          <Strong>{fmtDate(startD)}</Strong>
+                        </div>
+                      </MetaItem>
+                      <MetaItem>
+                        <Fa.FaClock size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <div>
+                          <Label>Vrijeme</Label>
+                          <Strong>{fmtTime(startD)}</Strong>
+                        </div>
+                      </MetaItem>
+                    </>
+                  )}
 
-                {/* === VIŠE TERMINA === */}
-                {hasMulti && terms.length > 0 && (
-                  <div style={{ display: 'grid', gap: '1rem' }}>
-                    <Label style={{ fontWeight: 700, color: TEXT }}>Termini ({terms.length})</Label>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gap: '0.8rem',
-                        gridTemplateColumns: `repeat(${terms.length}, minmax(180px, 1fr))`,
-                      }}
-                    >
-                      {terms.map((t, idx) => {
-                        const sd = new Date(t.startISO);
-                        const disabledGoogleCalendarButton = new Date(t.endISO) < new Date();
-                        const href = buildGCalHref(event, t.startISO, t.endISO);
-                        return (
-                          <div
-                            key={`${t.startISO}-${t.endISO || idx}`}
-                            style={{
-                              background: '#fff',
-                              border: '1px solid #eef2ff',
-                              borderRadius: 12,
-                              padding: '0.75rem',
-                            }}
-                          >
-                            <div style={{ marginBottom: 6 }}>
-                              <Label>Datum</Label>
-                              <Strong>{fmtDate(sd)}</Strong>
+                  {/* === VIŠE TERMINA === */}
+                  {hasMulti && terms.length > 0 && (
+                    <div style={{ display: 'grid', gap: '1rem' }}>
+                      <Label style={{ fontWeight: 700, color: TEXT }}>
+                        Termini ({terms.length})
+                      </Label>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gap: '0.8rem',
+                          gridTemplateColumns: `repeat(${terms.length}, minmax(180px, 1fr))`,
+                        }}
+                      >
+                        {terms.map((t, idx) => {
+                          const sd = new Date(t.startISO);
+                          const disabledGoogleCalendarButton = new Date(t.endISO) < new Date();
+                          const href = buildGCalHref(event, t.startISO, t.endISO);
+                          return (
+                            <div
+                              key={`${t.startISO}-${t.endISO || idx}`}
+                              style={{
+                                background: '#fff',
+                                border: '1px solid #eef2ff',
+                                borderRadius: 12,
+                                padding: '0.75rem',
+                              }}
+                            >
+                              <div style={{ marginBottom: 6 }}>
+                                <Label>Datum</Label>
+                                <Strong>{fmtDate(sd)}</Strong>
+                              </div>
+                              <div style={{ marginBottom: 10 }}>
+                                <Label>Vrijeme</Label>
+                                <Strong>{fmtTime(sd)}</Strong>
+                              </div>
+                              <div>
+                                <Button
+                                  disabled={disabledGoogleCalendarButton}
+                                  {...(!disabledGoogleCalendarButton
+                                    ? {}
+                                    : {
+                                        style: {
+                                          backgroundColor: 'var(--color-grey-400)',
+                                          border: 'var(--color-grey-500)',
+                                          cursor: 'not-allowed',
+                                        },
+                                      })}
+                                  onClick={() => window.open(href, '_blank')}
+                                >
+                                  <Fa.FaGoogle />
+                                  Dodaj u Google kalendar
+                                </Button>
+                              </div>
                             </div>
-                            <div style={{ marginBottom: 10 }}>
-                              <Label>Vrijeme</Label>
-                              <Strong>{fmtTime(sd)}</Strong>
-                            </div>
-                            <div>
-                              <Button
-                                disabled={disabledGoogleCalendarButton}
-                                {...(!disabledGoogleCalendarButton
-                                  ? {}
-                                  : {
-                                      style: {
-                                        backgroundColor: 'var(--color-grey-400)',
-                                        border: 'var(--color-grey-500)',
-                                        cursor: 'not-allowed',
-                                      },
-                                    })}
-                                onClick={() => window.open(href, '_blank')}
-                              >
-                                <Fa.FaGoogle />
-                                Dodaj u Google kalendar
-                              </Button>
-                            </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Lokacija */}
-                <MetaItem>
-                  <Fa.FaMapMarkerAlt size={26} style={{ marginTop: 2, color: BRAND }} />
-                  <div>
-                    <Label>Lokacija</Label>
-                    <Strong>{event?.lokacija?.naziv || '—'}</Strong>
-                  </div>
-                </MetaItem>
-              </MetaGrid>
+                  {/* Lokacija */}
+                  <MetaItem>
+                    <Fa.FaMapMarkerAlt size={26} style={{ marginTop: 2, color: BRAND }} />
+                    <div>
+                      <Label>Lokacija</Label>
+                      <Strong>{event?.lokacija?.naziv || '—'}</Strong>
+                    </div>
+                  </MetaItem>
+                </MetaGrid>
 
-              <Price>
-                {event?.cijena == 0.0
-                  ? 'Besplatan ulaz'
-                  : `Cijena ulaznice: ${formatMoney(event?.cijena)}`}{' '}
-              </Price>
-            </div>
+                <Price>
+                  {event?.cijena == 0.0
+                    ? 'Besplatan ulaz'
+                    : `Cijena ulaznice: ${formatMoney(event?.cijena)}`}{' '}
+                </Price>
+              </DatumiCijena>
 
-            <Divider />
+              {/* Share buttons */}
+            </InfoCard>
+          </InfoWrap>
 
-            {/* Organizator */}
-            {event?.institucija && (
-              <div
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-              >
+          {/* Organizator */}
+          {event?.institucija && (
+            <OrgSection>
+              <Divider />
+              <OrgContainer>
                 <OrgRow>
                   {event.institucija.logo ? (
                     <Link to={`/institution/${event.institucija.idguid}`}>
@@ -656,12 +766,10 @@ export default function SingleEvent({ event }) {
                   )}
                 </Actions>
                 {/* Share buttons */}
-              </div>
-            )}
-
-            {/* Share buttons */}
-          </InfoCard>
-        </div>
+              </OrgContainer>
+            </OrgSection>
+          )}
+        </Container>
       </PageWrap>
 
       {/* Mapa */}
