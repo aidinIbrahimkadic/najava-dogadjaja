@@ -15,12 +15,23 @@ const BRAND = '#f97316';
 const StyledFooter = styled(Footer)`
   background: #001529;
   color: rgba(255, 255, 255, 0.85);
+
+  @media (max-width: 400px) {
+    padding: 24px 10px;
+  }
 `;
 
 const FooterContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 0 28px;
+
+  @media (max-width: 690px) {
+    padding: 10px 0 28px;
+  }
+  @media (max-width: 190px) {
+    display: none;
+  }
 `;
 
 const FooterGrid = styled.div`
@@ -45,6 +56,10 @@ const BrandBlock = styled.div`
     color: rgba(255, 255, 255, 0.7);
     line-height: 1.6;
     margin: 0;
+  }
+
+  @media (max-width: 770px) {
+    justify-self: center;
   }
 `;
 
@@ -130,6 +145,18 @@ const FooterBottom = styled.div`
   font-size: 0.92rem;
 `;
 
+const InstitutionContainer = styled.div`
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+const NextEventContainer = styled.div`
+  /* @media (max-width: 250px) {
+    display: none;
+  } */
+`;
+
 /**
  * FrontFooter
  * @param {Object} props
@@ -200,7 +227,7 @@ export default function FrontFooter({ description = '', institucije = [], settin
           </BrandBlock>
 
           <Section>
-            <div>
+            <InstitutionContainer>
               <h3>Institucije</h3>
               <InstList>
                 {institutions?.slice(0, 8).map((inst) => (
@@ -216,10 +243,10 @@ export default function FrontFooter({ description = '', institucije = [], settin
                   </InstItem>
                 )}
               </InstList>
-            </div>
+            </InstitutionContainer>
 
             {nextEvent && (
-              <div>
+              <NextEventContainer>
                 <h3 style={{ marginTop: 16 }}>Naredni događaj</h3>
                 <NextEventCard to={eventHref}>
                   <Poster
@@ -235,7 +262,7 @@ export default function FrontFooter({ description = '', institucije = [], settin
                     <div>{nextEvent?.institucija}</div>
                   </EventMeta>
                 </NextEventCard>
-              </div>
+              </NextEventContainer>
             )}
           </Section>
         </FooterGrid>

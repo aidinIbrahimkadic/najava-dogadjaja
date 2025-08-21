@@ -44,6 +44,10 @@ const Square = styled.div`
     color: #6b7280; /* muted */
     white-space: nowrap;
   }
+
+  @media (max-width: 605px) {
+    display: none;
+  }
 `;
 
 const TitleRow = styled.div`

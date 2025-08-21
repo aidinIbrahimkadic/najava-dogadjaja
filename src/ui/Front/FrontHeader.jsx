@@ -23,7 +23,7 @@ const StyledHeader = styled.header`
   justify-content: space-around;
   align-items: center;
   height: 7rem;
-  padding: 1rem 4rem 1rem 1rem;
+  padding: 1rem;
   backdrop-filter: saturate(160%) blur(6px);
 
   ${({ $scrolled }) =>
@@ -54,6 +54,10 @@ const NavSection = styled.nav`
   height: 100%;
   align-items: center;
   gap: 24px;
+
+  @media (max-width: 605px) {
+    display: none;
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -72,6 +76,12 @@ const RightSection = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
+  @media (max-width: 380px) {
+    gap: 1rem;
+  }
+  @media (max-width: 280px) {
+    gap: 0.2rem;
+  }
 `;
 
 /* ------------------------------ Dropdown UI ----------------------------- */
@@ -86,6 +96,7 @@ const DropdownPanel = styled.div`
   display: flex;
   flex-direction: column;
   top: calc(100% + 1.2rem);
+  right: 0rem;
   /* right: ${({ $alignRight }) => ($alignRight ? 0 : 'auto')}; */
   /* left: ${({ $alignRight }) => ($alignRight ? 'auto' : 0)}; */
   background-color: var(--color-grey-0);
@@ -188,6 +199,10 @@ const UserInfo = styled.div`
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
+
+  @media (max-width: 605px) {
+    display: none;
+  }
 `;
 
 const UserName = styled.div`
@@ -214,6 +229,15 @@ const LoginButton = styled(Button)`
     color: var(--color-brand-500) !important;
     background: rgba(249, 115, 22, 0.05) !important;
   }
+
+  @media (max-width: 380px) {
+    font-size: 12px;
+    padding: 0.4rem 0.8rem;
+  }
+  @media (max-width: 280px) {
+    font-size: 10px;
+    padding: 0.2rem 0.4rem;
+  }
 `;
 
 const RegisterButton = styled(Button)`
@@ -222,6 +246,14 @@ const RegisterButton = styled(Button)`
   border-radius: 8px;
   font-weight: 500;
 
+  @media (max-width: 380px) {
+    font-size: 12px;
+    padding: 0.4rem 0.8rem;
+  }
+  @media (max-width: 280px) {
+    font-size: 10px;
+    padding: 0.2rem 0.4rem;
+  }
   &:hover {
     background: var(--color-brand-600) !important;
     border-color: var(--color-brand-600) !important;

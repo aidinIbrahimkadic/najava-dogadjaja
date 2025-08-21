@@ -79,6 +79,13 @@ const Page = styled.div`
   gap: 1rem;
   margin: 7rem 0;
   width: 80%;
+
+  @media (max-width: 550px) {
+    margin-top: 2rem;
+    gap: 0;
+    width: 90%;
+    margin: 0;
+  }
 `;
 
 const CategoriesRow = styled.div`
@@ -89,6 +96,10 @@ const CategoriesRow = styled.div`
   overflow-x: auto;
   padding-bottom: 0.25rem;
   margin-bottom: 2rem;
+
+  @media (max-width: 550px) {
+    grid-auto-columns: auto;
+  }
 `;
 
 const CategoryItem = styled.button`
@@ -132,6 +143,12 @@ const CatDot = styled.div`
       background: ${p.$bg};
     `}
   }
+
+  @media (max-width: 550px) {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.8rem;
+  }
 `;
 
 const CatLabel = styled.div`
@@ -139,6 +156,10 @@ const CatLabel = styled.div`
   color: var(--color-grey-500);
   text-align: center;
   line-height: 1.1;
+
+  @media (max-width: 550px) {
+    font-size: 1rem;
+  }
 `;
 
 const FiltersBar = styled.div`
@@ -148,13 +169,26 @@ const FiltersBar = styled.div`
   align-items: center;
 
   @media (max-width: 1000px) {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: column-reverse;
+    gap: 1rem;
   }
+
+  /* @media (max-width: 550px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: column-reverse;
+  } */
 `;
 
 const SearchInput = styled.input`
   height: 40px;
-  width: 50%;
+  width: 100%;
   align-self: center;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -171,12 +205,21 @@ const DateRange = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
+  width: 100%;
 
   input {
     height: 40px;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
     padding: 0 0.5rem;
+  }
+
+  @media (max-width: 550px) {
+    grid-template-columns: 1fr;
+
+    input {
+      height: 30px;
+    }
   }
 `;
 
@@ -207,6 +250,12 @@ const Chip = styled.button`
     css`
       border-color: var(--color-brand-500);
     `}
+
+  @media (max-width: 550px) {
+    font-size: 1rem;
+    height: 25px;
+    margin-bottom: 1rem;
+  }
 `;
 
 const Grid = styled.div`
@@ -215,16 +264,22 @@ const Grid = styled.div`
   gap: 1rem;
 
   @media (max-width: 1400px) {
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(12, 1fr);
   }
   @media (max-width: 1100px) {
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(12, 1fr);
   }
   @media (max-width: 900px) {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(12, 1fr);
   }
   @media (max-width: 700px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(12, 1fr);
+  }
+  @media (max-width: 550px) {
+    grid-template-columns: repeat(12, 1fr);
+  }
+  @media (max-width: 380px) {
+    grid-template-columns: repeat(6, 1fr);
   }
 `;
 
@@ -254,6 +309,9 @@ const Card = styled.article`
   @media (max-width: 700px) {
     grid-column: span 6;
   }
+  @media (max-width: 550px) {
+    justify-content: flex-start;
+  }
 `;
 
 const Poster = styled.div`
@@ -268,6 +326,10 @@ const Poster = styled.div`
       background-position: center;
       background-repeat: no-repeat;
     `}
+
+  @media (max-width:550px) {
+    height: 150px;
+  }
 `;
 
 const Body = styled.div`
@@ -344,10 +406,16 @@ const Price = styled.span`
 
 const Select = styled.select`
   height: 40px;
+  width: 100%;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   padding: 0 0.5rem;
   background: #fff;
+
+  @media (max-width: 550px) {
+    height: 30px;
+    font-size: 1.2rem;
+  }
 `;
 
 // Termini list on card
@@ -587,7 +655,6 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
             Ovaj vikend
           </Chip>
         </QuickFilters>
-
         <Select value={inst} onChange={(e) => setInst(e.target.value)}>
           <option value="">Sve institucije</option>
           {institutions.map((i) => (

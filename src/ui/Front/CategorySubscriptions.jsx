@@ -33,6 +33,10 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 10rem 0 25rem;
+
+  @media (max-width: 550px) {
+    padding: 5rem 0 15rem;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -156,6 +160,10 @@ const Name = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
   color: #111827;
+
+  @media (max-width: 450px) {
+    font-size: 1.1rem;
+  }
 `;
 
 const Badge = styled.span`

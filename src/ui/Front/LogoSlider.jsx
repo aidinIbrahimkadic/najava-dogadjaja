@@ -70,6 +70,9 @@ const Viewport = styled.div`
       animation: none;
     }
   }
+  @media (max-width: 1250px) {
+    margin: 2rem 0 0rem 0;
+  }
 `;
 
 // Scroller – na njega primjenjujemo ručni (drag) pomak

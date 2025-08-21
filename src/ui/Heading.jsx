@@ -11,6 +11,10 @@ const Heading = styled.h1`
     css`
       font-size: 3rem;
       font-weight: 600;
+
+      @media (max-width: 550px) {
+        font-size: 2rem;
+      }
     `}
 
   ${(props) =>
@@ -18,6 +22,11 @@ const Heading = styled.h1`
     css`
       font-size: 2.5rem;
       font-weight: 600;
+
+      @media (max-width: 550px) {
+        font-size: 2rem;
+        font-weight: 400;
+      }
     `}
     
     ${(props) =>

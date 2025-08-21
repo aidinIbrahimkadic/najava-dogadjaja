@@ -274,20 +274,20 @@ export default function UsersTable() {
               id: 'first_name',
               label: 'Ime',
               field: 'first_name',
-              sortable: false,
+              sortable: true,
             },
 
             {
               id: 'last_name',
               label: 'Prezime',
               field: 'last_name',
-              sortable: false,
+              sortable: true,
             },
             {
               id: 'email',
               label: 'Email',
               field: 'email',
-              sortable: false,
+              sortable: true,
             },
             // 👇 Select filter po instituciji (šalje ?institucija_idguid=<id>)
             {

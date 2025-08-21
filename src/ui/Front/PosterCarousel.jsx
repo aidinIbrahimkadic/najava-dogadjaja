@@ -17,11 +17,38 @@ const CarouselContent = styled.div`
   gap: 2rem;
 `;
 
+// const PosterCard = styled.div`
+//   position: relative;
+//   flex: 0 0 210px;
+//   width: 210px;
+//   height: 297px;
+//   background-image: url(${(props) => props.$image});
+//   background-size: cover;
+//   background-position: center;
+//   border-radius: 12px;
+//   overflow: hidden;
+
+//   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+//   //OVERLAY potamni
+//   /* filter: brightness(${(props) => (props.$dimmed ? 0.7 : 1)}); */
+//   transition:
+//     transform 0.3s ease,
+//     filter 0.3s ease;
+//   &:hover {
+//     transform: scale(1.05);
+//     filter: brightness(1);
+//     z-index: 10;
+//   }
+
+//   @media (max-width: 600px) {
+//   }
+// `;
+
 const PosterCard = styled.div`
   position: relative;
-  flex: 0 0 210px;
+  flex: 0 0 auto;
   width: 210px;
-  height: 297px;
+  aspect-ratio: 3 / 4;
   background-image: url(${(props) => props.$image});
   background-size: cover;
   background-position: center;
@@ -29,16 +56,22 @@ const PosterCard = styled.div`
   overflow: hidden;
 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  //OVERLAY potamni
-  /* filter: brightness(${(props) => (props.$dimmed ? 0.7 : 1)}); */
   transition:
     transform 0.3s ease,
     filter 0.3s ease;
+
   &:hover {
     transform: scale(1.05);
     filter: brightness(1);
     z-index: 10;
   }
+
+  @media (max-width: 600px) {
+    width: 150px; /* smanji, ali aspect ratio ostaje */
+  }
+  /* @media (max-width: 350px) {
+    width: 100px; 
+  } */
 `;
 
 const Overlay = styled.div`

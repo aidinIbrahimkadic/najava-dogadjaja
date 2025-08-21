@@ -16,6 +16,8 @@ export async function getUsers(query = {}) {
     params[k] = v;
   }
 
+  console.log(params);
+
   const res = await axiosInstance.get('/admin/users', { params });
   return res.data; // očekuje: { success, message, data: { users: [...], pagination: { total, pages } } }
 }
