@@ -9,6 +9,7 @@ const CarouselWrapper = styled.div`
   width: 100%;
   overflow: hidden;
   padding: 2rem 0;
+  margin-bottom: 4rem;
   cursor: ${(props) => (props.$dragging ? 'grabbing' : 'grab')};
 `;
 

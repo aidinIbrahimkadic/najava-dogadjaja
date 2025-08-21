@@ -65,7 +65,7 @@ const PageWrap = styled.div`
   padding: 2rem 0;
   margin-bottom: 7rem;
 
-  @media (max-width: 980px) {
+  @media (max-width: 680px) {
     grid-template-columns: 1fr;
   }
 `;

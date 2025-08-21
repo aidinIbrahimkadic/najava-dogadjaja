@@ -11,7 +11,7 @@ export const Page = styled.div`
 
   /* margin-bottom: 3rem; */
 
-  @media (max-width: 1400px) {
+  @media (max-width: 1300px) {
     grid-template-columns: 1fr;
   }
   @media (max-width: 550px) {

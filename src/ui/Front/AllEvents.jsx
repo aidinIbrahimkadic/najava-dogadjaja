@@ -278,7 +278,7 @@ const Grid = styled.div`
   @media (max-width: 550px) {
     grid-template-columns: repeat(12, 1fr);
   }
-  @media (max-width: 380px) {
+  @media (max-width: 440px) {
     grid-template-columns: repeat(6, 1fr);
   }
 `;
@@ -665,8 +665,14 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
         </Select>
 
         <DateRange>
-          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
-          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
+          <div style={{ display: 'flex', gap: '1rem', fontSize: '1.2rem' }}>
+            <span>Datum početka</span>
+            <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
+          </div>
+          <div style={{ display: 'flex', gap: '1rem', fontSize: '1.2rem' }}>
+            <span>Datum kraja</span>
+            <input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
+          </div>
         </DateRange>
       </FiltersBar>
 
