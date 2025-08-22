@@ -86,9 +86,9 @@ export default function InstitutionsTable() {
               sortable: true,
             },
             {
-              id: 'opis',
-              label: 'Opis',
-              field: 'opis',
+              id: 'ime_direktora',
+              label: 'Direktor',
+              field: 'ime_direktora',
               sortable: false,
             },
             { id: 'actions', label: '' },

@@ -1,7 +1,7 @@
 import axiosInstance from './axiosInstance';
 
 export async function getCategories(query = {}) {
-  const { page = 1, limit = 10, search, sort, filters = {} } = query;
+  const { page = 1, limit = 50, search, sort, filters = {} } = query;
 
   const params = { page, limit };
 

@@ -33,6 +33,7 @@ import EventPage from './pages/EventPage';
 import UserProfilePage from './pages/UserProfilePage';
 import ActivateForm from './features/authentication/ActivateForm';
 import ActivateAccount from './features/authentication/ActivateAccount';
+import Manifestations from './pages/Manifestations';
 
 const queryClient = new QueryClient();
 
@@ -62,7 +63,15 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/event/:eventId" element={<Event />} />
+              <Route
+                path="/manifestations"
+                element={
+                  <ProtectedRoute requiredPermission="events_pregled">
+                    <Manifestations />
+                  </ProtectedRoute>
+                }
+              />
+              {/* <Route path="/event/:eventId" element={<Event />} /> */}
               <Route
                 path="/categories"
                 element={

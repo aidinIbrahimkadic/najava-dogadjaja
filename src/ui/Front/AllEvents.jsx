@@ -96,6 +96,7 @@ const CategoriesRow = styled.div`
   overflow-x: auto;
   padding-bottom: 0.25rem;
   margin-bottom: 2rem;
+  scrollbar-gutter: stable;
 
   @media (max-width: 550px) {
     grid-auto-columns: auto;
@@ -463,8 +464,6 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
   const [filterWeekend, setFilterWeekend] = useState(false);
   const [inst, setInst] = useState('');
 
-  console.log('upcomingEvents', upcomingEvents);
-
   const childrenOnly = (allCategories ?? []).flatMap((p) => p.children ?? []);
 
   // KATEGORIJE
@@ -513,8 +512,6 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
       termini: Array.isArray(event.termini) ? event.termini : [],
     };
   });
-
-  console.log(allEvents);
 
   const institutions = useMemo(() => uniq(allEvents.map((e) => e.institution)), [allEvents]);
   const categories = useMemo(() => uniq(allEvents.map((e) => e.category)), [allEvents]);

@@ -25,6 +25,7 @@ import { useGetUser } from '../users/useUser';
 import { useUserPermissions } from '../authentication/useUserPermissions';
 import { ImageCell } from '../../ui/ImageCell';
 import { useDeleteImage } from './useDeleteImage';
+import { useGetUpcomingManifestations } from '../manifestations/useUpcomingManifestations';
 
 // Pretvori lokalni 'YYYY-MM-DDTHH:mm' u ISO-8601 sa Z
 const toISOZ = (val) => {
@@ -46,13 +47,16 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const { isLoading, categories: categoriesFromAPI } = useGetCategories();
   const { isLoading: isLocationsLoading, locations } = useGetLocations();
   const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions();
+  const { isLoading: isLoadingUpcomingManifestations, upcomingManifestations } =
+    useGetUpcomingManifestations();
+
+  console.log(isLoadingUpcomingManifestations, 'Kategorije', categoriesFromAPI);
 
   // PRIKAZI SAMO CHILD KATEGORIJE
   const categories = categoriesFromAPI?.filter((category) => {
     if (category.parent_idguid !== '00000000-0000-0000-0000-000000000000') return category;
   });
 
-  console.log('INSTITUCIJE', institutions);
   // KORISNIK KOJI JE LOGOVAN
   const { isLoading: isLoadingPermission, hasPermission, user: userCreate } = useUserPermissions();
 
@@ -259,8 +263,25 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
               />
             )}
           </FormField>
-
-          <FormField label="Korisnik" error={errors?.user_idguid?.message}>
+          <FormField label="Manifestacija" error={errors?.manif_idguid?.message}>
+            {isLocationsLoading ? (
+              <Spinner />
+            ) : (
+              <Select
+                id="manif_idguid"
+                name="manif_idguid"
+                options={upcomingManifestations?.data?.manifestacije.map((c) => ({
+                  value: c.idguid,
+                  label: c.title,
+                }))}
+                disabled={isWorking}
+                register={register}
+                setValue={setValue}
+                watch={watch}
+              />
+            )}
+          </FormField>
+          {/* <FormField label="Korisnik" error={errors?.user_idguid?.message}>
             <Input
               type="text"
               id="user_display"
@@ -273,7 +294,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
               value={user?.data?.idguid || ''}
               {...register('user_idguid', { required: 'Ovo polje je obavezno' })}
             />
-          </FormField>
+          </FormField> */}
         </FormRow>
 
         <FormRow columns="1fr 1fr">

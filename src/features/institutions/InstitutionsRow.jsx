@@ -17,7 +17,7 @@ function InstitutionRow({ institution, index }) {
   const { mutate: deleteInstitution, isPending } = useDeleteInstitution();
   const { isLoading, hasPermission, user, roles } = useUserPermissions();
 
-  const { idguid, naziv, opis } = institution;
+  const { idguid, naziv, ime_direktora } = institution;
 
   function handleDelete(id) {
     deleteInstitution(id);
@@ -30,7 +30,7 @@ function InstitutionRow({ institution, index }) {
       <Table.Row>
         <Cell>{index + 1}</Cell>
         <Cell>{naziv}</Cell>
-        <Cell>{opis}</Cell>
+        <Cell>{ime_direktora}</Cell>
 
         <Cell>
           <Modal>

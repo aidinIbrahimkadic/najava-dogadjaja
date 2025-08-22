@@ -9,6 +9,7 @@ import {
   HiOutlineHome,
   HiOutlineNumberedList,
   HiOutlineCalendarDays,
+  HiOutlineRectangleGroup,
   HiOutlineCog6Tooth,
   HiOutlineUsers,
   HiOutlineBuildingLibrary,
@@ -100,6 +101,16 @@ export default function MainNav() {
             <Label isCollapsed={isCollapsed}>Dashboard</Label>
           </StyledNavLink>
         </li>
+        {hasPermission('events_pregled') && (
+          <li>
+            <StyledNavLink to="/manifestations">
+              <IconWrapper>
+                <HiOutlineRectangleGroup />
+              </IconWrapper>
+              <Label isCollapsed={isCollapsed}>Manifestacije</Label>
+            </StyledNavLink>
+          </li>
+        )}
         {hasPermission('events_pregled') && (
           <li>
             <StyledNavLink to="/events">

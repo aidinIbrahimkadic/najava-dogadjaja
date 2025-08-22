@@ -149,8 +149,6 @@ export async function updateEvent({
 }
 
 export async function updateEventDeleteImage({ id }) {
-  console.log('ID: ', id);
-
   try {
     const response = await axiosInstance.delete(`/events/events/remove-image/${id}`);
     return response.data;

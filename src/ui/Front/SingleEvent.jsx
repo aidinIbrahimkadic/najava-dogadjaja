@@ -70,6 +70,7 @@ const PageWrap = styled.div`
   overflow: hidden;
   @media (max-width: 680px) {
     grid-template-columns: 1fr;
+    margin: 2rem 0 7rem 0;
   }
 `;
 
@@ -487,7 +488,7 @@ export default function SingleEvent({ event }) {
   // }
 
   return (
-    <div>
+    <div style={{ margin: '1rem 0' }}>
       <Heading as="h1">Informacije o događaju</Heading>
       <PageWrap>
         {/* Left: Poster */}
@@ -706,14 +707,17 @@ export default function SingleEvent({ event }) {
                       <Strong>{event?.lokacija?.naziv || '—'}</Strong>
                     </div>
                   </MetaItem>
-                  <div>
-                    <OpisItem>
-                      <Fa.FaRegFileAlt size={26} style={{ marginTop: 2, color: BRAND }} />
+                  {event?.description !== '' && (
+                    <div>
+                      <OpisItem>
+                        <Fa.FaRegFileAlt size={26} style={{ marginTop: 2, color: BRAND }} />
 
-                      <Strong>Opis</Strong>
-                    </OpisItem>
-                    <span>{event?.description || '—'}</span>
-                  </div>
+                        <Strong>Opis</Strong>
+                      </OpisItem>
+                      <span>{event?.description || '—'}</span>
+                    </div>
+                  )}
+
                   <Price>
                     {event?.cijena == 0.0
                       ? 'Besplatan ulaz'
