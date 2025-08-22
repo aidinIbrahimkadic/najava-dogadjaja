@@ -184,7 +184,6 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
     data.cijena = parseFloat(Number(data.cijena || 0).toFixed(2));
 
-    console.log('pred submit', data);
     const payload = { ...data };
 
     if (isEditSession)
@@ -309,7 +308,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
                   value: inst.idguid,
                   label: inst.naziv,
                 }))}
-                disabled={!hasPermission('events_institucije_save')}
+                disabled={!hasPermission('admin_permissions_delete')}
                 register={register}
                 setValue={setValue}
                 watch={watch}
