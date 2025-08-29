@@ -220,7 +220,7 @@ export default function FrontFooter({ description = '', institucije = [], settin
           <BrandBlock>
             <FrontLogo site_logo={settings?.site_logo} />
             <p>{description}</p>
-            {settings.email && (
+            {settings?.email && (
               <EventMeta>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <HiOutlineMail />
@@ -272,7 +272,7 @@ export default function FrontFooter({ description = '', institucije = [], settin
         </FooterGrid>
 
         <FooterBottom>
-          © {new Date().getFullYear()} {settings.site_copyright}
+          © {new Date().getFullYear()} {settings?.site_copyright}
         </FooterBottom>
       </FooterContent>
     </StyledFooter>

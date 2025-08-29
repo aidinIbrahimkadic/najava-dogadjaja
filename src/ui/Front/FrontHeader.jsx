@@ -324,7 +324,7 @@ export default function FrontHeader({ allInstitutions, settings }) {
     <StyledHeader $scrolled={scrolled}>
       <CenterSection>
         <LogoContainer>
-          <FrontLogo site_logo={settings.site_logo} size="small" />
+          <FrontLogo site_logo={settings?.site_logo} size="small" />
         </LogoContainer>
 
         <NavSection>

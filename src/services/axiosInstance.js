@@ -3,9 +3,10 @@
 // Ovaj kod kreira instancu axios-a koja automatski upravlja JWT tokenima, uključujući proaktivno osvježavanje tokena 5 sekundi prije isteka, kao i reaktivno osvježavanje tokena kada dođe do greške 401 ili 403. Također, čisti lokalnu pohranu i preusmjerava korisnika na login stranicu kada token istekne.
 
 import axios from 'axios';
+import { URL } from '../utils/constants';
 import { redirectToLogin } from '../utils/redirectService';
 
-const API_URL = 'https://events-opcina.poruci.ba/api';
+const API_URL = `${URL}/api`;
 
 const axiosInstance = axios.create({
   baseURL: API_URL,

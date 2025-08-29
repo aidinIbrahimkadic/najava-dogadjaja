@@ -160,17 +160,22 @@ export default function LogoSlider({
   });
 
   const duration = durationFromSpeed(speed);
-  const sequence = [
-    ...institutionsData,
-    ...institutionsData,
-    ...institutionsData,
-    ...institutionsData,
-    ...institutionsData,
-    ...institutionsData,
-    ...institutionsData,
-    ...institutionsData,
-    ...institutionsData,
-  ]; // dupliramo radi seamless loop-a
+  let sequence;
+  if (institutionsData) {
+    sequence = [
+      ...institutionsData,
+      ...institutionsData,
+      ...institutionsData,
+      ...institutionsData,
+      ...institutionsData,
+      ...institutionsData,
+      ...institutionsData,
+      ...institutionsData,
+      ...institutionsData,
+    ]; // dupliramo radi seamless loop-a
+  } else {
+    sequence = [];
+  }
 
   // Drag state/refs
   const [dragging, setDragging] = useState(false);

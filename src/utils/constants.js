@@ -1,6 +1,8 @@
 export const PAGE_SIZE = 10;
 export const DEFAULT_EVENT_DURATION_IN_HOURS = 1;
-export const FILE_URL = 'https://events-opcina.poruci.ba/api/image/';
-export const URL = 'https://events-opcina.poruci.ba';
+// export const FILE_URL = 'https://events-opcina.poruci.ba/api/image/';
+// export const URL = 'https://events-opcina.poruci.ba';
+export const FILE_URL = 'http://89.117.53.99:3000/api/image/';
+export const URL = 'http://89.117.53.99:3000';
 export const SUPER_ADMIN_ROLE = 'superadmin';
 export const BROJ_EVENATA_ZA_PRIKAZ = 7;
