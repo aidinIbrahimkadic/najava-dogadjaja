@@ -11,12 +11,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
+import { URL } from './utils/constants.js';
 
 // Function to update site metadata
 async function updateSiteMetadata() {
   try {
     // Replace with your actual API endpoint
-    const response = await fetch('https://events-opcina.poruci.ba/api/settings');
+    const response = await fetch(`${URL}/api/settings`);
     const data = await response.json();
 
     // Update title

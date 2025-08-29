@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Heading from '../../Heading';
 import * as FaIcons from 'react-icons/fa';
+import { URL } from '../../../utils/constants';
 // ---------------------------------------------
 // Dummy data
 // ---------------------------------------------
@@ -478,9 +479,9 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
     let posterSlika;
 
     if (event.slika !== '00000000-0000-0000-0000-000000000000') {
-      posterSlika = `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`;
+      posterSlika = `${URL}/api/image/${event.slika}?height=300`;
     } else {
-      posterSlika = `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
+      posterSlika = `${URL}/api/events/slika/${event.idguid}`;
     }
 
     return {

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import { HiBuildingLibrary, HiMapPin, HiCalendarDateRange } from 'react-icons/hi2';
+import { URL } from '../../utils/constants';
 
 // ——— Stilovi ———
 const Card = styled.div`
@@ -208,8 +209,8 @@ export default function InstitutionEvent({ event }) {
 
   const posterUrl =
     event.slika !== '00000000-0000-0000-0000-000000000000'
-      ? `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`
-      : `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
+      ? `${URL}/api/image/${event.slika}?height=300`
+      : `${URL}/api/events/slika/${event.idguid}`;
 
   // Poster: koristiš direktni URL ako imaš; u suprotnom gradient.
   const poster = posterUrl || storedfile?.url || null;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button } from 'antd';
 import { EyeOutlined, HeartOutlined } from '@ant-design/icons';
 import NextButton from '../NextButton';
+import { URL } from '../../../utils/constants';
 
 const CarouselWrapper = styled.div`
   width: 100%;
@@ -82,9 +83,9 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
 
   const postersFromEvents = upcomingEvents.map((event) => {
     if (event.slika !== '00000000-0000-0000-0000-000000000000') {
-      return `https://events-opcina.poruci.ba/api/image/${event.slika}?height=300`;
+      return `${URL}/api/image/${event.slika}?height=300`;
     } else {
-      return `https://events-opcina.poruci.ba/api/events/slika/${event.idguid}`;
+      return `${URL}/api/events/slika/${event.idguid}`;
     }
   });
 
