@@ -5,7 +5,8 @@ import * as FaIcons from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { HiBuildingLibrary, HiCalendarDateRange, HiMapPin } from 'react-icons/hi2';
 import { URL } from '../../utils/constants';
-
+import { useGetManifestationById } from '../../features/front/useManifestationById';
+import CalendarSpinner from '../CalendarSpinner';
 // Utils
 // ---------------------------------------------
 const pad = (n) => String(n).padStart(2, '0');
@@ -14,6 +15,21 @@ const fmtDate = (isoYmd) => {
   const d = new Date(isoYmd + 'T00:00:00');
   return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
 };
+
+function ManifestBadge({ manifestId }) {
+  const { isLoading, manifestation } = useGetManifestationById({ id: manifestId });
+  const title = manifestation?.data?.title || 'Manifestacija';
+
+  if (!manifestId) return null;
+
+  if (isLoading) return <CalendarSpinner />;
+
+  return (
+    <PosterTag title={title}>
+      <Link to={`/manifestation/${manifestId}`}>{title}</Link>
+    </PosterTag>
+  );
+}
 
 const fmtDateFromObj = (d) => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
 
@@ -43,17 +59,14 @@ const thisWeekendRange = () => {
   let saturday, sunday;
 
   if (dayOfWeek === 0) {
-    // Danas je nedjelja - uzmi jučerašnju subotu i danas
     saturday = new Date(now);
     saturday.setDate(now.getDate() - 1);
     sunday = new Date(now);
   } else if (dayOfWeek === 6) {
-    // Danas je subota - uzmi danas i sutra
     saturday = new Date(now);
     sunday = new Date(now);
     sunday.setDate(now.getDate() + 1);
   } else {
-    // Ostali dani - uzmi narednu subotu i nedjelju
     const daysUntilSaturday = 6 - dayOfWeek;
     saturday = new Date(now);
     saturday.setDate(now.getDate() + daysUntilSaturday);
@@ -61,7 +74,6 @@ const thisWeekendRange = () => {
     sunday.setDate(saturday.getDate() + 1);
   }
 
-  // Reset sati na početak dana
   saturday.setHours(0, 0, 0, 0);
   sunday.setHours(0, 0, 0, 0);
 
@@ -177,14 +189,6 @@ const FiltersBar = styled.div`
     flex-direction: column-reverse;
     gap: 1rem;
   }
-
-  /* @media (max-width: 550px) {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    flex-direction: column-reverse;
-  } */
 `;
 
 const SearchInput = styled.input`
@@ -217,7 +221,6 @@ const DateRange = styled.div`
 
   @media (max-width: 550px) {
     grid-template-columns: 1fr;
-
     input {
       height: 30px;
     }
@@ -301,6 +304,7 @@ const Card = styled.article`
   height: 100;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease;
+  position: relative;
 
   &:hover {
     transform: translateY(-5px);
@@ -320,10 +324,27 @@ const Card = styled.article`
   }
 `;
 
+const CancelRibbon = styled.div`
+  position: absolute;
+  top: 12px;
+  right: -42px;
+  transform: rotate(35deg);
+  background: #ef4444;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-size: 11px;
+  padding: 6px 56px;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.35);
+  z-index: 2;
+`;
+
 const Poster = styled.div`
   height: 250px;
   background: linear-gradient(135deg, #e5e7eb, #f9fafb);
   border-bottom: 1px solid #e5e7eb;
+  position: relative; /* za badge */
+
   ${(p) =>
     p.$image &&
     css`
@@ -335,6 +356,23 @@ const Poster = styled.div`
 
   @media (max-width:550px) {
     height: 150px;
+  }
+`;
+
+const PosterTag = styled.span`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #111827;
+  color: #fff;
+  font-size: 11px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  opacity: 0.95;
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 `;
 
@@ -353,6 +391,13 @@ const Title = styled.h3`
   line-height: 1.25;
   letter-spacing: 0.3px;
   color: var(--color-grey-700);
+
+  ${(p) =>
+    p.$cancelled &&
+    css`
+      color: #991b1b;
+      text-decoration: line-through;
+    `}
 
   &:hover {
     color: var(--color-brand-500);
@@ -450,6 +495,15 @@ const TermPill = styled.span`
   border-radius: 999px;
   padding: 0.15rem 0.55rem;
   font-size: 1.2rem;
+
+  ${(p) =>
+    p.$cancelled &&
+    css`
+      background: #fee2e2;
+      border-color: #fecaca;
+      color: #991b1b;
+      text-decoration: line-through;
+    `}
 `;
 
 // ---------------------------------------------
@@ -489,77 +543,83 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
     const end = event.end_date ? new Date(event.end_date) : new Date(event.start_date);
     const endDateStr = [end.getFullYear(), pad(end.getMonth() + 1), pad(end.getDate())].join('-');
     const endTimeStr = [pad(end.getHours()), pad(end.getMinutes())].join(':');
+
     const posterSlika =
       event.slika !== '00000000-0000-0000-0000-000000000000'
         ? `${URL}/api/image/${event.slika}?height=300`
         : `${URL}/api/events/slika/${event.idguid}?height=300`;
 
+    // ➕ Manifestacija: pokušaj izvući id i/ili naslov ako postoji
+    const manifestId =
+      event.manif_idguid || event.manifestacija?.idguid || event.manifestation_id || null;
+    const manifestTitle =
+      (event.manifestacija &&
+        typeof event.manifestacija === 'object' &&
+        event.manifestacija.title) ||
+      event.manifestacija_title ||
+      event.manifestation_title ||
+      null;
+
     return {
       id: event.idguid,
       title: event.title,
       price: parseFloat(event.cijena),
+      otkazano: !!event.otkazano,
       date: dateStr, // YYYY-MM-DD
       time: timeStr, // HH:MM
-      end_date: endDateStr, // YYYY-MM-DD
-      end_time: endTimeStr, // HH:MM
-      category: event.category.naziv,
-      category_idguid: event.category.idguid,
+      end_date: endDateStr,
+      end_time: endTimeStr,
+      category: event.category?.naziv ?? event.category, // robustno
+      category_idguid: event.category?.idguid ?? event.category_idguid,
       poster: posterSlika,
-      location: event.lokacija.naziv,
-      institution: event.institucija.naziv,
-      institution_idguid: event.institucija.idguid,
+      location: event.lokacija?.naziv ?? event.location ?? '',
+      institution: event.institucija?.naziv ?? event.institution ?? '',
+      institution_idguid: event.institucija?.idguid ?? event.institution_idguid,
       ima_vise_termina: !!event.ima_vise_termina,
       termini: Array.isArray(event.termini) ? event.termini : [],
+      // manifestacija
+      manifest_id: manifestId,
+      manifest_title: manifestTitle,
+      belongsToManifestation: !!(manifestId || manifestTitle || event.manifestacija === true),
     };
   });
 
-  const institutions = useMemo(() => uniq(allEvents.map((e) => e.institution)), [allEvents]);
-  const categories = useMemo(() => uniq(allEvents.map((e) => e.category)), [allEvents]);
+  const institutions = useMemo(
+    () => uniq(allEvents.map((e) => e.institution).filter(Boolean)),
+    [allEvents]
+  );
+  const categories = useMemo(
+    () => uniq(allEvents.map((e) => e.category).filter(Boolean)),
+    [allEvents]
+  );
 
   const weekend = thisWeekendRange();
 
   // ISPRAVLJENA helper funkcija: da li event zadovoljava date-range/weekend filtere
   const matchesDateFilters = useCallback(
     (e) => {
-      // aktivni opseg
       let f = from;
       let t = to;
       if (filterWeekend) {
-        f = weekend.from; // lokalni YYYY-MM-DD (subota)
-        t = weekend.to; // lokalni YYYY-MM-DD (nedjelja)
+        f = weekend.from;
+        t = weekend.to;
       }
-
-      // bez opsega -> prolazi
       if (!f && !t) return true;
 
       if (e.ima_vise_termina) {
-        // Događaj sa više termina - provjeri da li bilo koji termin pada u željeni period
         const termDates = (e.termini || [])
           .map((tt) => (tt?.start_date ? String(tt.start_date).slice(0, 10) : null))
           .filter(Boolean);
 
-        // Provjeri da li bilo koji od termina pada u weekend/date range
         return termDates.some((termDate) => {
-          if (f && t) {
-            // Termin treba biti između f i t (uključivo)
-            return cmp(termDate, f) >= 0 && cmp(termDate, t) <= 0;
-          }
-          if (f && !t) {
-            // Termin treba biti >= f
-            return cmp(termDate, f) >= 0;
-          }
-          if (!f && t) {
-            // Termin treba biti <= t
-            return cmp(termDate, t) <= 0;
-          }
+          if (f && t) return cmp(termDate, f) >= 0 && cmp(termDate, t) <= 0;
+          if (f && !t) return cmp(termDate, f) >= 0;
+          if (!f && t) return cmp(termDate, t) <= 0;
           return true;
         });
       } else {
-        // Događaj sa jednim terminom ili range-om
-        // Provjeri da li se period događaja preklapa sa filter periodom
         const eventStart = e.date;
         const eventEnd = e.end_date || e.date;
-
         return overlapsDaySpan(eventStart, eventEnd, f, t);
       }
     },
@@ -571,9 +631,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
     if (e.ima_vise_termina) {
       const nowMs = Date.now();
       const future = (e.termini || [])
-        .map((tt) => {
-          return tt?.start_date ? new Date(tt.start_date) : null;
-        })
+        .map((tt) => (tt?.start_date ? new Date(tt.start_date) : null))
         .filter((d) => d && d.getTime() >= nowMs)
         .sort((a, b) => a - b);
       if (future[0]) return future[0].toISOString();
@@ -588,14 +646,13 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
         if (inst && e.institution !== inst) return false;
         if (filterFree && Number(e.price) > 0) return false;
 
-        // search
         const search = query.trim().toLowerCase();
         if (search) {
-          const blob = `${e.title} ${e.location} ${e.institution}`.toLowerCase();
+          const blob =
+            `${e.title} ${e.location} ${e.institution} ${e.manifest_title || ''}`.toLowerCase();
           if (!blob.includes(search)) return false;
         }
 
-        // date/weekend (preklapanje ili termini)
         if (!matchesDateFilters(e)) return false;
 
         return true;
@@ -690,22 +747,6 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
           const hasEnded = now > endObj;
           const isOngoing = hasStarted && !hasEnded;
 
-          //STATUS POPRAVITI
-          // let statusLabel = 'Uskoro';
-          // let StatusIcon = FaIcons.FaHourglassStart;
-          // let statusColor = '#6b7280'; // siva za default
-
-          // if (hasEnded) {
-          //   statusLabel = 'Završen';
-          //   StatusIcon = FaIcons.FaCheckCircle;
-          //   statusColor = '#16a34a'; // zelena
-          // } else if (hasStarted) {
-          //   statusLabel = 'Live';
-          //   StatusIcon = FaIcons.FaHourglassHalf;
-          //   statusColor = '#f97316'; // brand narančasta
-          // }
-
-          // Termini samo budući, sortirani, max 6; ostatak sumarizujemo
           const futureTerms = (e.termini || [])
             .filter((t) => t?.start_date && new Date(t.start_date) > now)
             .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
@@ -713,46 +754,42 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
           const shownTerms = futureTerms.slice(0, 6);
           const moreTerms = Math.max(0, futureTerms.length - shownTerms.length);
 
+          // const showManifestBadge = e.belongsToManifestation;
+          // const manifestBadgeContent = e.manifest_title || 'Manifestacija';
+
           return (
             <Card key={e.id}>
-              <Poster $image={e.poster} />
+              {e.otkazano && <CancelRibbon>OTKAZANO</CancelRibbon>}
+
+              <Poster $image={e.poster}>
+                {e.manifest_id && <ManifestBadge manifestId={e.manifest_id} />}
+              </Poster>
+
               <Body>
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Link to={`/dogadjaj/${e.id}`}>
-                      <Title>{e.title}</Title>
+                      <Title $cancelled={e.otkazano}>{e.title}</Title>
                     </Link>
-                    {/* <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.35rem',
-                        marginLeft: '0.75rem',
-                        fontSize: '1.2rem',
-                        fontWeight: 600,
-                        color: statusColor,
-                      }}
-                    >
-                      <StatusIcon /> {statusLabel}
-                    </span> */}
                   </div>
-                  <CategoryRow>
-                    <Badge>{e.category}</Badge>
-                  </CategoryRow>
+                  {e.category && (
+                    <CategoryRow>
+                      <Badge>{e.category}</Badge>
+                    </CategoryRow>
+                  )}
                 </div>
 
                 <Meta>
-                  <Row>
-                    <HiMapPin />
-                    <span>{e.location}</span>
-                  </Row>
+                  {e.location && (
+                    <Row>
+                      <HiMapPin />
+                      <span>{e.location}</span>
+                    </Row>
+                  )}
 
                   {!e.ima_vise_termina && (
                     <Row>
                       <HiCalendarDateRange />
-
-                      {/* Ako je u toku (počeo, a nije završio): zadrži startni datum/vrijeme,
-        dodaj ⌛ i oboji tekst sivo. Inače prikaži standardno. */}
                       {isOngoing ? (
                         <span style={{ color: '#6b7280' }}>
                           {isMultiDay
@@ -769,7 +806,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                     </Row>
                   )}
 
-                  {/* Termini lista */}
+                  {/* Termini lista (prikaži i označi otkazane termine) */}
                   {e.ima_vise_termina && shownTerms.length > 0 && (
                     <TermsWrap>
                       <TermsHeader>
@@ -779,8 +816,13 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                         {shownTerms.map((t, idx) => {
                           const d = new Date(t.start_date);
                           return (
-                            <TermPill key={idx}>
+                            <TermPill
+                              key={idx}
+                              $cancelled={!!t.otkazano}
+                              title={t.otkazano ? 'Otkazano' : ''}
+                            >
                               {fmtDateFromObj(d)} u {fmtTimeFromObj(d)}h
+                              {t.otkazano ? ' — Otkazano' : ''}
                             </TermPill>
                           );
                         })}
@@ -789,17 +831,19 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                     </TermsWrap>
                   )}
 
-                  <Row>
-                    <HiBuildingLibrary />
-                    <Link to={`/institution/${e.institution_idguid}`}>
-                      <InstitutionBadge>{e.institution}</InstitutionBadge>
-                    </Link>
-                  </Row>
+                  {e.institution && (
+                    <Row>
+                      <HiBuildingLibrary />
+                      <Link to={`/institution/${e.institution_idguid}`}>
+                        <InstitutionBadge>{e.institution}</InstitutionBadge>
+                      </Link>
+                    </Row>
+                  )}
                 </Meta>
 
                 <Extra>
                   <Price>
-                    {e.price === 0 ? (
+                    {Number(e.price) === 0 ? (
                       <span
                         style={{
                           backgroundColor: 'var(--color-green-100)',

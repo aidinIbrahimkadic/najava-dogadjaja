@@ -73,6 +73,24 @@ const TicketTitle = styled.div`
     text-decoration: underline;
     color: #4f46e5;
   }
+  ${(p) =>
+    p.$cancelled
+      ? `
+    color: #991b1b;
+    a {
+      color: #991b1b;
+      text-decoration: line-through;
+      text-decoration-color: #ef4444;
+      text-decoration-thickness: 2px;
+    }
+    a:hover {
+      color: #991b1b;
+      text-decoration: line-through;
+      text-decoration-color: #ef4444;
+      text-decoration-thickness: 2px;
+    }
+  `
+      : ''}
 `;
 
 const Meta = styled.div`
@@ -179,11 +197,16 @@ export function UpcomingEvents({ events = [] }) {
           if (!t?.start_date) continue;
           const s = new Date(t.start_date);
           if (s <= now) continue; // samo buduće
+
           const dayKey = ymd(startOfDay(s));
           out.push({
             ...e,
+            // per-termin otkazano (ako je otkazan termin ili cijeli event)
+            otkazano: !!t?.otkazano || !!e?.otkazano,
+
             // group po danu prikaza
             _dayKey: dayKey,
+
             // za prikaz vremena/reda
             date: ymd(s), // "YYYY-MM-DD"
             time: `${String(s.getHours()).padStart(2, '0')}:${String(s.getMinutes()).padStart(2, '0')}`,
@@ -258,6 +281,7 @@ export function UpcomingEvents({ events = [] }) {
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
   }, [flat]);
 
+  console.log(events);
   return (
     <Card>
       <Title>
@@ -278,10 +302,12 @@ export function UpcomingEvents({ events = [] }) {
               <Ticket key={`${e.id}-${e._dayKey}-${e.time || 'xx'}`}>
                 <TicketStripe />
                 <div>
-                  <TicketTitle>
+                  {/* <TicketTitle>
+                    <Link to={`/dogadjaj/${e.id}`}>{e.title}</Link>
+                  </TicketTitle> */}
+                  <TicketTitle $cancelled={!!e.otkazano}>
                     <Link to={`/dogadjaj/${e.id}`}>{e.title}</Link>
                   </TicketTitle>
-
                   <Meta>
                     <MetaItem>
                       <FaClock /> {labelForRow(e)}

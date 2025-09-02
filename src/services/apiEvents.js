@@ -41,6 +41,8 @@ export async function postEvent({
   institucija_idguid,
   user_idguid,
   cijena,
+  manif_idguid,
+  otkazano,
   ima_vise_termina = false, // Optional, if you want to handle multiple dates
   termini = [], // Optional, if you want to handle multiple dates
 }) {
@@ -61,6 +63,14 @@ export async function postEvent({
     formData.append('institucijaIdguid', institucija_idguid);
     formData.append('ima_vise_termina', ima_vise_termina);
     formData.append('termini', termini);
+    formData.append('otkazano', otkazano);
+
+    if (manif_idguid) {
+      formData.append('manif_idguid', manif_idguid);
+      formData.append('manifestacija', true);
+    } else {
+      formData.append('manifestacija', false);
+    }
 
     // Append the file with field name 'image' or whatever your backend expects
     if (slika instanceof FileList) {
@@ -105,6 +115,8 @@ export async function updateEvent({
     institucija_idguid,
     ima_vise_termina,
     termini,
+    manif_idguid,
+    otkazano,
   },
   editId: id,
   // Image url
@@ -126,6 +138,14 @@ export async function updateEvent({
     formData.append('user_idguid', user_idguid);
     formData.append('ima_vise_termina', ima_vise_termina);
     formData.append('termini', termini);
+    formData.append('otkazano', otkazano);
+
+    if (manif_idguid) {
+      formData.append('manif_idguid', manif_idguid);
+      formData.append('manifestacija', true);
+    } else {
+      formData.append('manifestacija', false);
+    }
 
     if (slika instanceof FileList && slika.length > 0) {
       formData.append('slika', slika[0]);

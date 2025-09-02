@@ -36,6 +36,8 @@ const toISOZ = (val) => {
   return d.second(0).millisecond(0).toDate().toISOString();
 };
 
+const toNull = (v) => (v === '' || v === undefined ? null : v);
+
 // Lokalno vrijeme → ISO sa offsetom (npr. ...20:00:00+02:00), BEZ 'Z'
 
 function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
@@ -49,8 +51,6 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
   const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions();
   const { isLoading: isLoadingUpcomingManifestations, upcomingManifestations } =
     useGetUpcomingManifestations();
-
-  console.log(isLoadingUpcomingManifestations, 'Kategorije', categoriesFromAPI);
 
   // PRIKAZI SAMO CHILD KATEGORIJE
   const categories = categoriesFromAPI?.filter((category) => {
@@ -84,8 +84,21 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
       user_idguid: eventToEdit.user.idguid,
       cijena: eventToEdit.cijena ? parseFloat(eventToEdit.cijena).toFixed(2) : '0.00',
       ima_vise_termina: Array.isArray(eventToEdit.termini) && eventToEdit.termini.length > 1,
+      // termini: Array.isArray(eventToEdit.termini)
+      //   ? eventToEdit.termini.map((t) => ({
+      //       start_datetime: format(
+      //         new Date(t.start_datetime || t.start_date || eventToEdit.start_date),
+      //         "yyyy-MM-dd'T'HH:mm"
+      //       ),
+      //       end_datetime: format(
+      //         new Date(t.end_datetime || t.end_date || t.start_datetime || eventToEdit.start_date),
+      //         "yyyy-MM-dd'T'HH:mm"
+      //       ),
+      //     }))
+      //   : [],
       termini: Array.isArray(eventToEdit.termini)
         ? eventToEdit.termini.map((t) => ({
+            idguid: t.idguid ?? undefined, // <— VAŽNO: zadrži id termina radi upserta
             start_datetime: format(
               new Date(t.start_datetime || t.start_date || eventToEdit.start_date),
               "yyyy-MM-dd'T'HH:mm"
@@ -94,6 +107,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
               new Date(t.end_datetime || t.end_date || t.start_datetime || eventToEdit.start_date),
               "yyyy-MM-dd'T'HH:mm"
             ),
+            otkazano: !!t.otkazano, // <— VAŽNO: status otkazivanja
           }))
         : [],
     };
@@ -110,6 +124,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             institucija_idguid: '',
             ima_vise_termina: false,
             termini: [],
+            manif_idguid: '',
           },
     }
   );
@@ -156,11 +171,16 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           .filter((t) => t?.start_datetime || t?.start_date)
           .map((t) => {
             const s = toISOZ(t.start_datetime || t.start_date);
-            return { start_date: s, end_date: s };
+            return {
+              idguid: t.idguid ?? undefined, // <— ako postoji, backend može uraditi UPDATE
+              start_date: s,
+              end_date: s,
+              otkazano: !!t.otkazano, // <— pošalji status za svaki termin
+            };
           })
       : data.start_date
         ? // single-termin slučaj ostaje kao i do sada (UTC), jer ti radi dobro
-          [{ start_date: data.start_date, end_date: data.start_date }]
+          [{ start_date: data.start_date, end_date: data.start_date, otkazano: !!data.otkazano }]
         : [];
 
     if (ima_vise_termina && preparedTermini.length > 0) {
@@ -183,6 +203,8 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
     data.ima_vise_termina = data.ima_vise_termina ? true : false;
 
     data.cijena = parseFloat(Number(data.cijena || 0).toFixed(2));
+
+    data.manif_idguid = toNull(data.manif_idguid);
 
     const payload = { ...data };
 
@@ -263,37 +285,27 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             )}
           </FormField>
           <FormField label="Manifestacija" error={errors?.manif_idguid?.message}>
-            {isLocationsLoading ? (
+            {isLoadingUpcomingManifestations ? (
               <Spinner />
             ) : (
               <Select
                 id="manif_idguid"
                 name="manif_idguid"
-                options={upcomingManifestations?.data?.manifestacije.map((c) => ({
-                  value: c.idguid,
-                  label: c.title,
-                }))}
+                options={[
+                  { value: '', label: '— Nije dio manifestacije —' },
+                  ...(upcomingManifestations?.data?.manifestacije ?? []).map((c) => ({
+                    value: c.idguid,
+                    label: c.title,
+                  })),
+                ]}
                 disabled={isWorking}
                 register={register}
                 setValue={setValue}
                 watch={watch}
+                // bez validation: polje je opcionalno
               />
             )}
           </FormField>
-          {/* <FormField label="Korisnik" error={errors?.user_idguid?.message}>
-            <Input
-              type="text"
-              id="user_display"
-              value={`${user?.data?.first_name || ''} ${user?.data?.last_name || ''}`}
-              disabled
-            />
-            <input
-              type="hidden"
-              id="user_idguid"
-              value={user?.data?.idguid || ''}
-              {...register('user_idguid', { required: 'Ovo polje je obavezno' })}
-            />
-          </FormField> */}
         </FormRow>
 
         <FormRow columns="1fr 1fr">
@@ -474,7 +486,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
                       key={fieldItem.id}
                       style={{
                         display: 'grid',
-                        gridTemplateColumns: '1fr auto',
+                        gridTemplateColumns: '1fr 1fr auto',
                         gap: '0.75rem',
                         alignItems: 'center',
                         background: '#fff',
@@ -501,7 +513,21 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
                           />
                         )}
                       />
-
+                      {isEditSession && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                          <label
+                            htmlFor={`termini.${index}.otkazano`}
+                            style={{ fontWeight: 'bold', userSelect: 'none' }}
+                          >
+                            Termin otkazan?
+                          </label>
+                          <Checkbox
+                            id={`termini.${index}.otkazano`}
+                            disabled={isWorking}
+                            {...register(`termini.${index}.otkazano`)}
+                          />
+                        </div>
+                      )}
                       <Button
                         variation="secondary"
                         size="small"
@@ -519,7 +545,9 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
                       type="button"
                       size="small"
                       variation="primary"
-                      onClick={() => append({ start_datetime: '', end_datetime: '' })}
+                      onClick={() =>
+                        append({ start_datetime: '', end_datetime: '', otkazano: false })
+                      }
                       disabled={isWorking}
                     >
                       + Dodaj termin
@@ -531,7 +559,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </>
         )}
 
-        <FormRow columns="1fr 1fr">
+        <FormRow columns={`1fr 1fr ${isEditSession && '1fr'}`}>
           <FormField label="Poster:" error={errors?.slika?.message}>
             {existingSlika && existingSlika !== '00000000-0000-0000-0000-000000000000' ? (
               <ImageCell
@@ -554,6 +582,16 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
               <Checkbox id="is_public" disabled={isWorking} {...register('is_public')} />
             </div>
           </FormField>
+          {isEditSession && (
+            <FormField error={errors?.otkazano?.message}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <label htmlFor="otkazano" style={{ fontWeight: 'bold', userSelect: 'none' }}>
+                  Događaj otkazan?
+                </label>
+                <Checkbox id="otkazano" disabled={isWorking} {...register('otkazano')} />
+              </div>
+            </FormField>
+          )}
         </FormRow>
 
         <FormRow buttons="has">

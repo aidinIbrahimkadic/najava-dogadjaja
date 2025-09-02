@@ -34,6 +34,7 @@ import UserProfilePage from './pages/UserProfilePage';
 import ActivateForm from './features/authentication/ActivateForm';
 import ActivateAccount from './features/authentication/ActivateAccount';
 import Manifestations from './pages/Manifestations';
+import ManifestationPage from './pages/ManifestationPage';
 
 const queryClient = new QueryClient();
 
@@ -135,6 +136,7 @@ function App() {
               <Route path="/activate-account" element={<ActivateAccount />} />
               <Route path="/institution/:id" element={<InstitutionPage />} />
               <Route path="/dogadjaj/:id" element={<EventPage />} />
+              <Route path="/manifestation/:id" element={<ManifestationPage />} />
               <Route
                 path="/userProfile"
                 element={

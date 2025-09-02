@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useUserPermissions } from '../features/authentication/useUserPermissions';
 import { useGetAllCategories } from '../features/front/useAllCategories';
 import { useGetAllInstitutions } from '../features/front/useAllInstitutions';
+import { useGetAllUpcomingManifestations } from '../features/front/useAllUpcomingManifestations';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import { useUpdateUserInterests } from '../features/front/useUpdateUserInterests';
 import { useGetUserInterests } from '../features/front/useUserInterests';
@@ -10,6 +11,7 @@ import AllEvents from '../ui/Front/AllEvents';
 import CategorySubscriptions from '../ui/Front/CategorySubscriptions';
 import LayoutUpcomingWeather from '../ui/Front/LayoutUpcomingWeather';
 import LogoSlider from '../ui/Front/LogoSlider';
+import Manifestation from '../ui/Front/Manifestation';
 import PosterCarousel from '../ui/Front/PosterCarousel';
 
 const Container = styled.div`
@@ -25,6 +27,7 @@ export default function HomePage() {
   const { isLoading: isLoadingCategories, allCategories } = useGetAllCategories();
   const { isLoading: isLoadingInstitutions, allInstitutions } = useGetAllInstitutions();
   const { isLoading: isLoadingUser, user } = useUserPermissions();
+  const { isLoading: isLoadingManifestations, manifestations } = useGetAllUpcomingManifestations();
 
   const hasUser = !!user?.idguid;
 
@@ -40,6 +43,7 @@ export default function HomePage() {
 
   const showSpinner =
     isLoading ||
+    isLoadingManifestations ||
     isLoadingCategories ||
     isLoadingInstitutions ||
     isLoadingUser ||
@@ -52,6 +56,9 @@ export default function HomePage() {
       ) : (
         <>
           <PosterCarousel upcomingEvents={upcomingEvents} />
+          {manifestations.manifestacije.length > 0 && (
+            <Manifestation events={manifestations.manifestacije} />
+          )}
 
           <AllEvents upcomingEvents={upcomingEvents} allCategories={allCategories} />
           <LayoutUpcomingWeather upcomingEvents={upcomingEvents} />

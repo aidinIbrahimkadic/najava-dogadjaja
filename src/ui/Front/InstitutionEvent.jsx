@@ -1,6 +1,6 @@
 // EventCardNew.jsx
 import React, { useMemo } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import { HiBuildingLibrary, HiMapPin, HiCalendarDateRange } from 'react-icons/hi2';
@@ -24,12 +24,42 @@ const Card = styled.div`
 `;
 
 const Poster = styled.div`
+  position: relative;
   background-image: ${(p) =>
     p.$image
       ? `url(${p.$image})`
       : `linear-gradient(135deg, ${p.$fallback1} 0%, ${p.$fallback2} 100%)`};
   background-size: cover;
   background-position: center;
+`;
+
+// 🔴 OTKAZANO overlay (badge + kosa pruga)
+const CancelBadge = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #b91c1c;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 0.45rem;
+  box-shadow: 0 6px 16px rgba(185, 28, 28, 0.35);
+  z-index: 2;
+`;
+
+const CancelStripe = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(185, 28, 28, 0.22) 0 12px,
+    rgba(185, 28, 28, 0.35) 12px 24px
+  );
+  mix-blend-mode: multiply;
+  z-index: 1;
 `;
 
 const Body = styled.div`
@@ -52,6 +82,15 @@ const Title = styled.h3`
     color: var(--color-brand-500);
     text-decoration: underline;
   }
+
+  ${(p) =>
+    p.$cancelled &&
+    css`
+      color: #b91c1c;
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      text-decoration-color: #ef4444;
+    `}
 `;
 
 const Meta = styled.div`
@@ -129,6 +168,16 @@ const TermPill = styled.span`
   border: 1px dashed rgba(2, 6, 23, 0.12);
   font-size: 0.85rem;
   color: #334155;
+
+  ${(p) =>
+    p.$cancelled &&
+    css`
+      color: #b91c1c;
+      text-decoration: line-through;
+      border-color: rgba(185, 28, 28, 0.45);
+      background: #fff1f2;
+      font-weight: 700;
+    `}
 `;
 
 const Extra = styled.div`
@@ -186,8 +235,6 @@ function priceText(val) {
 // ——— Nova komponenta ———
 /**
  * Očekuje event objekt kakav vraća tvoj API (vidi tvoj dump).
- * Opcionalno možeš proslijediti `posterUrl` ako imaš direktan URL,
- * inače će se koristiti gradijent iz boje kategorije / institucije.
  */
 export default function InstitutionEvent({ event }) {
   const {
@@ -203,16 +250,16 @@ export default function InstitutionEvent({ event }) {
     lokacija,
     location, // tekstualni fallback
     institucija,
+    otkazano,
     institucija_idguid,
-    storedfile, // ako nekad budeš imao url slike
+    storedfile,
   } = event || {};
 
   const posterUrl =
-    event.slika !== '00000000-0000-0000-0000-000000000000'
+    event?.slika && event.slika !== '00000000-0000-0000-0000-000000000000'
       ? `${URL}/api/image/${event.slika}?height=300`
-      : `${URL}/api/events/slika/${event.idguid}`;
+      : `${URL}/api/events/slika/${event?.idguid}?height=300`;
 
-  // Poster: koristiš direktni URL ako imaš; u suprotnom gradient.
   const poster = posterUrl || storedfile?.url || null;
   const fallback1 = (category?.boja && shade(category.boja, -8)) || '#fde4d4';
   const fallback2 = institucija?.boja_pozadine_postera || '#fbd1b8';
@@ -222,7 +269,6 @@ export default function InstitutionEvent({ event }) {
     return !sameDay(start_date, end_date);
   }, [start_date, end_date]);
 
-  // Sortiraj termine po datumu; prikazi samo buduće (ili sve – po želji).
   const now = Date.now();
   const sortedTerms = useMemo(() => {
     const arr = Array.isArray(termini) ? [...termini] : [];
@@ -231,7 +277,7 @@ export default function InstitutionEvent({ event }) {
   }, [termini]);
 
   const upcomingTerms = useMemo(() => {
-    // ako želiš SVE termine, umjesto filtera vrati `sortedTerms`
+    // možeš vratiti `sortedTerms` ako želiš baš sve
     return sortedTerms.filter((t) => new Date(t.start_date).getTime() >= now);
   }, [sortedTerms, now]);
 
@@ -249,11 +295,18 @@ export default function InstitutionEvent({ event }) {
 
   return (
     <Card>
-      <Poster $image={poster} $fallback1={fallback1} $fallback2={fallback2} />
+      <Poster $image={poster} $fallback1={fallback1} $fallback2={fallback2}>
+        {otkazano && (
+          <>
+            <CancelBadge>OTKAZANO</CancelBadge>
+            <CancelStripe />
+          </>
+        )}
+      </Poster>
 
       <Body>
         <Link to={`/dogadjaj/${idguid}`}>
-          <Title>{title}</Title>
+          <Title $cancelled={!!otkazano}>{title}</Title>
         </Link>
 
         <Meta>
@@ -276,13 +329,15 @@ export default function InstitutionEvent({ event }) {
               <HiCalendarDateRange />
               <span>
                 {isMultiDay
-                  ? `${fmtDateISOToLocal(start_date)} (${fmtTimeISOToLocal(start_date)}h) – ${fmtDateISOToLocal(end_date)} (${fmtTimeISOToLocal(end_date)}h)`
+                  ? `${fmtDateISOToLocal(start_date)} (${fmtTimeISOToLocal(
+                      start_date
+                    )}h) – ${fmtDateISOToLocal(end_date)} (${fmtTimeISOToLocal(end_date)}h)`
                   : `${fmtDateISOToLocal(start_date)} u ${fmtTimeISOToLocal(start_date)}h`}
               </span>
             </Row>
           )}
 
-          {/* Lista termina */}
+          {/* Lista termina – precrtaj crveno one sa t.otkazano === true */}
           {ima_vise_termina && upcomingTerms.length > 0 && (
             <TermsWrap>
               <TermsHeader>
@@ -290,8 +345,13 @@ export default function InstitutionEvent({ event }) {
               </TermsHeader>
               <TermsPills>
                 {shownTerms.map((t, idx) => (
-                  <TermPill key={idx}>
+                  <TermPill
+                    key={idx}
+                    $cancelled={!!t.otkazano}
+                    title={t.otkazano ? 'Otkazano' : ''}
+                  >
                     {fmtDateISOToLocal(t.start_date)} u {fmtTimeISOToLocal(t.start_date)}h
+                    {t.otkazano && ' — otkazano'}
                   </TermPill>
                 ))}
                 {moreTerms > 0 && <TermPill>+{moreTerms} još</TermPill>}
@@ -312,7 +372,13 @@ export default function InstitutionEvent({ event }) {
         </Meta>
 
         <Extra>
-          <Price>{cijena == 0 ? 'Besplatan ulaz' : `Cijena ulaznice: ${priceText(cijena)}`}</Price>
+          <Price>
+            {parseFloat(cijena) === 0 ? (
+              priceText(cijena)
+            ) : (
+              <>Cijena ulaznice: {priceText(cijena)}</>
+            )}
+          </Price>
         </Extra>
       </Body>
     </Card>

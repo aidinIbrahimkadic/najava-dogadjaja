@@ -60,47 +60,16 @@ const PageWrap = styled.div`
   --muted: ${MUTED};
   --card-bg: ${CARD_BG};
   background-color: #ffffff;
-  /* display: grid;
-  grid-template-columns: 0.4fr 1fr; */
   align-items: start;
   border-radius: 2rem;
   margin: 4rem 0 7rem 0;
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
-
   overflow: hidden;
   @media (max-width: 680px) {
     grid-template-columns: 1fr;
     margin: 2rem 0 7rem 0;
   }
 `;
-
-// const Poster = styled.div`
-//   grid-area: poster;
-//   background: #fff;
-//   /* border-radius: ${RADIUS} 0 0 ${RADIUS}; */
-//   /* box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08); */
-//   overflow: hidden;
-//   position: sticky;
-//   top: 16px;
-
-//   @media (max-width: 980px) {
-//     position: static;
-//   }
-//   @media (max-width: 700px) {
-//     height: 400px;
-//     width: auto;
-//     background-position: center;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: space-around;
-//     object-fit: cover;
-//   }
-//   @media (max-width: 400px) {
-//     height: 300px;
-//     width: auto;
-//   }
-// `;
 
 const InfoWrap = styled.section`
   grid-area: info;
@@ -110,20 +79,8 @@ const OrgSection = styled.section`
   grid-area: org;
 `;
 
-const PosterImg = styled.img`
-  height: 100%;
-  width: auto;
-
-  @media (max-width: 700px) {
-    width: 100%;
-    height: auto;
-  }
-`;
-
 const InfoCard = styled.section`
   background: #fff;
-  /* border-radius: 0 ${RADIUS} ${RADIUS} 0; */
-  /* box-shadow: 0 16px 36px rgba(0, 0, 0, 0.06); */
   padding: 1.5rem;
   display: grid;
   height: 100%;
@@ -161,6 +118,15 @@ const Title = styled.h1`
   color: var(--text);
   font-size: clamp(1.8rem, 2.2vw, 2.4rem);
   line-height: 1.15;
+
+  ${(p) =>
+    p.$cancelled &&
+    `
+    color: #b91c1c;
+    text-decoration: line-through;
+    text-decoration-thickness: 3px;
+    text-decoration-color: #ef4444;
+  `}
 `;
 
 const Price = styled.div`
@@ -204,6 +170,15 @@ const Label = styled.div`
 
 const Strong = styled.div`
   font-weight: 700;
+
+  ${(p) =>
+    p.$cancelled &&
+    `
+    color: #b91c1c;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #ef4444;
+  `}
 `;
 
 const Divider = styled.hr`
@@ -251,6 +226,15 @@ const Button = styled.button`
       p.$variant === 'outline' ? 'rgba(249,115,22,0.06)' : 'var(--brand-dark)'};
   }
 
+  &:disabled {
+    cursor: not-allowed;
+    background: #e5e7eb;
+    color: #6b7280;
+    border-color: #e5e7eb;
+    box-shadow: none;
+    transform: none;
+  }
+
   & > svg {
     display: block;
     flex-shrink: 0;
@@ -262,10 +246,6 @@ const OrgRow = styled.div`
   grid-template-columns: 44px 1fr;
   gap: 0.75rem;
   align-items: center;
-
-  @media (max-width: 850px) {
-    /* Mobile: poster, institucija, info (svaki u svom redu) */
-  }
 `;
 
 const OrgLogo = styled.img`
@@ -327,15 +307,12 @@ const DatumiCijena = styled.div`
 const Container = styled.div`
   display: grid;
   gap: 1rem;
-
-  /* Desktop (≥900px): poster lijevo, desno info pa institucija */
   grid-template-columns: 0.45fr 1fr;
   grid-template-areas:
     'poster info'
     'poster org';
 
   @media (max-width: 850px) {
-    /* Mobile: poster, institucija, info (svaki u svom redu) */
     grid-template-columns: 0.4fr 1fr;
     grid-template-areas:
       'poster info'
@@ -343,7 +320,6 @@ const Container = styled.div`
   }
 
   @media (max-width: 700px) {
-    /* Mobile: poster, institucija, info (svaki u svom redu) */
     grid-template-columns: 1fr;
     grid-template-areas:
       'poster'
@@ -352,19 +328,38 @@ const Container = styled.div`
   }
 `;
 
-const OrgContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.4rem 1rem;
+// 🔴 Overlay za otkazane događaje (isti stil kao na karticama)
+const PosterWrap = styled.div`
+  position: relative;
+  grid-area: poster;
+`;
 
-  @media (max-width: 850px) {
-    padding: 1rem;
-  }
-  @media (max-width: 700px) {
-    flex-direction: column;
-    gap: 2rem;
-  }
+const CancelBadge = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #b91c1c;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 0.45rem;
+  box-shadow: 0 6px 16px rgba(185, 28, 28, 0.35);
+  z-index: 2;
+`;
+
+const CancelStripe = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(185, 28, 28, 0.22) 0 12px,
+    rgba(185, 28, 28, 0.35) 12px 24px
+  );
+  mix-blend-mode: multiply;
+  z-index: 1;
 `;
 
 // ---- Helpers ----
@@ -417,7 +412,7 @@ function formatMoney(value) {
   return `${n.toFixed(2)} KM`;
 }
 
-// napari termine iz više mogućih oblika
+// termini + otkazano flag
 function parseTerms(ev) {
   const raw =
     (Array.isArray(ev?.termini) && ev.termini) ||
@@ -433,7 +428,8 @@ function parseTerms(ev) {
         t?.date ||
         (typeof t === 'string' ? t : null);
       const endISO = t?.end_date || t?.kraj || t?.end || null;
-      return startISO ? { startISO, endISO } : null;
+      const otkazano = !!t?.otkazano;
+      return startISO ? { startISO, endISO, otkazano } : null;
     })
     .filter(Boolean);
 }
@@ -449,15 +445,15 @@ export default function SingleEvent({ event }) {
 
   const differentDay = startD && endD ? startD.toDateString() !== endD.toDateString() : false;
 
-  const hasMulti = Boolean(event?.ima_vise_termina) || parseTerms(event).length > 1;
+  const termsParsed = parseTerms(event);
+  const hasMulti = Boolean(event?.ima_vise_termina) || termsParsed.length > 1;
 
-  // Za globalni GCal (koristi osnovni start/end)
   const globalGcalHref = useMemo(
     () => buildGCalHref(event, startISO, endISO),
     [event, startISO, endISO]
   );
 
-  const terms = useMemo(() => (hasMulti ? parseTerms(event) : []), [event, hasMulti]);
+  const terms = useMemo(() => (hasMulti ? termsParsed : []), [hasMulti, termsParsed]);
 
   const catColor = event?.category?.boja || '#eef2ff';
   const { Icon: CatIcon } = (() => {
@@ -470,53 +466,29 @@ export default function SingleEvent({ event }) {
   const lng = event?.lokacija?.longitude;
   const hasCoords = typeof lat === 'number' && typeof lng === 'number';
 
-  // const now = new Date();
-  // let status = 'Uskoro';
-  // let StatusIcon = Fa.FaClock; // default ikona
-
-  // if (startD && endD) {
-  //   if (now < startD) {
-  //     status = 'Uskoro';
-  //     StatusIcon = Fa.FaClock;
-  //   } else if (now >= startD && now <= endD) {
-  //     status = 'U toku';
-  //     StatusIcon = Fa.FaHourglassStart;
-  //   } else if (now > endD) {
-  //     status = 'Završen';
-  //     StatusIcon = Fa.FaCheckCircle;
-  //   }
-  // }
-
   return (
     <div style={{ margin: '1rem 0' }}>
       <Heading as="h1">Informacije o događaju</Heading>
       <PageWrap>
-        {/* Left: Poster */}
+        {/* Left: Poster sa OTKAZANO overlay-em */}
         <Container>
-          {/* <Poster>
-            {imageUrl ? (
-              <a href={imageUrl} target="_blank" rel="noopener noreferrer">
-                <PosterImg src={imageUrl} alt="Poster" />
-              </a>
-            ) : (
-              // <PosterImg src={imageUrl} alt={event?.title || 'Poster'} />
-              <PosterImg
-                src={`https://placehold.co/800x1100/fff7ed/262626?text=${encodeURIComponent(
-                  event?.title || 'Događaj'
-                )}`}
-                alt="Poster placeholder"
-              />
+          <PosterWrap>
+            <Poster imageUrl={imageUrl} alt={event?.title} />
+            {event?.otkazano && (
+              <>
+                <CancelBadge>OTKAZANO</CancelBadge>
+                <CancelStripe />
+              </>
             )}
-          </Poster> */}
+          </PosterWrap>
 
-          <Poster imageUrl={imageUrl} alt={event?.title} />
           {/* Right: Info */}
           <InfoWrap>
             <InfoCard>
               <div>
                 <HeaderRow>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '.8rem' }}>
-                    <Title>{event?.title}</Title>
+                    <Title $cancelled={!!event?.otkazano}>{event?.title}</Title>
                     <Pill $bg={catColor}>
                       <CatIcon /> {event?.category?.naziv || 'Kategorija'}
                     </Pill>
@@ -537,8 +509,6 @@ export default function SingleEvent({ event }) {
                         >
                           <ViberIcon size={36} round />
                         </ViberShareButton>
-                        {/* Copy link dugme ViberShareButton*/}
-
                         <TwitterShareButton
                           url={`${URL}/api/events-share/${event.idguid}`}
                           title={event?.title}
@@ -585,15 +555,7 @@ export default function SingleEvent({ event }) {
                   </MetaItem>
                 </HeaderRow>
               </div>
-              {/* {!hasMulti && (
-              <MetaItem>
-                <StatusIcon size={26} style={{ marginTop: 2, color: BRAND }} />
-                <div>
-                  <Label>Status</Label>
-                  {status}
-                </div>
-              </MetaItem>
-            )} */}
+
               <DatumiCijena>
                 <MetaGrid>
                   {/* === DATUM/VRIJEME: 3 slučaja === */}
@@ -603,7 +565,7 @@ export default function SingleEvent({ event }) {
                         <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
                         <div>
                           <Label>Početak</Label>
-                          <Strong>
+                          <Strong $cancelled={!!event?.otkazano}>
                             {fmtDate(startD)} - {fmtTime(startD)}
                           </Strong>
                         </div>
@@ -612,7 +574,7 @@ export default function SingleEvent({ event }) {
                         <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
                         <div>
                           <Label>Kraj</Label>
-                          <Strong>
+                          <Strong $cancelled={!!event?.otkazano}>
                             {fmtDate(endD)} - {fmtTime(endD)}
                           </Strong>
                         </div>
@@ -626,14 +588,14 @@ export default function SingleEvent({ event }) {
                         <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
                         <div>
                           <Label>Datum</Label>
-                          <Strong>{fmtDate(startD)}</Strong>
+                          <Strong $cancelled={!!event?.otkazano}>{fmtDate(startD)}</Strong>
                         </div>
                       </MetaItem>
                       <MetaItem>
                         <Fa.FaClock size={26} style={{ marginTop: 2, color: BRAND }} />
                         <div>
                           <Label>Vrijeme</Label>
-                          <Strong>{fmtTime(startD)}</Strong>
+                          <Strong $cancelled={!!event?.otkazano}>{fmtTime(startD)}</Strong>
                         </div>
                       </MetaItem>
                     </>
@@ -654,43 +616,50 @@ export default function SingleEvent({ event }) {
                       >
                         {terms.map((t, idx) => {
                           const sd = new Date(t.startISO);
-                          const disabledGoogleCalendarButton = new Date(t.endISO) < new Date();
+                          const disabledGoogleCalendarButton =
+                            new Date(t.endISO || t.startISO) < new Date() || t.otkazano;
                           const href = buildGCalHref(event, t.startISO, t.endISO);
+
+                          const termBoxStyle = t.otkazano
+                            ? {
+                                background: '#fff1f2',
+                                border: '1px solid rgba(185,28,28,0.35)',
+                              }
+                            : { background: '#fff', border: '1px solid #eef2ff' };
+
                           return (
                             <div
                               key={`${t.startISO}-${t.endISO || idx}`}
                               style={{
-                                background: '#fff',
-                                border: '1px solid #eef2ff',
+                                ...termBoxStyle,
                                 borderRadius: 12,
                                 padding: '0.75rem',
                               }}
+                              title={t.otkazano ? 'Otkazano' : undefined}
                             >
                               <div style={{ marginBottom: 6 }}>
                                 <Label>Datum</Label>
-                                <Strong>{fmtDate(sd)}</Strong>
+                                <Strong $cancelled={!!t.otkazano}>{fmtDate(sd)}</Strong>
                               </div>
                               <div style={{ marginBottom: 10 }}>
                                 <Label>Vrijeme</Label>
-                                <Strong>{fmtTime(sd)}</Strong>
+                                <Strong $cancelled={!!t.otkazano}>{fmtTime(sd)}</Strong>
                               </div>
-                              <div>
+                              <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center' }}>
                                 <Button
                                   disabled={disabledGoogleCalendarButton}
-                                  {...(!disabledGoogleCalendarButton
-                                    ? {}
-                                    : {
-                                        style: {
-                                          backgroundColor: 'var(--color-grey-400)',
-                                          border: 'var(--color-grey-500)',
-                                          cursor: 'not-allowed',
-                                        },
-                                      })}
-                                  onClick={() => window.open(href, '_blank')}
+                                  onClick={() =>
+                                    !disabledGoogleCalendarButton && window.open(href, '_blank')
+                                  }
                                 >
                                   <Fa.FaGoogle />
                                   Dodaj u Google kalendar
                                 </Button>
+                                {t.otkazano && (
+                                  <Pill $bg="#fee2e2" color="#b91c1c">
+                                    <Fa.FaTimesCircle /> Otkazano
+                                  </Pill>
+                                )}
                               </div>
                             </div>
                           );
@@ -707,11 +676,11 @@ export default function SingleEvent({ event }) {
                       <Strong>{event?.lokacija?.naziv || '—'}</Strong>
                     </div>
                   </MetaItem>
+
                   {event?.description !== '' && (
                     <div>
                       <OpisItem>
                         <Fa.FaRegFileAlt size={26} style={{ marginTop: 2, color: BRAND }} />
-
                         <Strong>Opis</Strong>
                       </OpisItem>
                       <span>{event?.description || '—'}</span>
@@ -725,8 +694,6 @@ export default function SingleEvent({ event }) {
                   </Price>
                 </MetaGrid>
               </DatumiCijena>
-
-              {/* Share buttons */}
             </InfoCard>
           </InfoWrap>
 
@@ -766,7 +733,7 @@ export default function SingleEvent({ event }) {
                 </OrgRow>
 
                 <Actions>
-                  {/* Globalni GCal prikazujemo SAMO ako nema više termina */}
+                  {/* Globalni GCal samo ako nema više termina */}
                   {!hasMulti && globalGcalHref && (
                     <Button onClick={() => window.open(globalGcalHref, '_blank')}>
                       <Fa.FaGoogle />
@@ -785,7 +752,6 @@ export default function SingleEvent({ event }) {
                     </Button>
                   )}
                 </Actions>
-                {/* Share buttons */}
               </OrgContainer>
             </OrgSection>
           )}
@@ -847,3 +813,18 @@ export default function SingleEvent({ event }) {
     </div>
   );
 }
+
+const OrgContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 1rem;
+
+  @media (max-width: 850px) {
+    padding: 1rem;
+  }
+  @media (max-width: 700px) {
+    flex-direction: column;
+    gap: 2rem;
+  }
+`;

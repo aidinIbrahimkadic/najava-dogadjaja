@@ -1,19 +1,51 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetEventById } from '../features/front/useEventById';
+import styled from 'styled-components';
+import { useGetEventsByManifestationId } from '../features/front/useAllEventsByManifestationId';
+import { useGetManifestationById } from '../features/front/useManifestationById';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import CalendarSpinner from '../ui/CalendarSpinner';
-import { Page } from '../ui/Front/Page';
 import { RightColumn } from '../ui/Front/RightColumn';
-import SingleEvent from '../ui/Front/SingleEvent';
+import SingleManifestation from '../ui/Front/SingleManifestation';
 import { UpcomingEvents } from '../ui/Front/UpcomingEvents';
 import { WeatherForecast3Day } from '../ui/Front/WeatherForecast3Day';
+// ⬇️ prilagodi putanju ako je drugačija
 
-export default function EventPage() {
+export const Page = styled.div`
+  width: 100%;
+  /* min-height: 100vh; */
+  background: #fbfdff;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1.5rem;
+  padding: 7rem 5rem 10rem 5rem;
+
+  /* margin-bottom: 3rem; */
+
+  @media (max-width: 1300px) {
+    grid-template-columns: 1fr;
+  }
+  @media (max-width: 550px) {
+    padding: 2rem 1rem 5rem 1rem;
+  }
+`;
+
+export default function ManifestationPage() {
   const { id } = useParams();
-  const { isLoading: isLoadingEvents, upcomingEvents } = useGetUpcomingEvents();
-  const { isLoading: isLoadingEvent, event } = useGetEventById(id);
 
-  // Mapirajmo i start i end (fallback end=start)
+  const { isLoading, events } = useGetEventsByManifestationId({ id });
+  const { isLoading: isLoadingManifestation, manifestation } = useGetManifestationById({ id });
+  const { isLoading: isLoadingEvents, upcomingEvents } = useGetUpcomingEvents();
+
+  // const  {isLoading: isLoadingManifestation, manifestation} = useGetMani
+  if (!id) {
+    return <h2>Manifestacija nije pronađena (nedostaje ID u URL-u)</h2>;
+  }
+
+  {
+    (isLoading || isLoadingManifestation || isLoadingEvents) && <CalendarSpinner />;
+  }
+
   const allEvents = (upcomingEvents || []).map((ev) => {
     const start = new Date(ev.start_date);
     const end = ev.end_date ? new Date(ev.end_date) : new Date(ev.start_date);
@@ -44,13 +76,9 @@ export default function EventPage() {
     };
   });
 
-  if (isLoadingEvents || isLoadingEvent) {
-    return <CalendarSpinner />;
-  }
-
   return (
     <Page>
-      <SingleEvent event={event?.data} />
+      <SingleManifestation events={events} manifestation={manifestation} />
       <RightColumn>
         <UpcomingEvents events={allEvents} />
         <WeatherForecast3Day />

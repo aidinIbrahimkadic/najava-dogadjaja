@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { URL } from '../../utils/constants';
+import { useGetManifestationById } from '../../features/front/useManifestationById';
 
 const CarouselWrapper = styled.div`
   width: 100%;
@@ -18,33 +19,6 @@ const CarouselContent = styled.div`
   gap: 2rem;
 `;
 
-// const PosterCard = styled.div`
-//   position: relative;
-//   flex: 0 0 210px;
-//   width: 210px;
-//   height: 297px;
-//   background-image: url(${(props) => props.$image});
-//   background-size: cover;
-//   background-position: center;
-//   border-radius: 12px;
-//   overflow: hidden;
-
-//   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-//   //OVERLAY potamni
-//   /* filter: brightness(${(props) => (props.$dimmed ? 0.7 : 1)}); */
-//   transition:
-//     transform 0.3s ease,
-//     filter 0.3s ease;
-//   &:hover {
-//     transform: scale(1.05);
-//     filter: brightness(1);
-//     z-index: 10;
-//   }
-
-//   @media (max-width: 600px) {
-//   }
-// `;
-
 const PosterCard = styled.div`
   position: relative;
   flex: 0 0 auto;
@@ -55,11 +29,18 @@ const PosterCard = styled.div`
   background-position: center;
   border-radius: 12px;
   overflow: hidden;
-
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition:
     transform 0.3s ease,
-    filter 0.3s ease;
+    filter 0.3s ease,
+    opacity 0.3s ease;
+
+  /* lagani vizualni signal za otkazano */
+  ${(p) =>
+    p.$cancelled &&
+    `
+      filter: grayscale(0.5) brightness(0.85);
+    `}
 
   &:hover {
     transform: scale(1.05);
@@ -70,9 +51,6 @@ const PosterCard = styled.div`
   @media (max-width: 600px) {
     width: 150px; /* smanji, ali aspect ratio ostaje */
   }
-  /* @media (max-width: 350px) {
-    width: 100px; 
-  } */
 `;
 
 const Overlay = styled.div`
@@ -105,6 +83,53 @@ const PosterButton = styled(Button)`
   }
 `;
 
+/* Bedž s nazivom manifestacije (klik vodi na /manifestation/:id) */
+const ManifestTag = styled(Link)`
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  max-width: 85%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  &:hover {
+    background: #fff;
+    text-decoration: underline;
+  }
+`;
+
+/* Crveni tag OTKAZANO */
+const CancelTag = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
+`;
+
+/* Mali helper koji dohvaća naziv manifestacije preko hook-a */
+function ManifestChip({ manifestId }) {
+  const { manifestation } = useGetManifestationById({ id: manifestId });
+  const title = manifestation?.data?.title;
+  if (!manifestId || !title) return null;
+
+  return <ManifestTag to={`/manifestation/${manifestId}`}>{title}</ManifestTag>;
+}
+
 export default function PosterCarousel({ upcomingEvents = [] }) {
   const containerRef = useRef(null);
   const rafRef = useRef(null);
@@ -114,19 +139,22 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
   const [isPaused, setIsPaused] = useState(false);
 
   const postersFromEvents = upcomingEvents.map((event) => {
-    let slika;
+    const slika =
+      event.slika && event.slika !== '00000000-0000-0000-0000-000000000000'
+        ? `${URL}/api/image/${event.slika}?height=300`
+        : `${URL}/api/events/slika/${event.idguid}?height=300`;
 
-    if (event.slika !== '00000000-0000-0000-0000-000000000000') {
-      slika = `${URL}/api/image/${event.slika}?height=300`;
-    } else {
-      slika = `${URL}/api/events/slika/${event.idguid}?height=300`;
-    }
-
-    return { slika, idguid: event.idguid };
+    return {
+      slika,
+      idguid: event.idguid,
+      otkazano: !!event.otkazano,
+      manifestId: event.manifestacija ? event.manif_idguid : null,
+    };
   });
 
   useEffect(() => {
     const container = containerRef.current;
+    if (!container) return;
     const speed = 0.5; // px po frame (usporeno)
 
     function step() {
@@ -183,16 +211,15 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
           ...postersFromEvents,
           ...postersFromEvents,
           ...postersFromEvents,
+          ...postersFromEvents,
         ].map((img, idx) => (
-          <PosterCard
-            key={idx}
-            $image={img.slika}
-            // dimujemo samo prvu i zadnju sliku iz originalnog seta
-            $dimmed={
-              idx % postersFromEvents.length === 0 ||
-              idx % postersFromEvents.length === postersFromEvents.length - 1
-            }
-          >
+          <PosterCard key={idx} $image={img.slika} $cancelled={img.otkazano}>
+            {/* naziv manifestacije (ako postoji) */}
+            {img.manifestId && !img.otkazano && <ManifestChip manifestId={img.manifestId} />}
+
+            {/* oznaka otkazano */}
+            {img.otkazano && <CancelTag>OTKAZANO</CancelTag>}
+
             <Overlay>
               <Link to={`/dogadjaj/${img.idguid}`}>
                 <PosterButton icon={<EyeOutlined />}>Više</PosterButton>

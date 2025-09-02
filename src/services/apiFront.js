@@ -103,3 +103,34 @@ export async function getProxyShare({ id }) {
     throw new Error(error.response?.data?.message || 'Greška pri dijeljenju događaja');
   }
 }
+
+export async function getAllUpcomingManifestations() {
+  try {
+    const response = await axiosInstance.get(`/manifestacije/upcoming`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju manifestacija');
+  }
+}
+
+export async function getAllEventsFromManifestation({ id }) {
+  try {
+    const response = await axiosInstance.get(`/manifestacije/events/${id}?limit=100`);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || 'Greška pri dobavljanju događaja manifestacija'
+    );
+  }
+}
+
+export async function getSingleManifestation({ id }) {
+  if (!id) throw new Error('Manifestation ID is required');
+
+  try {
+    const response = await axiosInstance.get(`/manifestacije/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Greška pri dobavljanju manifestacije');
+  }
+}

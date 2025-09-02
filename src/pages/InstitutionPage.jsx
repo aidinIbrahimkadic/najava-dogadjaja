@@ -37,6 +37,7 @@ export default function InstitutionPage() {
       price: parseFloat(event.cijena),
       date: formatedDate,
       time: formattedTime,
+      otkazano: event.otkazano,
       category: event.category.naziv,
       category_idguid: event.category.idguid,
       location: event.lokacija.naziv,

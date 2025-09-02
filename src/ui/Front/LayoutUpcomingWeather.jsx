@@ -28,6 +28,7 @@ export default function LayoutUpcomingWeather({ upcomingEvents }) {
       time: timeStr,
       end_date: endDateStr,
       end_time: endTimeStr,
+      otkazano: event.otkazano,
       category: event.category?.naziv,
       category_idguid: event.category?.idguid,
       location: event.lokacija?.naziv,
@@ -68,23 +69,33 @@ function toEventsByDate(events) {
   };
 
   for (const e of events) {
+    const eventCancelled = !!e?.otkazano;
     const hasMultiTerms =
-      Boolean(e.ima_vise_termina) && Array.isArray(e.termini) && e.termini.length > 0;
+      Boolean(e?.ima_vise_termina) && Array.isArray(e?.termini) && e.termini.length > 0;
 
     if (hasMultiTerms) {
-      // Svaki termin ide kao stavka na dan njegovog starta (label = vrijeme starta)
+      // Svaki termin ide kao zasebna stavka (otkazano = termin.otkazano || event.otkazano)
       for (const t of e.termini) {
         if (!t?.start_date) continue;
         const s = new Date(t.start_date);
-        push(ymd(s), { id: e.id, title: e.title, label: timeHM(s) });
+        const isTermCancelled = eventCancelled || !!t?.otkazano;
+
+        push(ymd(s), {
+          id: e.id,
+          title: e.title,
+          label: timeHM(s),
+          otkazano: isTermCancelled,
+          status: isTermCancelled ? 'cancelled' : 'active',
+        });
       }
       continue;
     }
 
-    // Jedan event (može biti višednevni)
+    // Jedan event (može biti višednevni) — otkazano = event.otkazano
     const start = e._startISO
       ? new Date(e._startISO)
       : new Date(`${e.date}T${e.time || '00:00'}:00`);
+
     const end = e._endISO
       ? new Date(e._endISO)
       : new Date(
@@ -99,12 +110,17 @@ function toEventsByDate(events) {
     eDay.setHours(0, 0, 0, 0);
 
     const isMultiDay = sDay.getTime() !== eDay.getTime();
-    const label = isMultiDay ? null : timeHM(start); // ⟵ nema labela za višednevne!
+    const label = isMultiDay ? null : timeHM(start); // nema labela za višednevne
 
     // Proširi kroz sve dane raspona (inkluzivno)
     for (let cur = new Date(sDay); cur <= eDay; cur.setDate(cur.getDate() + 1)) {
-      const entry = { id: e.id, title: e.title };
-      if (label) entry.label = label;
+      const entry = {
+        id: e.id,
+        title: e.title,
+        otkazano: eventCancelled,
+        status: eventCancelled ? 'cancelled' : 'active',
+      };
+      if (!isMultiDay) entry.label = label;
       push(ymd(cur), entry);
     }
   }
