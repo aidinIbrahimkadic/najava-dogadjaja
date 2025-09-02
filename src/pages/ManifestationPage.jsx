@@ -45,7 +45,7 @@ export default function ManifestationPage() {
   {
     (isLoading || isLoadingManifestation || isLoadingEvents) && <CalendarSpinner />;
   }
-
+  console.log(upcomingEvents, 'upcomingEvents');
   const allEvents = (upcomingEvents || []).map((ev) => {
     const start = new Date(ev.start_date);
     const end = ev.end_date ? new Date(ev.end_date) : new Date(ev.start_date);
@@ -68,6 +68,8 @@ export default function ManifestationPage() {
       end_date: fmtDate(end),
       end_time: fmtTime(end),
       otkazano: ev.otkazano,
+      ima_vise_termina: ev.ima_vise_termina,
+      termini: ev.termini,
       category: ev.category?.naziv,
       category_idguid: ev.category?.idguid,
       location: ev.lokacija?.naziv,
