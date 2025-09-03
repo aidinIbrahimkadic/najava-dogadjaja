@@ -149,11 +149,6 @@ export async function postResetPassword({
   data: { email, password, password_confirmation },
   token,
 }) {
-  console.log('TOKEN:', token);
-  console.log('mail:', email);
-  console.log('password:', password);
-  console.log('password_confirmation:', password_confirmation);
-
   try {
     const response = await axiosInstance.post(`/auth/reset-password`, {
       email,

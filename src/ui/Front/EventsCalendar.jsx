@@ -183,7 +183,6 @@ const TitleRow = styled.div`
 export function EventsCalendar({ eventsByDate = {} }) {
   const ref = useRef(null);
 
-  console.log(eventsByDate);
   const cellRender = (value) => {
     const key = value.format('YYYY-MM-DD');
     const items = eventsByDate[key] || [];

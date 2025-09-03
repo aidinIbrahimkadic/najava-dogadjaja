@@ -11,7 +11,6 @@ function VerifyEmail() {
 
   useEffect(() => {
     const token = searchParams.get('token');
-    console.log(token);
     if (!token) {
       setStatus('error');
       setMessage('Token nije pronađen u linku.');

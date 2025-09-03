@@ -206,7 +206,6 @@ axiosInstance.interceptors.response.use(
         // console.log('Reaktivni refresh uspješan');
         return axiosInstance(originalRequest);
       } catch (err) {
-        console.log('Refresh token failed - redirecting to login');
         processQueue(err, null);
         handleTokenExpired();
         return Promise.reject(err);

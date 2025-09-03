@@ -23,9 +23,9 @@ const money = (v) => {
 // ───────────── styles ─────────────
 const Wrap = styled.div`
   width: min(1100px, 92vw);
-  margin: 6rem auto 4rem;
+  margin: 1rem auto 4rem;
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
 
   @media (max-width: 600px) {
     margin-top: 2rem;
@@ -83,7 +83,7 @@ const LightboxImg = styled.img`
 
 const H1 = styled.h1`
   font-size: clamp(1.5rem, 2.4vw, 2.3rem);
-  margin: 0.25rem 0 0.5rem;
+  margin: 0;
   color: #0f172a;
 `;
 
@@ -132,7 +132,7 @@ const InstFallback = styled(InstLogo)`
 `;
 
 const SectionTitle = styled.h2`
-  margin: 1.2rem 0 0.5rem;
+  margin: 3rem 0 0rem;
   font-size: 1.25rem;
   color: #111827;
 `;
@@ -280,6 +280,8 @@ export default function SingleManifestation({ events, manifestation }) {
   const maniTitle =
     maniFromEvents?.title || manifestation?.data?.title || manifestation?.title || 'Manifestacija';
 
+  const maniDesc = manifestation?.data?.description;
+
   // Cover slika — ako je dostupna iz zasebnog manifestacije-responsa
   const maniData = manifestation?.data ?? manifestation ?? {};
   const [openLightbox, setOpenLightbox] = useState(false);
@@ -367,6 +369,25 @@ export default function SingleManifestation({ events, manifestation }) {
 
   return (
     <Wrap>
+      {/* Naslov */}
+      <H1>{maniTitle}</H1>
+
+      {(maniStart || maniEnd) && (
+        <Period>
+          {maniStart && (
+            <span>
+              <HiCalendarDays />
+              Početak: <strong>{fmtDateTime(maniStart)}</strong>
+            </span>
+          )}
+          {maniEnd && (
+            <span>
+              <HiCalendarDays />
+              Kraj: <strong>{fmtDateTime(maniEnd)}</strong>
+            </span>
+          )}
+        </Period>
+      )}
       {/* Cover + Lightbox */}
       {coverSrc && (
         <>
@@ -383,9 +404,6 @@ export default function SingleManifestation({ events, manifestation }) {
           )}
         </>
       )}
-
-      {/* Naslov */}
-      <H1>{maniTitle}</H1>
 
       {/* Institucije učesnici */}
       {institutions.length > 0 && (
@@ -406,24 +424,11 @@ export default function SingleManifestation({ events, manifestation }) {
           </InstRow>
         </>
       )}
-
       {/* Period manifestacije (opcionalno) */}
-      {(maniStart || maniEnd) && (
-        <Period>
-          {maniStart && (
-            <span>
-              <HiCalendarDays />
-              Početak: <strong>{fmtDateTime(maniStart)}</strong>
-            </span>
-          )}
-          {maniEnd && (
-            <span>
-              <HiCalendarDays />
-              Kraj: <strong>{fmtDateTime(maniEnd)}</strong>
-            </span>
-          )}
-        </Period>
-      )}
+
+      <SectionTitle>Opis manifestacije</SectionTitle>
+
+      <div>{maniDesc}</div>
 
       {/* Lista događaja */}
       <SectionTitle>Događaji manifestacije</SectionTitle>

@@ -262,8 +262,6 @@ export default function CategorySubscriptions({
     };
   });
 
-  console.log(kategorije);
-
   const cats = useMemo(() => kategorije, [kategorije]);
   const defaultSelected = useMemo(() => {
     if (initialSelectedIds?.length) return new Set(initialSelectedIds);

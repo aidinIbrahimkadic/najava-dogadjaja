@@ -27,8 +27,6 @@ export default function ManifestationsTable() {
   if (isLoading || isLoadingLocations || isLoadingInstitutions) return <CalendarSpinner />;
   if (error) return <Empty />;
 
-  console.log(manifestations);
-
   const locationOptions = locations?.map((l) => {
     return {
       value: l.idguid,

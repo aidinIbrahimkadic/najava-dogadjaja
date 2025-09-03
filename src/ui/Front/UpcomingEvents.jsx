@@ -281,7 +281,6 @@ export function UpcomingEvents({ events = [] }) {
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
   }, [flat]);
 
-  console.log(events);
   return (
     <Card>
       <Title>

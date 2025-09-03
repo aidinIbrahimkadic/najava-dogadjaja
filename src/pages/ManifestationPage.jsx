@@ -45,7 +45,7 @@ export default function ManifestationPage() {
   {
     (isLoading || isLoadingManifestation || isLoadingEvents) && <CalendarSpinner />;
   }
-  console.log(upcomingEvents, 'upcomingEvents');
+
   const allEvents = (upcomingEvents || []).map((ev) => {
     const start = new Date(ev.start_date);
     const end = ev.end_date ? new Date(ev.end_date) : new Date(ev.start_date);
