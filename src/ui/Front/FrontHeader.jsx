@@ -5,13 +5,12 @@ import FrontLogo from './FrontLogo';
 import styled, { css } from 'styled-components';
 import { useLogout } from '../../features/authentication/useLogout';
 import { useUserPermissions } from '../../features/authentication/useUserPermissions';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { HiOutlineUser, HiChevronDown } from 'react-icons/hi2';
 import { BiUser, BiLogOut, BiBuilding } from 'react-icons/bi';
 
 const { Header } = Layout;
 
-/* ----------------------------- Styled Blocks ----------------------------- */
 const StyledHeader = styled.header`
   position: sticky; /* STICKY */
   top: 0; /* STICKY */
@@ -93,21 +92,37 @@ const DropdownWrap = styled.div`
 
 const DropdownPanel = styled.div`
   position: absolute;
-  display: flex;
-  flex-direction: column;
   top: calc(100% + 1.2rem);
-  right: 0rem;
-  /* right: ${({ $alignRight }) => ($alignRight ? 0 : 'auto')}; */
-  /* left: ${({ $alignRight }) => ($alignRight ? 'auto' : 0)}; */
+  left: 0;
   background-color: var(--color-grey-0);
   border: 1px solid var(--color-grey-200);
   border-radius: 1rem;
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  min-width: 20rem;
   z-index: 1000;
   overflow: hidden;
+
+  /* širina i max visina da stane više kolona i scroll */
+  width: min(72rem, 90vw);
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0.6rem;
+`;
+
+const DropdownGrid = styled.div`
+  display: grid;
+  gap: 0.4rem;
+
+  /* 3 kolone desktop, 2 tablet, 1 mob */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const DropdownToggle = styled.button`
@@ -127,44 +142,33 @@ const DropdownToggle = styled.button`
 `;
 
 const DropdownItemLink = styled(Link)`
-  display: grid;
-  grid-template-columns: 1.5rem 1fr;
-  gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
   padding: 0.8rem 1rem;
   font-size: 1.4rem;
   color: var(--color-grey-700);
   text-decoration: none;
-  transition: background-color 0.2s ease;
+  border-radius: 0.6rem;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
     background-color: var(--color-grey-50);
-    color: var(--color-grey-700);
+    color: var(--color-grey-800);
   }
-`;
 
-const DropdownItemButton = styled.button`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.2rem 1.6rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  font-size: 1.4rem;
-  color: var(--color-grey-700);
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-grey-50);
-  }
   svg {
+    flex: 0 0 auto;
     color: var(--color-grey-500);
   }
+
+  span {
+    overflow-wrap: anywhere;
+  }
 `;
 
-/* ----------------------------- User Menu Bits --------------------------- */
 const UserMenu = styled.div`
   display: flex;
   align-items: center;
@@ -260,6 +264,83 @@ const RegisterButton = styled(Button)`
   }
 `;
 
+const DropdownPanelOld = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: calc(100% + 1.2rem);
+  right: 0rem;
+  /* right: ${({ $alignRight }) => ($alignRight ? 0 : 'auto')}; */
+  /* left: ${({ $alignRight }) => ($alignRight ? 'auto' : 0)}; */
+  background-color: var(--color-grey-0);
+  border: 1px solid var(--color-grey-200);
+  border-radius: 1rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 20rem;
+  z-index: 1000;
+  overflow: hidden;
+`;
+
+const DropdownItemLinkOld = styled(Link)`
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  font-size: 1.4rem;
+  color: var(--color-grey-700);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-grey-50);
+    color: var(--color-grey-700);
+  }
+`;
+
+const DropdownItemButton = styled.button`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  font-size: 1.4rem;
+  background: transparent;
+  border: none;
+  color: var(--color-grey-700);
+  text-align: left;
+  border-radius: 0.6rem; /* zaobljeni ivici */
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background-color: var(--color-grey-50);
+    color: var(--color-grey-700);
+  }
+
+  /* Nema “kvadratnog” fokusa; ring samo za tastaturu */
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.35); /* brand narandžasti ring */
+  }
+
+  &:active {
+    background-color: var(--color-grey-100);
+  }
+
+  svg {
+    flex: 0 0 auto;
+    color: var(--color-grey-500);
+  }
+`;
+
 /* --------------------------------- View --------------------------------- */
 export default function FrontHeader({ allInstitutions, settings }) {
   const institucije = allInstitutions?.map((inst) => ({
@@ -268,9 +349,34 @@ export default function FrontHeader({ allInstitutions, settings }) {
     link: `/institution/${inst.idguid}`,
   }));
 
+  // Sortiraj po punom nazivu sa diakritikom (bez uklanjanja prefiksa)
+  const institucijeSorted = useMemo(
+    () =>
+      (institucije ?? []).slice().sort((a, b) =>
+        (a.naziv || '').localeCompare(b.naziv || '', 'bs-BA', {
+          sensitivity: 'base',
+          numeric: true,
+        })
+      ),
+    [institucije]
+  );
+
+  const institucijeByColumns = useMemo(() => {
+    const columns = 3; // koliko kolona želimo
+    const rows = Math.ceil(institucijeSorted.length / columns);
+    const cols = Array.from({ length: columns }, () => []);
+
+    institucijeSorted.forEach((item, i) => {
+      const colIndex = Math.floor(i / rows); // puni po kolonama
+      cols[colIndex].push(item);
+    });
+
+    return cols;
+  }, [institucijeSorted]);
+
   const [isInstOpen, setIsInstOpen] = useState(false);
   const [isUserOpen, setIsUserOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false); // NEW
+  const [scrolled, setScrolled] = useState(false);
 
   const instRef = useRef(null);
   const userRef = useRef(null);
@@ -351,23 +457,32 @@ export default function FrontHeader({ allInstitutions, settings }) {
               aria-expanded={isInstOpen}
               aria-label="Institucije meni"
             >
-              Institucije
+              Organizatori događaja
               <ChevronIcon $isOpen={isInstOpen} size={16} />
             </DropdownToggle>
 
             {isInstOpen && (
-              <DropdownPanel role="menu" aria-label="Institucije meni" $alignRight={false}>
-                {institucije?.map((inst) => (
-                  <DropdownItemLink
-                    key={inst.id}
-                    to={inst.link}
-                    onClick={() => setIsInstOpen(false)}
-                    role="menuitem"
-                  >
-                    <BiBuilding size={18} />
-                    {inst.naziv}
-                  </DropdownItemLink>
-                ))}
+              <DropdownPanel role="menu" aria-label="Institucije meni">
+                <DropdownGrid as="div">
+                  {institucijeByColumns.map((col, colIdx) => (
+                    <div
+                      key={colIdx}
+                      style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}
+                    >
+                      {col.map((inst) => (
+                        <DropdownItemLink
+                          key={inst.id}
+                          to={inst.link}
+                          onClick={() => setIsInstOpen(false)}
+                          role="menuitem"
+                        >
+                          <BiBuilding size={18} />
+                          <span>{inst.naziv}</span>
+                        </DropdownItemLink>
+                      ))}
+                    </div>
+                  ))}
+                </DropdownGrid>
               </DropdownPanel>
             )}
           </DropdownWrap>
@@ -393,21 +508,26 @@ export default function FrontHeader({ allInstitutions, settings }) {
             </UserMenuButton>
 
             {isUserOpen && (
-              <DropdownPanel role="menu" aria-label="Korisnički meni" $alignRight>
-                <DropdownItemLink
+              <DropdownPanelOld role="menu" aria-label="Korisnički meni">
+                <DropdownItemLinkOld
                   to={isAdmin ? '/me' : '/userProfile'}
                   onClick={() => setIsUserOpen(false)}
                   role="menuitem"
                 >
                   <BiUser size={18} />
                   Uredi korisnika
-                </DropdownItemLink>
+                </DropdownItemLinkOld>
 
-                <DropdownItemLink onClick={handleLogout} role="menuitem">
+                <DropdownItemButton
+                  type="button"
+                  role="menuitem"
+                  onMouseDown={(e) => e.preventDefault()} // spriječi fokus pri kliku mišem
+                  onClick={handleLogout}
+                >
                   <BiLogOut size={18} />
                   Logout
-                </DropdownItemLink>
-              </DropdownPanel>
+                </DropdownItemButton>
+              </DropdownPanelOld>
             )}
           </UserMenu>
         ) : (

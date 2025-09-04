@@ -112,7 +112,7 @@ function EditUserPasswordForm({ onCloseModal }) {
                 placeholder="Ponovite lozinku"
                 size="large"
                 status={errors.new_password_confirmation ? 'error' : ''}
-                onPaste={(e) => e.preventDefault()}
+                // onPaste={(e) => e.preventDefault()}
               />
             )}
           />

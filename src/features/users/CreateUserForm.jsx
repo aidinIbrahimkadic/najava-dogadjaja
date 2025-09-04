@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { useGetInstitutions } from '../institutions/useInstitutions';
 import Spinner from '../../ui/Spinner';
 import Select from '../../ui/Select';
+import { Select as AntdSelect } from 'antd';
 import Heading from '../../ui/Heading';
 import { useGetRoles } from '../roles/useRoles';
 import { useGetUser } from './useUser';
@@ -97,7 +98,7 @@ const StyledPasswordInput = styled(Input.Password)`
 function CreateUserForm({ userToEdit = {}, onCloseModal }) {
   const { isCreating, postUser } = usePostUser();
   const { isEditing, updateUser } = useUpdateUser();
-  const { isLoadingInstitutions, institutions } = useGetInstitutions();
+  const { isLoadingInstitutions, institutions } = useGetInstitutions({ all: true });
   const { isLoading: isLoadingRoles, roles } = useGetRoles();
   const { updateUserRoles } = useUpdateUserRoles();
 
@@ -252,7 +253,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
       </FormRow>
 
       <FormRow columns="1fr 1fr">
-        <FormField label="Institucija" error={errors?.institucija?.message}>
+        {/* <FormField label="Institucija" error={errors?.institucija?.message}>
           {isLoadingInstitutions ? (
             <Spinner size="small" />
           ) : (
@@ -278,6 +279,43 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
                   return value ? true : 'Molimo odaberite odgovarajuću instituciju';
                 },
               }}
+            />
+          )}
+        </FormField> */}
+
+        <FormField label="Institucija" error={errors?.institucija?.message}>
+          {isLoadingInstitutions ? (
+            <Spinner size="small" />
+          ) : (
+            <Controller
+              name="institucija"
+              control={control}
+              rules={{
+                validate: (value) => {
+                  const selectedRoleId = watch('role_idguid');
+                  const selectedRole = roles?.data?.roles.find((r) => r.idguid === selectedRoleId);
+                  if (selectedRole?.name?.toLowerCase() === SUPER_ADMIN_ROLE.toLowerCase())
+                    return true;
+                  return value ? true : 'Molimo odaberite odgovarajuću instituciju';
+                },
+              }}
+              render={({ field }) => (
+                <AntdSelect
+                  showSearch
+                  allowClear
+                  size="large"
+                  placeholder="Pretraži i odaberi instituciju"
+                  options={(institutions ?? []).map(({ idguid, naziv }) => ({
+                    value: idguid,
+                    label: naziv,
+                  }))}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  value={field.value || undefined}
+                  onChange={field.onChange}
+                />
+              )}
             />
           )}
         </FormField>
@@ -421,7 +459,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal }) {
                     placeholder="Ponovite lozinku"
                     size="large"
                     status={errors.password2 ? 'error' : ''}
-                    onPaste={(e) => e.preventDefault()}
+                    // onPaste={(e) => e.preventDefault()}
                   />
                 )}
               />

@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import dayjs from 'dayjs';
 import CustomDatePicker from '../../ui/CustomDatePicker';
 import { DEFAULT_EVENT_DURATION_IN_HOURS } from '../../utils/constants.js';
-
+import { Select as AntdSelect } from 'antd';
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
 import Button from '../../ui/Button';
@@ -18,7 +18,7 @@ import { usePostEvent } from './usePostEvent';
 import { useUpdateEvent } from './useUpdateEvent';
 import { useGetCategories } from '../categories/useCategories';
 import Checkbox from '../../ui/Checkbox';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGetLocations } from '../locations/useLocations';
 import { useGetInstitutions } from '../institutions/useInstitutions';
 import { useGetUser } from '../users/useUser';
@@ -27,6 +27,7 @@ import { ImageCell } from '../../ui/ImageCell';
 import { useDeleteImage } from './useDeleteImage';
 import { useGetUpcomingManifestations } from '../manifestations/useUpcomingManifestations';
 
+const ZERO = '00000000-0000-0000-0000-000000000000';
 // Pretvori lokalni 'YYYY-MM-DDTHH:mm' u ISO-8601 sa Z
 const toISOZ = (val) => {
   if (!val) return '';
@@ -46,16 +47,36 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
   const { isCreating, postEvent } = usePostEvent();
   const { isEditing, updateEvent } = useUpdateEvent();
-  const { isLoading, categories: categoriesFromAPI } = useGetCategories();
-  const { isLoading: isLocationsLoading, locations } = useGetLocations();
-  const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions();
+  // const { isLoading, categories: categoriesFromAPI } = useGetCategories();
+  // const { isLoading: isLocationsLoading, locations } = useGetLocations();
+  // const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions();
+  const { isLoading: isLoadingCats, categories: categoriesFromAPI } = useGetCategories({
+    all: true,
+    sort: { field: 'naziv', order: 'ASC' },
+    // Ako želiš SAMO podkategorije (bez grupa):
+    filters: { parent_idguid: 'NOT_ZERO' },
+  });
+
+  const { isLoading: isLocationsLoading, locations } = useGetLocations({
+    all: true,
+    sort: { field: 'naziv', order: 'ASC' },
+  });
+  const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions({
+    all: true,
+    sort: { field: 'naziv', order: 'ASC' },
+  });
   const { isLoading: isLoadingUpcomingManifestations, upcomingManifestations } =
     useGetUpcomingManifestations();
 
   // PRIKAZI SAMO CHILD KATEGORIJE
-  const categories = categoriesFromAPI?.filter((category) => {
-    if (category.parent_idguid !== '00000000-0000-0000-0000-000000000000') return category;
-  });
+  // const categories = categoriesFromAPI?.filter((category) => {
+  //   if (category.parent_idguid !== '00000000-0000-0000-0000-000000000000') return category;
+  // });
+
+  const categories = useMemo(() => {
+    const list = categoriesFromAPI ?? [];
+    return list.filter((c) => (c?.parent_idguid ?? ZERO) !== ZERO);
+  }, [categoriesFromAPI]);
 
   // KORISNIK KOJI JE LOGOVAN
   const { isLoading: isLoadingPermission, hasPermission, user: userCreate } = useUserPermissions();
@@ -84,18 +105,7 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
       user_idguid: eventToEdit.user.idguid,
       cijena: eventToEdit.cijena ? parseFloat(eventToEdit.cijena).toFixed(2) : '0.00',
       ima_vise_termina: Array.isArray(eventToEdit.termini) && eventToEdit.termini.length > 1,
-      // termini: Array.isArray(eventToEdit.termini)
-      //   ? eventToEdit.termini.map((t) => ({
-      //       start_datetime: format(
-      //         new Date(t.start_datetime || t.start_date || eventToEdit.start_date),
-      //         "yyyy-MM-dd'T'HH:mm"
-      //       ),
-      //       end_datetime: format(
-      //         new Date(t.end_datetime || t.end_date || t.start_datetime || eventToEdit.start_date),
-      //         "yyyy-MM-dd'T'HH:mm"
-      //       ),
-      //     }))
-      //   : [],
+
       termini: Array.isArray(eventToEdit.termini)
         ? eventToEdit.termini.map((t) => ({
             idguid: t.idguid ?? undefined, // <— VAŽNO: zadrži id termina radi upserta
@@ -250,18 +260,36 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
           </FormField>
 
           <FormField label="Kategorija događaja" required error={errors?.category_idguid?.message}>
-            {isLoading ? (
+            {isLoadingCats ? (
               <Spinner />
             ) : (
-              <Select
-                id="category_idguid"
+              <Controller
                 name="category_idguid"
-                options={categories.map((c) => ({ value: c.idguid, label: c.naziv }))}
-                disabled={isWorking}
-                register={register}
-                setValue={setValue}
-                watch={watch}
-                validation={{ required: 'Molimo odaberite odgovarajuću kategoriju' }}
+                control={control}
+                rules={{ required: 'Molimo odaberite odgovarajuću kategoriju' }}
+                render={({ field }) => {
+                  const coll = new Intl.Collator('bs', { sensitivity: 'base' });
+                  const options = categories
+                    .slice()
+                    .sort((a, b) => coll.compare(a?.naziv ?? '', b?.naziv ?? ''))
+                    .map((c) => ({ value: c.idguid, label: c.naziv }));
+
+                  return (
+                    <AntdSelect
+                      showSearch
+                      allowClear
+                      size="large"
+                      placeholder="Pretraži i odaberi kategoriju"
+                      options={options}
+                      filterOption={(input, option) =>
+                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                      }
+                      value={field.value || undefined}
+                      onChange={field.onChange}
+                      disabled={isWorking}
+                    />
+                  );
+                }}
               />
             )}
           </FormField>
@@ -272,15 +300,28 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
             {isLocationsLoading ? (
               <Spinner />
             ) : (
-              <Select
-                id="location_idguid"
+              <Controller
                 name="location_idguid"
-                options={locations.map((c) => ({ value: c.idguid, label: c.naziv }))}
-                disabled={isWorking}
-                register={register}
-                setValue={setValue}
-                watch={watch}
-                validation={{ required: 'Molimo odaberite odgovarajuću lokaciju događaja' }}
+                control={control}
+                rules={{ required: 'Molimo odaberite odgovarajuću lokaciju događaja' }}
+                render={({ field }) => (
+                  <AntdSelect
+                    showSearch
+                    allowClear
+                    size="large"
+                    placeholder="Pretraži i odaberi lokaciju"
+                    options={(locations ?? []).map(({ idguid, naziv }) => ({
+                      value: idguid,
+                      label: naziv,
+                    }))}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={field.value || undefined}
+                    onChange={field.onChange}
+                    disabled={isWorking}
+                  />
+                )}
               />
             )}
           </FormField>
@@ -310,21 +351,32 @@ function CreateEventForm({ eventToEdit = {}, onCloseModal }) {
 
         <FormRow columns="1fr 1fr">
           <FormField label="Institucija" required error={errors?.institucija_idguid?.message}>
-            {isLoadingInstitutions && isLoadingPermission && isLoadingUser ? (
+            {isLoadingInstitutions || isLoadingPermission || isLoadingUser ? (
               <Spinner />
             ) : (
-              <Select
-                id="institucija_idguid"
+              <Controller
                 name="institucija_idguid"
-                options={institutions?.map((inst) => ({
-                  value: inst.idguid,
-                  label: inst.naziv,
-                }))}
-                disabled={!hasPermission('admin_permissions_delete')}
-                register={register}
-                setValue={setValue}
-                watch={watch}
-                validation={{ required: 'Molimo odaberite odgovarajuću instituciju' }}
+                control={control}
+                rules={{ required: 'Molimo odaberite odgovarajuću instituciju' }}
+                render={({ field }) => (
+                  <AntdSelect
+                    showSearch
+                    allowClear
+                    size="large"
+                    placeholder="Pretraži i odaberi instituciju"
+                    options={(institutions ?? []).map(({ idguid, naziv }) => ({
+                      value: idguid,
+                      label: naziv,
+                    }))}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={field.value || undefined}
+                    onChange={field.onChange}
+                    // ako želiš zadržati permission lock:
+                    disabled={!hasPermission('admin_permissions_delete') || isWorking}
+                  />
+                )}
               />
             )}
           </FormField>

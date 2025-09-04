@@ -22,7 +22,7 @@ function UserRow({ user, index }) {
   const { mutate: deleteUser, isPending } = useDeleteUser();
   const { isLoading, hasPermission } = useUserPermissions();
 
-  const { idguid, email, first_name, last_name, institucija, active } = user;
+  const { idguid, email, institucija, active } = user;
 
   const { isLoading: isLoadingMoreOnUser, user: moreOnUser } = useGetUser(idguid);
 
@@ -38,8 +38,6 @@ function UserRow({ user, index }) {
   return (
     <Table.Row>
       <Cell>{index + 1}</Cell>
-      <Cell>{first_name}</Cell>
-      <Cell>{last_name}</Cell>
       <Cell>{email}</Cell>
       <Cell>{institucija?.naziv}</Cell>
       <Cell>

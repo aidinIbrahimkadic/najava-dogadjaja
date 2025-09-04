@@ -283,7 +283,12 @@ const UpcomingEventsContainer = styled.div`
     width: 100%;
   }
 `;
-
+const Description = styled.div`
+  color: ${TEXT};
+  line-height: 1.7;
+  white-space: pre-wrap; /* čuva \n i višestruke razmake */
+  word-break: break-word; /* da dugi URL-ovi ne razbiju layout */
+`;
 // —— Component ——
 export default function SingleInstitution({ inst, upcomingEvents }) {
   const {
@@ -434,11 +439,9 @@ export default function SingleInstitution({ inst, upcomingEvents }) {
         <Section>
           <SectionTitle>
             <Fa.FaInfoCircle />
-            <Heading as="h3">O instituciji</Heading>
+            <Heading as="h3">O organizatoru događaja</Heading>
           </SectionTitle>
-          <div style={{ color: TEXT, lineHeight: 1.6 }}>
-            {opis?.trim() ? opis : 'Nema dodatnog opisa.'}
-          </div>
+          <Description>{opis?.trim() ? opis : 'Nema dodatnog opisa.'}</Description>
 
           <Chips>
             {createdAt && (

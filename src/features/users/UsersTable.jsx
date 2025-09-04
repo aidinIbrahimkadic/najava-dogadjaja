@@ -259,7 +259,7 @@ export default function UsersTable() {
     <Menus>
       <Table
         server
-        columns=".1fr 1fr 1fr  2fr 1fr 1fr .2fr .1fr"
+        columns=".1fr 1.5fr 1fr 1fr .2fr .1fr"
         query={query}
         onQueryChange={setQuery}
         total={count}
@@ -270,19 +270,6 @@ export default function UsersTable() {
           config={[
             { id: 'index', label: '#' },
 
-            {
-              id: 'first_name',
-              label: 'Ime',
-              field: 'first_name',
-              sortable: true,
-            },
-
-            {
-              id: 'last_name',
-              label: 'Prezime',
-              field: 'last_name',
-              sortable: true,
-            },
             {
               id: 'email',
               label: 'Email',
@@ -332,17 +319,6 @@ export default function UsersTable() {
           config={[
             { id: 'index', label: '#' },
 
-            {
-              id: 'first_name',
-              label: 'Ime',
-              field: 'first_name',
-            },
-
-            {
-              id: 'last_name',
-              label: 'Prezime',
-              field: 'last_name',
-            },
             {
               id: 'email',
               label: 'Email',

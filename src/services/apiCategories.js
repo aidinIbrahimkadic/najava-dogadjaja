@@ -1,33 +1,80 @@
 import axiosInstance from './axiosInstance';
 
+// export async function getCategories(query = {}) {
+//   const { page = 1, limit = 50, search, sort, filters = {} } = query;
+
+//   const params = { page, limit };
+
+//   if (search) params.search = search;
+
+//   if (sort?.field && sort?.order) {
+//     params.sortBy = sort.field;
+//     params.sortOrder = sort.order; // 'ASC' | 'DESC'
+//   }
+
+//   const ZERO = '00000000-0000-0000-0000-000000000000';
+
+//   for (const [k, v] of Object.entries(filters)) {
+//     if (v === undefined || v === null || v === '') continue;
+
+//     if (k === 'parent_idguid') {
+//       if (v === 'NOT_ZERO') {
+//         // Samo podkategorije: parent_idguid != ZERO
+//         // (ako backend nema _ne, javi pa ću premapirati na drugi parametar)
+//         params.parent_idguid = ZERO;
+//       } else if (v === ZERO) {
+//         // Samo grupe: parent_idguid == ZERO
+//         params.parent_idguid = ZERO;
+//       }
+//       continue;
+//     }
+
+//     params[k] = v;
+//   }
+
+//   try {
+//     const res = await axiosInstance.get('/events/kategorije', { params });
+//     return res.data; // očekuje: { data: [...], total, page, limit, ... }
+//   } catch (error) {
+//     throw new Error(error?.response?.data?.message || 'Greška pri dobavljanju kategorija');
+//   }
+// }
+
 export async function getCategories(query = {}) {
-  const { page = 1, limit = 50, search, sort, filters = {} } = query;
+  let { page = 1, limit = 50, search, sort, filters = {}, all = false } = query;
 
-  const params = { page, limit };
+  const params = {};
+  if (all || limit === 'ALL') {
+    params.page = 1;
+    params.limit = typeof limit === 'number' ? limit : 10000; // hard-cap
+  } else {
+    params.page = page;
+    params.limit = limit;
+  }
 
-  if (search) params.search = search;
+  if (search?.trim()) params.search = search.trim();
 
   if (sort?.field && sort?.order) {
     params.sortBy = sort.field;
     params.sortOrder = sort.order; // 'ASC' | 'DESC'
-    // Ako backend prima i kombinovani ključ:
-    // params.sort = `${sort.field}:${sort.order}`;
+    params.sort = `${sort.field}:${sort.order}`;
   }
 
-  // Specijalno mapiranje za parent/child filter
   const ZERO = '00000000-0000-0000-0000-000000000000';
 
   for (const [k, v] of Object.entries(filters)) {
     if (v === undefined || v === null || v === '') continue;
 
     if (k === 'parent_idguid') {
+      // ✔ Ako želiš PODKATEGORIJE:
+      //   pošalji filters: { parent_idguid: 'NOT_ZERO' }
+      //   backend treba da ima parametar "parent_idguid_ne" (ili sličan).
       if (v === 'NOT_ZERO') {
-        // Samo podkategorije: parent_idguid != ZERO
-        // (ako backend nema _ne, javi pa ću premapirati na drugi parametar)
-        params.parent_idguid = ZERO;
-      } else if (v === ZERO) {
-        // Samo grupe: parent_idguid == ZERO
-        params.parent_idguid = ZERO;
+        // promijeni naziv parametra prema BE (ovdje pretpostavljam *_ne)
+        params.parent_idguid_ne = ZERO;
+      } else {
+        // ili eksplicitno tražene grupe/podstabla
+        params.parent_idguid = v; // npr. ZERO za grupe ili konkretan parent
       }
       continue;
     }
@@ -37,7 +84,7 @@ export async function getCategories(query = {}) {
 
   try {
     const res = await axiosInstance.get('/events/kategorije', { params });
-    return res.data; // očekuje: { data: [...], total, page, limit, ... }
+    return res.data; // { data: [...], total, page, limit, ... }
   } catch (error) {
     throw new Error(error?.response?.data?.message || 'Greška pri dobavljanju kategorija');
   }
