@@ -16,8 +16,9 @@ import {
   HiOutlineMap,
   HiOutlineIdentification,
 } from 'react-icons/hi2';
-import { useUserPermissions } from '../features/authentication/useUserPermissions';
 
+import { useUserPermissions } from '../features/authentication/useUserPermissions';
+import { LiveBadge } from './Live';
 const NavList = styled.ul`
   display: flex;
   flex-direction: column;
@@ -189,9 +190,9 @@ export default function MainNav() {
         <li>
           <StyledNavLink to="/">
             <IconWrapper>
-              <HiOutlineCog6Tooth />
+              <LiveBadge />
             </IconWrapper>
-            <Label isCollapsed={isCollapsed}>Pocetna front</Label>
+            <Label isCollapsed={isCollapsed}>Na pocetnu stranicu</Label>
           </StyledNavLink>
         </li>
       </NavList>
