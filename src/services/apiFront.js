@@ -49,7 +49,7 @@ export async function getAllCategories() {
 
 export async function getAllInstitutions() {
   try {
-    const response = await axiosInstance.get(`/institucije`);
+    const response = await axiosInstance.get(`/institucije?limit=100`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Greška pri dobavljanju institucija');
