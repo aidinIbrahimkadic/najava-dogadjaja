@@ -371,7 +371,6 @@ export default function SingleManifestation({ events, manifestation }) {
     <Wrap>
       {/* Naslov */}
       <H1>{maniTitle}</H1>
-
       {(maniStart || maniEnd) && (
         <Period>
           {maniStart && (
@@ -404,7 +403,6 @@ export default function SingleManifestation({ events, manifestation }) {
           )}
         </>
       )}
-
       {/* Institucije učesnici */}
       {institutions.length > 0 && (
         <>
@@ -425,11 +423,12 @@ export default function SingleManifestation({ events, manifestation }) {
         </>
       )}
       {/* Period manifestacije (opcionalno) */}
-
-      <SectionTitle>Opis manifestacije</SectionTitle>
-
-      <div>{maniDesc}</div>
-
+      {maniDesc && (
+        <>
+          <SectionTitle>Opis manifestacije</SectionTitle>
+          <div>{maniDesc}</div>
+        </>
+      )}
       {/* Lista događaja */}
       <SectionTitle>Događaji manifestacije</SectionTitle>
       <Grid>
@@ -516,7 +515,6 @@ export default function SingleManifestation({ events, manifestation }) {
           </Card>
         ))}
       </Grid>
-
       {cards.length === 0 && (
         <div style={{ color: '#6b7280', padding: '.5rem 0' }}>
           Nema događaja u sklopu ove manifestacije.

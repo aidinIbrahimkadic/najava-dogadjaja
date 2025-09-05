@@ -49,7 +49,7 @@ const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
  */
 export default function EventPhotosRow({
   events = [],
-  height = 300,
+  height = 500,
   routePrefix = 'manifestation',
 }) {
   const photos = useMemo(() => {

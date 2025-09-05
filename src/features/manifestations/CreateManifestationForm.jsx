@@ -13,7 +13,7 @@ import FormRow from '../../ui/FormRow';
 import FormField from '../../ui/FormField';
 import Spinner from '../../ui/Spinner';
 import Select from '../../ui/Select';
-
+import { Select as AntdSelect } from 'antd';
 import { usePostManifestation } from './usePostManifestation';
 import { useUpdateManifestation } from './useUpdateManifestation';
 import Checkbox from '../../ui/Checkbox';
@@ -42,8 +42,17 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
 
   const { isCreating, postManifestation } = usePostManifestation();
   const { isEditing, updateManifestation } = useUpdateManifestation();
-  const { isLoading: isLocationsLoading, locations } = useGetLocations();
-  const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions();
+  // const { isLoading: isLocationsLoading, locations } = useGetLocations();
+  // const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions();
+
+  const { isLoading: isLocationsLoading, locations } = useGetLocations({
+    all: true,
+    sort: { field: 'naziv', order: 'ASC' },
+  });
+  const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions({
+    all: true,
+    sort: { field: 'naziv', order: 'ASC' },
+  });
 
   // KORISNIK KOJI JE LOGOVAN
   const { isLoadingUser, hasPermission, user } = useUserPermissions();
@@ -69,11 +78,9 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
 
   const { idguid: editId, ...editValues } = formatedValues;
 
-  const { register, handleSubmit, reset, watch, setValue, getValues, formState, control } = useForm(
-    {
-      defaultValues: isEditSession ? editValues : {},
-    }
-  );
+  const { register, handleSubmit, reset, setValue, getValues, formState, control } = useForm({
+    defaultValues: isEditSession ? editValues : {},
+  });
 
   const { errors } = formState;
 
@@ -148,7 +155,7 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
         </FormRow>
 
         <FormRow columns="1fr 1fr">
-          <FormField label="Lokacija" error={errors?.location?.message}>
+          {/* <FormField label="Lokacija" error={errors?.location?.message}>
             {isLocationsLoading ? (
               <Spinner />
             ) : (
@@ -162,8 +169,37 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
                 watch={watch}
               />
             )}
+          </FormField> */}
+          <FormField label="Lokacija događaja" error={errors?.location_idguid?.message}>
+            {isLocationsLoading ? (
+              <Spinner />
+            ) : (
+              <Controller
+                name="location_idguid"
+                control={control}
+                render={({ field }) => (
+                  <AntdSelect
+                    showSearch
+                    allowClear
+                    size="large"
+                    placeholder="Pretraži i odaberi lokaciju"
+                    options={(locations ?? []).map(({ idguid, naziv }) => ({
+                      value: idguid,
+                      label: naziv,
+                    }))}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={field.value || undefined}
+                    onChange={field.onChange}
+                    disabled={isWorking}
+                  />
+                )}
+              />
+            )}
           </FormField>
-          <FormField label="Institucija" error={errors?.institucija_idguid?.message}>
+
+          {/* <FormField label="Institucija" error={errors?.institucija_idguid?.message}>
             {isLoadingInstitutions && isLoadingUser ? (
               <Spinner />
             ) : (
@@ -178,6 +214,36 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
                 register={register}
                 setValue={setValue}
                 watch={watch}
+              />
+            )}
+          </FormField> */}
+          <FormField label="Institucija" required error={errors?.institucija_idguid?.message}>
+            {isLoadingInstitutions || isLoadingUser ? (
+              <Spinner />
+            ) : (
+              <Controller
+                name="institucija_idguid"
+                control={control}
+                rules={{ required: 'Molimo odaberite odgovarajuću instituciju' }}
+                render={({ field }) => (
+                  <AntdSelect
+                    showSearch
+                    allowClear
+                    size="large"
+                    placeholder="Pretraži i odaberi instituciju"
+                    options={(institutions ?? []).map(({ idguid, naziv }) => ({
+                      value: idguid,
+                      label: naziv,
+                    }))}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={field.value || undefined}
+                    onChange={field.onChange}
+                    // ako želiš zadržati permission lock:
+                    disabled={!hasPermission('admin_permissions_delete') || isWorking}
+                  />
+                )}
               />
             )}
           </FormField>
