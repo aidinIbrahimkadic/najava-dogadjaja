@@ -28,29 +28,6 @@ export async function getInstitutions(query = {}) {
   return res.data; // { data, total, page, limit, ... }
 }
 
-// export async function getInstitutions(query = {}) {
-//   const { page = 1, limit = 10, search, sort, filters = {} } = query;
-
-//   const params = { page, limit };
-
-//   if (search) params.search = search;
-
-//   if (sort?.field && sort?.order) {
-//     params.sortBy = sort.field; // npr. 'naziv'
-//     params.sortOrder = sort.order; // 'ASC' | 'DESC'
-//     params.sort = `${sort.field}:${sort.order}`; // ako backend voli i kombinovani ključ
-//   }
-
-//   // Ravni filteri: npr. ?naziv=...&opis=...
-//   for (const [k, v] of Object.entries(filters)) {
-//     if (v === undefined || v === null || v === '') continue;
-//     params[k] = v;
-//   }
-
-//   const res = await axiosInstance.get('/events/institucije', { params });
-//   return res.data; // očekuje: { data, total, page, limit, ... }
-// }
-
 export async function getInstitution(id) {
   if (!id) throw new Error('Institution ID is required');
 

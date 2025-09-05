@@ -55,7 +55,7 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
   });
 
   // KORISNIK KOJI JE LOGOVAN
-  const { isLoadingUser, hasPermission, user } = useUserPermissions();
+  const { isLoadingUser, user } = useUserPermissions();
 
   const isWorking = isCreating || isEditing;
 
@@ -241,7 +241,7 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
                     value={field.value || undefined}
                     onChange={field.onChange}
                     // ako želiš zadržati permission lock:
-                    disabled={!hasPermission('admin_permissions_delete') || isWorking}
+                    // disabled={!hasPermission('admin_permissions_delete') || isWorking}
                   />
                 )}
               />

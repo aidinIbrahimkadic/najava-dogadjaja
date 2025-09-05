@@ -122,7 +122,7 @@ export default function MainNav() {
           </li>
         )}
 
-        {hasPermission('events_categories_pregled') && (
+        {hasPermission('events_categories_save') && (
           <li>
             <StyledNavLink to="/categories">
               <IconWrapper>
