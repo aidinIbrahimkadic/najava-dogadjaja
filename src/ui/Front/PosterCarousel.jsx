@@ -221,7 +221,7 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
             {img.otkazano && <CancelTag>OTKAZANO</CancelTag>}
 
             <Overlay>
-              <Link to={`/dogadjaj/${img.idguid}`}>
+              <Link to={`/dogadjaj/${img.idguid}`} target="_top">
                 <PosterButton icon={<EyeOutlined />}>Više</PosterButton>
               </Link>
             </Overlay>
