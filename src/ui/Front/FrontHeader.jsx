@@ -7,7 +7,7 @@ import { useLogout } from '../../features/authentication/useLogout';
 import { useUserPermissions } from '../../features/authentication/useUserPermissions';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { HiOutlineUser, HiChevronDown } from 'react-icons/hi2';
-import { BiUser, BiLogOut, BiBuilding } from 'react-icons/bi';
+import { BiUser, BiGridAlt, BiLogOut, BiBuilding } from 'react-icons/bi';
 
 const { Header } = Layout;
 
@@ -509,6 +509,17 @@ export default function FrontHeader({ allInstitutions, settings }) {
 
             {isUserOpen && (
               <DropdownPanelOld role="menu" aria-label="Korisnički meni">
+                {isAdmin && (
+                  <DropdownItemLinkOld
+                    to="/dashboard"
+                    onClick={() => setIsUserOpen(false)}
+                    role="menuitem"
+                  >
+                    <BiGridAlt size={18} />
+                    Administratorski panel
+                  </DropdownItemLinkOld>
+                )}
+
                 <DropdownItemLinkOld
                   to={isAdmin ? '/me' : '/userProfile'}
                   onClick={() => setIsUserOpen(false)}
@@ -525,7 +536,7 @@ export default function FrontHeader({ allInstitutions, settings }) {
                   onClick={handleLogout}
                 >
                   <BiLogOut size={18} />
-                  Logout
+                  Odjava
                 </DropdownItemButton>
               </DropdownPanelOld>
             )}

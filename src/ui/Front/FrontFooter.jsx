@@ -24,7 +24,7 @@ const StyledFooter = styled(Footer)`
 const FooterContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 0 28px;
+  padding: 0 0 10px 0;
 
   @media (max-width: 690px) {
     padding: 10px 0 28px;
@@ -36,8 +36,8 @@ const FooterContent = styled.div`
 
 const FooterGrid = styled.div`
   display: grid;
-  grid-template-columns: 0.8fr 1fr;
-  margin-bottom: 24px;
+  grid-template-columns: 1fr 1fr;
+  padding: 80px 0;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -161,6 +161,13 @@ const NextEventContainer = styled.div`
   } */
 `;
 
+const DescContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
 /**
  * FrontFooter
  * @param {Object} props
@@ -173,7 +180,7 @@ const NextEventContainer = styled.div`
  * @param {string} [props.nextEvent.href] - Link do stranice događaja (ako izostane, koristi /dogadjaj/:id)
  * @param {string} [props.nextEvent.id] - Id za fallback rutu /dogadjaj/:id
  */
-export default function FrontFooter({ description = '', institucije = [], settings }) {
+export default function FrontFooter({ description = '', settings }) {
   const { upcomingEvents } = useGetUpcomingEvents();
 
   const posterSlika =
@@ -205,12 +212,12 @@ export default function FrontFooter({ description = '', institucije = [], settin
     }
   };
 
-  let institutions = institucije.map((i) => {
-    return {
-      name: i.naziv || 'Nepoznato',
-      href: `/institution/${i.idguid}`,
-    };
-  });
+  // let institutions = institucije.map((i) => {
+  //   return {
+  //     name: i.naziv || 'Nepoznato',
+  //     href: `/institution/${i.idguid}`,
+  //   };
+  // });
   const eventHref = nextEvent?.href || (nextEvent?.id ? `/dogadjaj/${nextEvent.id}` : '#');
 
   return (
@@ -221,34 +228,18 @@ export default function FrontFooter({ description = '', institucije = [], settin
             <FrontLogo site_logo={settings?.site_logo} />
             <p>{description}</p>
             {settings?.email && (
-              <EventMeta>
+              <DescContent>
+                <p>Ova aplikacija se trenutno nalazi u beta fazi testiranja.</p>
+                <p>Primjetili ste problem na aplikaciji? Prijavite nam na email:</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <HiOutlineMail />
                   <a href={`mailto:${settings?.email}`}>{settings?.email}</a>
                 </div>
-              </EventMeta>
+              </DescContent>
             )}
           </BrandBlock>
 
           <Section>
-            <InstitutionContainer>
-              <h3>Institucije</h3>
-              <InstList>
-                {institutions?.slice(0, 8).map((inst) => (
-                  <InstItem key={inst.href ?? inst.name}>
-                    <a href={inst.href} target="_blank" rel="noopener noreferrer">
-                      {inst.name}
-                    </a>
-                  </InstItem>
-                ))}
-                {(!institutions || institutions.length === 0) && (
-                  <InstItem style={{ color: 'rgba(255,255,255,0.45)' }}>
-                    Trenutno nema unesenih institucija.
-                  </InstItem>
-                )}
-              </InstList>
-            </InstitutionContainer>
-
             {nextEvent && (
               <NextEventContainer>
                 <h3 style={{ marginTop: 16 }}>Naredni događaj</h3>

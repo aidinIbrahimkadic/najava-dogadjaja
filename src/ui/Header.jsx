@@ -7,7 +7,7 @@ import { useLogout } from '../features/authentication/useLogout';
 
 import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarRightCollapse } from 'react-icons/tb';
 import { HiOutlineUser, HiChevronDown } from 'react-icons/hi2';
-import { BiUser, BiLogOut } from 'react-icons/bi';
+import { BiUser, BiLogOut, BiHelpCircle } from 'react-icons/bi';
 
 import Spinner from './Spinner';
 import { useUserPermissions } from '../features/authentication/useUserPermissions';
@@ -229,9 +229,14 @@ export default function Header() {
                   <BiUser size={18} />
                   Uredi korisnika
                 </DropdownItem>
+                <DropdownItem as={'a'} target="_blank" href="/Uputstvo%20-%20Najava%20događaja.pdf">
+                  <BiHelpCircle size={18} />
+                  Uputstvo
+                </DropdownItem>
+
                 <DropdownItem onClick={handleLogout}>
                   <BiLogOut size={18} />
-                  Logout
+                  Odjava
                 </DropdownItem>
               </Dropdown>
             )}

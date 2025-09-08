@@ -35,6 +35,7 @@ import ActivateForm from './features/authentication/ActivateForm';
 import ActivateAccount from './features/authentication/ActivateAccount';
 import Manifestations from './pages/Manifestations';
 import ManifestationPage from './pages/ManifestationPage';
+import SliderOnly from './pages/SliderOnly';
 
 const queryClient = new QueryClient();
 
@@ -148,6 +149,7 @@ function App() {
               <Route index path="/" element={<HomePage />} />
               <Route path="*" element={<PageNotFound />} />
             </Route>
+            <Route path="/embed/slider" element={<SliderOnly />} />
           </Routes>
         </BrowserRouter>
         <Toaster

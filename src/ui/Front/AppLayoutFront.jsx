@@ -74,7 +74,7 @@ export default function AppLayoutFront() {
       />
 
       <FrontFooter
-        description="Platforma za najavu događaja Općine Tešanj."
+        description="Platforma za najavu događaja Općine Tešanj. (BETA verzija)"
         institucije={allInstitutions}
         settings={settings}
       />
