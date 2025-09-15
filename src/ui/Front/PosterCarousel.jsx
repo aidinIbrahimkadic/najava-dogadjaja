@@ -282,12 +282,36 @@ import { Link, useNavigate } from 'react-router-dom';
 import { URL } from '../../utils/constants';
 import { useGetManifestationById } from '../../features/front/useManifestationById';
 
+// da li smo u iframu?
+const inIframe = () => {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true; // ako je cross-origin, tretiraj kao iframe
+  }
+};
+
+// otvori putanju u "top" prozoru (apsolutni URL)
+const openInTop = (path) => {
+  const abs = new URL(path, window.location.origin).href;
+  try {
+    if (window.top) {
+      window.top.location.href = abs;
+      return;
+    }
+  } catch {
+    // ako je cross-origin sandbox, fallback ispod
+  }
+  window.location.href = abs;
+};
+
 const CarouselWrapper = styled.div`
   width: 100%;
   overflow: hidden;
   padding: 2rem 0;
   margin-bottom: 4rem;
   cursor: ${(props) => (props.$dragging ? 'grabbing' : 'grab')};
+  /* Omogući horizontalno skrolanje gestama bez blokiranja vertikalnog */
   touch-action: pan-x;
 `;
 
@@ -330,6 +354,7 @@ const PosterCard = styled.div`
   }
 `;
 
+/* Bedž s nazivom manifestacije (klik vodi na /manifestation/:id) */
 const ManifestTag = styled(Link)`
   position: absolute;
   left: 8px;
@@ -352,6 +377,7 @@ const ManifestTag = styled(Link)`
   }
 `;
 
+/* Crveni tag OTKAZANO */
 const CancelTag = styled.div`
   position: absolute;
   right: 8px;
@@ -366,28 +392,7 @@ const CancelTag = styled.div`
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
 `;
 
-/* utili za iframe -> top navigaciju */
-const inIframe = () => {
-  try {
-    return window.self !== window.top;
-  } catch {
-    return true;
-  }
-};
-const openInTop = (path) => {
-  const abs = new URL(path, window.location.origin).href;
-  try {
-    if (window.top) {
-      window.top.location.href = abs;
-      return;
-    }
-  } catch {
-    // sandbox/cross-origin → fallback
-  }
-  window.location.href = abs;
-};
-
-/* manifest badge */
+/* Mali helper koji dohvaća naziv manifestacije preko hook-a */
 function ManifestChip({ manifestId }) {
   const { manifestation } = useGetManifestationById({ id: manifestId });
   const title = manifestation?.data?.title;
@@ -410,8 +415,8 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
   const rafRef = useRef(null);
   const draggingRef = useRef(false);
   const dragStartX = useRef(0);
-  const lastXRef = useRef(0);
-  const movedRef = useRef(false);
+  const scrollStart = useRef(0);
+  const movedRef = useRef(false); // umjesto sabiranja—flag kad pređe prag
   const [isPaused, setIsPaused] = useState(false);
   const navigate = useNavigate();
 
@@ -432,11 +437,12 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    const speed = 0.5;
+    const speed = 0.5; // px po frame (usporeno)
 
     function step() {
       if (!isPaused && !draggingRef.current) {
         container.scrollLeft += speed;
+        // kad prijeđeš polovinu sadržaja, vrati se na početak
         if (container.scrollLeft >= container.scrollWidth / 2) {
           container.scrollLeft -= container.scrollWidth / 2;
         }
@@ -448,64 +454,64 @@ export default function PosterCarousel({ upcomingEvents = [] }) {
     return () => cancelAnimationFrame(rafRef.current);
   }, [isPaused]);
 
+  // Helper za X koordinate
   const getClientX = (e) => (e.touches ? e.touches[0].clientX : e.clientX);
 
+  // Hover pauza (desktop)
   const handleMouseEnter = () => setIsPaused(true);
   const handleMouseLeave = () => setIsPaused(false);
 
-  const DRAG_THRESHOLD = 8; // px
+  const DRAG_THRESHOLD = 8; // px — klik je samo ako je pomak <= ovoga
 
+  // Start drag
   const handleDragStart = (e) => {
     draggingRef.current = true;
     movedRef.current = false;
     dragStartX.current = getClientX(e);
-    lastXRef.current = dragStartX.current;
-    // snimi trenutni scroll
-    handleDragStart.scrollStart = containerRef.current.scrollLeft;
+    scrollStart.current = containerRef.current.scrollLeft;
     setIsPaused(true);
+    // Nema preventDefault — izbjegavamo passive warning
   };
 
+  // End drag
   const handleDragEnd = () => {
     draggingRef.current = false;
     setIsPaused(false);
-    // movedRef.current resetujemo TEK nakon potencijalnog onClick-a (koji dolazi poslije mouseup)
-    // Zato ga ne diramo ovdje.
+    // movedRef NE resetujemo ovdje; onClick dolazi odmah poslije mouseup/touchend
   };
 
+  // Move drag
   const handleDragMove = (e) => {
     if (!draggingRef.current) return;
     const currentX = getClientX(e);
-    // pomjeri scroll
     const delta = currentX - dragStartX.current;
-    containerRef.current.scrollLeft = handleDragStart.scrollStart - delta;
 
-    // označi da je "drag" ako je ukupno pomjeranje prešlo prag
-    if (Math.abs(currentX - dragStartX.current) > DRAG_THRESHOLD) {
-      movedRef.current = true;
-    }
-    lastXRef.current = currentX;
+    // scrollaj
+    containerRef.current.scrollLeft = scrollStart.current - delta;
+
+    // označi kao "drag" ako je ukupno pomjeranje prešlo prag
+    if (Math.abs(delta) > DRAG_THRESHOLD) movedRef.current = true;
   };
 
+  // Klik na poster — navigacija samo ako nije bilo povlačenja
   const handlePosterClick = (idguid) => {
-    // Klik validan samo ako nismo “draggali”
     if (movedRef.current) {
-      // reset za naredni klik
+      // reset flag za naredni klik
       movedRef.current = false;
       return;
     }
     const path = `/dogadjaj/${idguid}`;
     if (inIframe()) openInTop(path);
     else navigate(path);
-    // reset
     movedRef.current = false;
   };
 
-  // mouse
+  // Mouse eventi
   const handleMouseDown = (e) => handleDragStart(e);
   const handleMouseUp = () => handleDragEnd();
   const handleMouseMove = (e) => handleDragMove(e);
 
-  // touch
+  // Touch eventi
   const handleTouchStart = (e) => handleDragStart(e);
   const handleTouchEnd = () => handleDragEnd();
   const handleTouchMove = (e) => handleDragMove(e);
