@@ -25,7 +25,9 @@ const Container = styled.div`
 export default function HomePage() {
   const { upcomingEvents, isLoading } = useGetUpcomingEvents();
   const { isLoading: isLoadingCategories, allCategories } = useGetAllCategories();
-  const { isLoading: isLoadingInstitutions, allInstitutions } = useGetAllInstitutions();
+  const { allInstitutions } = useGetAllInstitutions({
+    defer: 'idle',
+  });
   const { isLoading: isLoadingUser, user } = useUserPermissions();
   const { isLoading: isLoadingManifestations, manifestations } = useGetAllUpcomingManifestations();
 
@@ -45,7 +47,6 @@ export default function HomePage() {
     isLoading ||
     isLoadingManifestations ||
     isLoadingCategories ||
-    isLoadingInstitutions ||
     isLoadingUser ||
     (hasUser && isLoadingUserInterests);
 

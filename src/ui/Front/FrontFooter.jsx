@@ -6,6 +6,7 @@ import { HiOutlineMail } from 'react-icons/hi';
 
 import { useGetUpcomingEvents } from '../../features/front/useUpcomingEvents';
 import { URL } from '../../utils/constants';
+import CalendarSpinner from '../CalendarSpinner';
 
 const { Footer } = Layout;
 
@@ -181,7 +182,9 @@ const DescContent = styled.div`
  * @param {string} [props.nextEvent.id] - Id za fallback rutu /dogadjaj/:id
  */
 export default function FrontFooter({ description = '', settings }) {
-  const { upcomingEvents } = useGetUpcomingEvents();
+  const { isLoading, upcomingEvents } = useGetUpcomingEvents();
+
+  if (isLoading) return <CalendarSpinner />;
 
   const posterSlika =
     upcomingEvents?.[0]?.slika && upcomingEvents[0].slika !== '00000000-0000-0000-0000-000000000000'

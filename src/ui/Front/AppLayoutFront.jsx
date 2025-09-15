@@ -43,7 +43,9 @@ const StyledBackTop = styled(FloatButton.BackTop)`
 `;
 
 export default function AppLayoutFront() {
-  const { isLoading: isLoadingInstitutions, allInstitutions } = useGetAllInstitutions();
+  const { allInstitutions } = useGetAllInstitutions({
+    defer: 'idle',
+  });
   const { isLoading: isLoadingSettings, settings } = useGetAllSettings();
 
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ export default function AppLayoutFront() {
     });
   }, [navigate]);
 
-  return isLoadingSettings || isLoadingInstitutions ? (
+  return isLoadingSettings ? (
     <Spinner />
   ) : (
     <StyledLayout>
