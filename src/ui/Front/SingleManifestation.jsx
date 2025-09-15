@@ -1,7 +1,7 @@
 // src/ui/Front/SingleManifestation.jsx
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { HiCalendarDays, HiClock, HiBuildingLibrary, HiMapPin } from 'react-icons/hi2';
 import * as Fa from 'react-icons/fa';
 import { URL } from '../../utils/constants';
@@ -164,6 +164,10 @@ const Card = styled.article`
   @media (max-width: 600px) {
     grid-column: span 12;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const CancelRibbon = styled.div`
@@ -281,7 +285,7 @@ export default function SingleManifestation({ events, manifestation }) {
     maniFromEvents?.title || manifestation?.data?.title || manifestation?.title || 'Manifestacija';
 
   const maniDesc = manifestation?.data?.description;
-
+  const navigate = useNavigate();
   // Cover slika — ako je dostupna iz zasebnog manifestacije-responsa
   const maniData = manifestation?.data ?? manifestation ?? {};
   const [openLightbox, setOpenLightbox] = useState(false);
@@ -433,7 +437,13 @@ export default function SingleManifestation({ events, manifestation }) {
       <SectionTitle>Događaji manifestacije</SectionTitle>
       <Grid>
         {cards.map((e) => (
-          <Card key={e.id}>
+          <Card
+            key={e.id}
+            role="link"
+            tabIndex={0}
+            onClick={() => navigate(`/dogadjaj/${e.id}`)}
+            onKeyDown={(ev) => ev.key === 'Enter' && navigate(`/dogadjaj/${e.id}`)}
+          >
             {e.cancelled && <CancelRibbon>OTKAZANO</CancelRibbon>}
 
             <Poster $image={e.poster}>

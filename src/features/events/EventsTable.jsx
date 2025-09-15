@@ -10,14 +10,17 @@ import { useGetCategories } from '../categories/useCategories';
 import { useState } from 'react';
 import { PAGE_SIZE } from '../../utils/constants'; // ako već imaš
 import { useGetLocations } from '../locations/useLocations';
+import dayjs from 'dayjs';
 
 export default function EventsTable() {
+  const ymd = dayjs().format('YYYY-MM-DD');
+
   const [query, setQuery] = useState({
     page: 1,
     limit: PAGE_SIZE ?? 10,
     search: undefined,
     sort: { field: 'start_date', order: 'ASC' },
-    filters: {}, // npr. { title: '...' , category_idguid: '...' , cijena_gte: 0, start_date_from: '2025-08-01', ... }
+    filters: { start_date_from: ymd }, // npr. { title: '...' , category_idguid: '...' , cijena_gte: 0, start_date_from: '2025-08-01', ... }
   });
 
   const { events, isLoading, error, count } = useGetEvents(query);

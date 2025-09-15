@@ -2,7 +2,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import Heading from '../Heading';
 import * as FaIcons from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { HiBuildingLibrary, HiCalendarDateRange, HiMapPin } from 'react-icons/hi2';
 import { URL } from '../../utils/constants';
 import { useGetManifestationById } from '../../features/front/useManifestationById';
@@ -25,8 +25,13 @@ function ManifestBadge({ manifestId }) {
   if (isLoading) return <CalendarSpinner />;
 
   return (
+    // <PosterTag title={title}>
+
+    //   <Link to={`/manifestation/${manifestId}`}>{title}</Link>
     <PosterTag title={title}>
-      <Link to={`/manifestation/${manifestId}`}>{title}</Link>
+      <Link to={`/manifestation/${manifestId}`} onClick={(e) => e.stopPropagation()}>
+        {title}
+      </Link>
     </PosterTag>
   );
 }
@@ -292,7 +297,8 @@ const Grid = styled.div`
   }
 `;
 
-const Card = styled.article`
+// const Card = styled(Link)`
+const Card = styled.div`
   grid-column: span 3;
   display: flex;
   flex-direction: column;
@@ -301,13 +307,15 @@ const Card = styled.article`
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   overflow: hidden;
-  height: 100;
+  /* height: 100; */
+  height: 100%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease;
   position: relative;
 
   &:hover {
     transform: translateY(-5px);
+    cursor: pointer;
   }
 
   @media (max-width: 1100px) {
@@ -510,6 +518,7 @@ const TermPill = styled.span`
 // Component
 // ---------------------------------------------
 export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [query, setQuery] = useState('');
   const [from, setFrom] = useState('');
@@ -758,7 +767,15 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
           // const manifestBadgeContent = e.manifest_title || 'Manifestacija';
 
           return (
-            <Card key={e.id}>
+            // <Link to={`/dogadjaj/${e.id}`}>
+            // <Card key={e.id} to={`/dogadjaj/${e.id}`}>
+            <Card
+              key={e.id}
+              role="link"
+              tabIndex={0}
+              onClick={() => navigate(`/dogadjaj/${e.id}`)}
+              onKeyDown={(ev) => ev.key === 'Enter' && navigate(`/dogadjaj/${e.id}`)}
+            >
               {e.otkazano && <CancelRibbon>OTKAZANO</CancelRibbon>}
 
               <Poster $image={e.poster}>
@@ -768,7 +785,8 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
               <Body>
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Link to={`/dogadjaj/${e.id}`}>
+                    {/* <Link to={`/dogadjaj/${e.id}`}> */}
+                    <Link to={`/dogadjaj/${e.id}`} onClick={(ev) => ev.stopPropagation()}>
                       <Title $cancelled={e.otkazano}>{e.title}</Title>
                     </Link>
                   </div>
@@ -834,7 +852,11 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                   {e.institution && (
                     <Row>
                       <HiBuildingLibrary />
-                      <Link to={`/institution/${e.institution_idguid}`}>
+                      {/* <Link to={`/institution/${e.institution_idguid}`}> */}
+                      <Link
+                        to={`/institution/${e.institution_idguid}`}
+                        onClick={(ev) => ev.stopPropagation()}
+                      >
                         <InstitutionBadge>{e.institution}</InstitutionBadge>
                       </Link>
                     </Row>
@@ -861,6 +883,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                 </Extra>
               </Body>
             </Card>
+            // </Link>
           );
         })}
       </Grid>

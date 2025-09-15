@@ -360,17 +360,16 @@ import TextArea from '../../ui/TextArea';
 import FormRow from '../../ui/FormRow';
 import FormField from '../../ui/FormField';
 import Spinner from '../../ui/Spinner';
-import Select from '../../ui/Select';
 import { Select as AntdSelect } from 'antd';
 import { usePostManifestation } from './usePostManifestation';
 import { useUpdateManifestation } from './useUpdateManifestation';
-import Checkbox from '../../ui/Checkbox';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useGetLocations } from '../locations/useLocations';
 // import { useGetInstitutions } from '../institutions/useInstitutions'; // više ne treba
 import { useUserPermissions } from '../authentication/useUserPermissions';
 import { ImageCell } from '../../ui/ImageCell';
 import { useDeleteImage } from './useDeleteImage';
+import { useGetInstitutions } from '../institutions/useInstitutions';
 
 // Pretvori lokalni 'YYYY-MM-DDTHH:mm' u ISO-8601 sa Z
 const toISOZ = (val) => {
@@ -388,13 +387,28 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
   const { isCreating, postManifestation } = usePostManifestation();
   const { isEditing, updateManifestation } = useUpdateManifestation();
 
+  const { isLoading: isLoadingInstitutions, institutions } = useGetInstitutions({
+    all: true,
+    sort: { field: 'naziv', order: 'ASC' },
+  });
+
   const { isLoading: isLocationsLoading, locations } = useGetLocations({
     all: true,
     sort: { field: 'naziv', order: 'ASC' },
   });
 
   // KORISNIK KOJI JE LOGOVAN
-  const { isLoadingUser, user } = useUserPermissions();
+  const { isLoadingUser, user, isLoadingPermission, hasPermission } = useUserPermissions();
+
+  const DEFAULT_GUID = '00000000-0000-0000-0000-000000000000';
+  const isSuperAdmin = useMemo(
+    () => !!hasPermission?.('admin_permissions_delete'),
+    [hasPermission]
+  );
+  // korisnik ima vezanu instituciju (i nije all-zero GUID)
+  const hasAssignedInstitution = !!(
+    user?.institucija?.idguid && user.institucija.idguid !== DEFAULT_GUID
+  );
 
   const isWorking = isCreating || isEditing;
 
@@ -424,11 +438,18 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
   const { errors } = formState;
 
   // 🔹 Automatski postavi instituciju iz user-a i drži je zaključanom (disable unos)
+  // useEffect(() => {
+  //   if (user?.data?.institucija?.idguid && !isLoadingUser) {
+  //     setValue('institucija_idguid', user.data.institucija.idguid, { shouldValidate: true });
+  //   }
+  // }, [user, isLoadingUser, setValue]);
+
+  // 🔹 Ako korisnik ima dodijeljenu instituciju i nije superadmin -> upiši i zakljuĉaj
   useEffect(() => {
-    if (user?.data?.institucija?.idguid && !isLoadingUser) {
-      setValue('institucija_idguid', user.data.institucija.idguid, { shouldValidate: true });
+    if (!isLoadingUser && hasAssignedInstitution && !isSuperAdmin) {
+      setValue('institucija_idguid', user.institucija.idguid, { shouldValidate: true });
     }
-  }, [user, isLoadingUser, setValue]);
+  }, [isLoadingUser, hasAssignedInstitution, isSuperAdmin, setValue, user]);
 
   function onSubmit(data) {
     const { start_time, end_time } = data;
@@ -477,8 +498,8 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
     // console.log(errors);
   }
 
-  const userInstitutionName = user?.institucija?.naziv ?? '';
-  const userInstitutionId = user?.institucija?.idguid ?? '';
+  // const userInstitutionName = user?.institucija?.naziv ?? '';
+  // const userInstitutionId = user?.institucija?.idguid ?? '';
 
   return (
     <>
@@ -526,19 +547,17 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
           </FormField>
 
           {/* 🔹 Institucija – auto iz user-a, zaključano; hidden input šalje idguid */}
-          <FormField label="Institucija" required error={errors?.institucija_idguid?.message}>
+          {/* <FormField label="Institucija" required error={errors?.institucija_idguid?.message}>
             {isLoadingUser ? (
               <Spinner />
             ) : (
               <>
-                {/* Vidljivo polje (naziv) – disabled */}
                 <Input
                   type="text"
                   value={userInstitutionName}
-                  disabled
+                  disabled={!hasPermission('admin_permissions_delete') || isWorking}
                   title={userInstitutionName || 'Institucija (automatski)'}
                 />
-                {/* Skriveno polje – upisuje idguid u form state */}
                 <input
                   type="hidden"
                   {...register('institucija_idguid', {
@@ -548,6 +567,82 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
                   readOnly
                 />
               </>
+            )}
+          </FormField> */}
+          {/* <FormField label="Institucija" required error={errors?.institucija_idguid?.message}>
+            {isLoadingInstitutions || isLoadingPermission || isLoadingUser ? (
+              <Spinner />
+            ) : (
+              <Controller
+                name="institucija_idguid"
+                control={control}
+                rules={{ required: 'Molimo odaberite odgovarajuću instituciju' }}
+                render={({ field }) => (
+                  <AntdSelect
+                    showSearch
+                    allowClear
+                    size="large"
+                    placeholder="Pretraži i odaberi instituciju"
+                    options={(institutions ?? []).map(({ idguid, naziv }) => ({
+                      value: idguid,
+                      label: naziv,
+                    }))}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={field.value || undefined}
+                    onChange={field.onChange}
+                    // ako želiš zadržati permission lock:
+                    disabled={!hasPermission('admin_permissions_delete') || isWorking}
+                  />
+                )}
+              />
+            )}
+          </FormField> */}
+          <FormField label="Institucija" required error={errors?.institucija_idguid?.message}>
+            {isLoadingInstitutions || isLoadingPermission || isLoadingUser ? (
+              <Spinner />
+            ) : hasAssignedInstitution && !isSuperAdmin ? (
+              // ✅ Običan korisnik s dodijeljenom institucijom: zaključano polje + hidden id
+              <>
+                <Input
+                  type="text"
+                  value={user.institucija.naziv || ''}
+                  disabled
+                  title={user.institucija.naziv || 'Institucija (automatski)'}
+                />
+                <input
+                  type="hidden"
+                  {...register('institucija_idguid', { required: 'Institucija je obavezna' })}
+                  value={user.institucija.idguid}
+                  readOnly
+                />
+              </>
+            ) : (
+              // ✅ Superadmin ili korisnik bez vezane institucije: normalni izbor
+              <Controller
+                name="institucija_idguid"
+                control={control}
+                rules={{ required: 'Molimo odaberite odgovarajuću instituciju' }}
+                render={({ field }) => (
+                  <AntdSelect
+                    showSearch
+                    allowClear
+                    size="large"
+                    placeholder="Pretraži i odaberi instituciju"
+                    options={(institutions ?? []).map(({ idguid, naziv }) => ({
+                      value: idguid,
+                      label: naziv,
+                    }))}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={field.value || undefined}
+                    onChange={field.onChange}
+                    disabled={isWorking}
+                  />
+                )}
+              />
             )}
           </FormField>
         </FormRow>
@@ -676,7 +771,7 @@ function CreateManifestationForm({ manifestationToEdit = {}, onCloseModal }) {
             title={isEditSession ? 'Uredi događaj' : 'Dodaj novi događaj'}
             size="small"
             variation="primary"
-            disabled={isWorking || isLoadingUser || !userInstitutionId}
+            disabled={isWorking || isLoadingUser}
           >
             {isEditSession ? 'Uredi događaj' : 'Dodaj novi događaj'}
           </Button>

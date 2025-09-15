@@ -1,7 +1,7 @@
 // EventCardNew.jsx
 import React, { useMemo } from 'react';
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import { HiBuildingLibrary, HiMapPin, HiCalendarDateRange } from 'react-icons/hi2';
 import { URL } from '../../utils/constants';
@@ -20,6 +20,7 @@ const Card = styled.div`
 
   &:hover {
     transform: translateY(-5px);
+    cursor: pointer;
   }
 `;
 
@@ -255,6 +256,8 @@ export default function InstitutionEvent({ event }) {
     storedfile,
   } = event || {};
 
+  const navigate = useNavigate();
+
   const posterUrl =
     event?.slika && event.slika !== '00000000-0000-0000-0000-000000000000'
       ? `${URL}/api/image/${event.slika}?height=300`
@@ -294,7 +297,14 @@ export default function InstitutionEvent({ event }) {
   const place = lokacija?.naziv || location || '—';
 
   return (
-    <Card>
+    // <Card>
+    <Card
+      key={idguid}
+      role="link"
+      tabIndex={0}
+      onClick={() => navigate(`/dogadjaj/${idguid}`)}
+      onKeyDown={(ev) => ev.key === 'Enter' && navigate(`/dogadjaj/${idguid}`)}
+    >
       <Poster $image={poster} $fallback1={fallback1} $fallback2={fallback2}>
         {otkazano && (
           <>
