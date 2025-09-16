@@ -1,18 +1,7 @@
-// import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
-// import CalendarSpinner from '../ui/CalendarSpinner';
-// import PosterCarousel from '../ui/Front/PosterCarousel';
-
-// export default function SliderOnly() {
-//   const { upcomingEvents, isLoading } = useGetUpcomingEvents();
-
-//   if (isLoading) <CalendarSpinner />;
-//   return <PosterCarousel upcomingEvents={upcomingEvents} />;
-// }
-
 import React, { useEffect } from 'react';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import CalendarSpinner from '../ui/CalendarSpinner';
-import PosterCarousel from '../ui/Front/PosterCarousel';
+import PosterCarouselEmbed from '../ui/Front/PosterCarouselEmbed';
 
 // helper: jesmo li u iframu?
 function inIframe() {
@@ -51,5 +40,5 @@ export default function SliderOnly() {
 
   if (isLoading) return <CalendarSpinner />;
 
-  return <PosterCarousel upcomingEvents={upcomingEvents || []} />;
+  return <PosterCarouselEmbed upcomingEvents={upcomingEvents || []} />;
 }
