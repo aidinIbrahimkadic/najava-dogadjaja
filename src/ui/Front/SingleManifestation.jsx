@@ -3,7 +3,7 @@ import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiCalendarDays, HiClock, HiBuildingLibrary, HiMapPin } from 'react-icons/hi2';
-import * as Fa from 'react-icons/fa';
+import { FaTag, FaRegClock } from 'react-icons/fa';
 import { URL } from '../../utils/constants';
 
 const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
@@ -475,7 +475,7 @@ export default function SingleManifestation({ events, manifestation }) {
                 {/* Kategorija */}
                 {e.categoryName && (
                   <div className="row">
-                    <Fa.FaTag />
+                    <FaTag />
                     <Pill>{e.categoryName}</Pill>
                   </div>
                 )}
@@ -492,7 +492,7 @@ export default function SingleManifestation({ events, manifestation }) {
                 {e.hasTerms && e.terms.length > 0 && (
                   <>
                     <div className="row" style={{ fontWeight: 600 }}>
-                      <Fa.FaRegClock /> Termini
+                      <FaRegClock /> Termini
                     </div>
                     <Pills>
                       {e.terms.map((t, idx) => {

@@ -3,28 +3,8 @@ import styled, { css } from 'styled-components';
 import { FiBell, FiBellOff } from 'react-icons/fi';
 import { FaMusic } from 'react-icons/fa';
 import Heading from '../Heading';
-import * as FaIcons from 'react-icons/fa';
+import { FA_ICONS as FaIcons } from '../iconsMap';
 import toast from 'react-hot-toast';
-// import { useGetUserInterests } from '../../features/front/useUserInterests';
-
-/**
- * CategorySubscriptions
- *
- * Komponenta omogućava korisniku (ulogovan) da se pretplati na obavijesti po kategorijama.
- * Radi sa dummy kategorijama (u API stilu) i spremna je za backend integraciju (props.onSave).
- *
- * Props:
- * - categories?: Array<{ id: string; naziv: string; boja?: string; Icon?: any }>
- * - initialSelectedIds?: string[]
- * - isAuthenticated?: boolean (default true)
- * - onSave?: (selectedIds: string[]) => Promise<void> | void
- * - autoSave?: boolean (default false) // ako je true, poziva onSave pri svakoj promjeni
- */
-
-// ---------- Dummy kategorije (API-ish) + "generisana" nova (Pozorište) ----------
-
-// (opcionalno) lokalna persistencija za demo
-// const STORAGE_KEY = 'cat_subscriptions_demo';
 
 const Container = styled.div`
   /* background-color: var(--color-brand-50); */

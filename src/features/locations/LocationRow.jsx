@@ -5,7 +5,7 @@ import Modal from '../../ui/Modal';
 import Menus from '../../ui/Menus';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 
-import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
+import { HiTrash, HiPencilSquare } from 'react-icons/hi2';
 import Cell from '../../ui/Cell';
 import CreateLocationForm from './CreateLocationForm';
 import { useGetUser } from '../users/useUser';

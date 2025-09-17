@@ -1,7 +1,8 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import Heading from '../Heading';
-import * as FaIcons from 'react-icons/fa';
+import { FaRegClock } from 'react-icons/fa';
+import { FA_ICONS as FaIcons } from '../iconsMap';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiBuildingLibrary, HiCalendarDateRange, HiMapPin } from 'react-icons/hi2';
 import { URL } from '../../utils/constants';
@@ -828,7 +829,7 @@ export default function AllEvents({ upcomingEvents = [], allCategories = [] }) {
                   {e.ima_vise_termina && shownTerms.length > 0 && (
                     <TermsWrap>
                       <TermsHeader>
-                        <FaIcons.FaRegClock /> Termini
+                        <FaRegClock /> Termini
                       </TermsHeader>
                       <TermsPills>
                         {shownTerms.map((t, idx) => {

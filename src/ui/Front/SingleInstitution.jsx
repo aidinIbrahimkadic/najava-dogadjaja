@@ -1,7 +1,15 @@
 // InstitutionProfile.jsx
 import React, { useMemo } from 'react';
 import styled, { css } from 'styled-components';
-import * as Fa from 'react-icons/fa';
+import {
+  FaEnvelope,
+  FaPhoneAlt,
+  FaAddressBook,
+  FaUserTie,
+  FaInfoCircle,
+  FaClock,
+  FaHistory,
+} from 'react-icons/fa';
 import { HiOutlineMapPin, HiOutlineGlobeAlt, HiOutlineCalendarDays } from 'react-icons/hi2';
 import Heading from '../Heading';
 import InstitutionEvent from './InstitutionEvent';
@@ -341,13 +349,13 @@ export default function SingleInstitution({ inst, upcomingEvents }) {
 
           {email && (
             <ActionBtn href={`mailto:${safeMail(email)}`} aria-label="Pošaljite e-mail">
-              <Fa.FaEnvelope /> E-mail
+              <FaEnvelope /> E-mail
             </ActionBtn>
           )}
 
           {broj_telefona && (
             <ActionBtn href={phoneHref(broj_telefona)} aria-label="Pozovite">
-              <Fa.FaPhoneAlt /> Nazovi
+              <FaPhoneAlt /> Nazovi
             </ActionBtn>
           )}
         </FloatingActions>
@@ -359,13 +367,13 @@ export default function SingleInstitution({ inst, upcomingEvents }) {
         {/* Kontakt podaci */}
         <Section>
           <SectionTitle>
-            <Fa.FaAddressBook /> <Heading as="h3">Kontakt & detalji</Heading>
+            <FaAddressBook /> <Heading as="h3">Kontakt & detalji</Heading>
           </SectionTitle>
 
           <InfoGrid>
             <InfoRow>
               <div className="icon">
-                <Fa.FaUserTie />
+                <FaUserTie />
               </div>
               <div className="meta">
                 <span className="label">Direktor</span>
@@ -385,7 +393,7 @@ export default function SingleInstitution({ inst, upcomingEvents }) {
 
             <InfoRow>
               <div className="icon">
-                <Fa.FaPhoneAlt />
+                <FaPhoneAlt />
               </div>
               <div className="meta">
                 <span className="label">Telefon</span>
@@ -397,7 +405,7 @@ export default function SingleInstitution({ inst, upcomingEvents }) {
 
             <InfoRow>
               <div className="icon">
-                <Fa.FaEnvelope />
+                <FaEnvelope />
               </div>
               <div className="meta">
                 <span className="label">E-mail</span>
@@ -438,7 +446,7 @@ export default function SingleInstitution({ inst, upcomingEvents }) {
         </Section>
         <Section>
           <SectionTitle>
-            <Fa.FaInfoCircle />
+            <FaInfoCircle />
             <Heading as="h3">O organizatoru događaja</Heading>
           </SectionTitle>
           <Description>{opis?.trim() ? opis : 'Nema dodatnog opisa.'}</Description>
@@ -446,13 +454,13 @@ export default function SingleInstitution({ inst, upcomingEvents }) {
           <Chips>
             {createdAt && (
               <Chip title="Datum kreiranja">
-                <Fa.FaClock />
+                <FaClock />
                 Kreirano: <strong>{new Date(createdAt).toLocaleDateString()}</strong>
               </Chip>
             )}
             {updatedAt && (
               <Chip title="Zadnja izmjena">
-                <Fa.FaHistory />
+                <FaHistory />
                 Ažurirano: <strong>{new Date(updatedAt).toLocaleDateString()}</strong>
               </Chip>
             )}

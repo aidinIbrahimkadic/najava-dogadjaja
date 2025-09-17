@@ -2,7 +2,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { HiOutlineHome, HiOutlineArrowPathRoundedSquare } from 'react-icons/hi2';
-import { FaSearch } from 'react-icons/fa';
 import { useGetUpcomingEvents } from '../features/front/useUpcomingEvents';
 import CalendarSpinner from '../ui/CalendarSpinner';
 import { Page } from '../ui/Front/Page';

@@ -1,5 +1,3 @@
-// import { useNavigate } from 'react-router-dom';
-
 import { useGetCategory } from '../categories/useCategory';
 import { useDeleteEvent } from '../events/useDeleteEvent';
 
@@ -8,7 +6,7 @@ import Modal from '../../ui/Modal';
 import Menus from '../../ui/Menus';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 
-import { HiEye, HiTrash, HiPencilSquare } from 'react-icons/hi2';
+import { HiTrash, HiPencilSquare } from 'react-icons/hi2';
 import CreateEventForm from './CreateEventForm';
 import Badge from '../../ui/Badge';
 import Cell from '../../ui/Cell';

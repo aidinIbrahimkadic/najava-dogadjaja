@@ -1,6 +1,18 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import * as Fa from 'react-icons/fa';
+import {
+  FaLink,
+  FaRegCalendarCheck,
+  FaClock,
+  FaGoogle,
+  FaTimesCircle,
+  FaMapMarkerAlt,
+  FaRegFileAlt,
+  FaBuilding,
+  FaLocationArrow,
+  FaInfoCircle,
+} from 'react-icons/fa';
+import { FA_ICONS as Fa } from '../iconsMap';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -548,7 +560,7 @@ export default function SingleEvent({ event }) {
                             placeItems: 'center',
                           }}
                         >
-                          <Fa.FaLink size={18} color="var(--color-grey-600)" />
+                          <FaLink size={18} color="var(--color-grey-600)" />
                         </button>
                       </div>
                     </div>
@@ -562,7 +574,7 @@ export default function SingleEvent({ event }) {
                   {!hasMulti && differentDay && startD && endD && (
                     <>
                       <MetaItem>
-                        <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
                         <div>
                           <Label>Početak</Label>
                           <Strong $cancelled={!!event?.otkazano}>
@@ -571,7 +583,7 @@ export default function SingleEvent({ event }) {
                         </div>
                       </MetaItem>
                       <MetaItem>
-                        <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
                         <div>
                           <Label>Kraj</Label>
                           <Strong $cancelled={!!event?.otkazano}>
@@ -585,14 +597,14 @@ export default function SingleEvent({ event }) {
                   {!hasMulti && !differentDay && startD && (
                     <>
                       <MetaItem>
-                        <Fa.FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <FaRegCalendarCheck size={26} style={{ marginTop: 2, color: BRAND }} />
                         <div>
                           <Label>Datum</Label>
                           <Strong $cancelled={!!event?.otkazano}>{fmtDate(startD)}</Strong>
                         </div>
                       </MetaItem>
                       <MetaItem>
-                        <Fa.FaClock size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <FaClock size={26} style={{ marginTop: 2, color: BRAND }} />
                         <div>
                           <Label>Vrijeme</Label>
                           <Strong $cancelled={!!event?.otkazano}>{fmtTime(startD)}</Strong>
@@ -652,12 +664,12 @@ export default function SingleEvent({ event }) {
                                     !disabledGoogleCalendarButton && window.open(href, '_blank')
                                   }
                                 >
-                                  <Fa.FaGoogle />
+                                  <FaGoogle />
                                   Dodaj u Google kalendar
                                 </Button>
                                 {t.otkazano && (
                                   <Pill $bg="#fee2e2" color="#b91c1c">
-                                    <Fa.FaTimesCircle /> Otkazano
+                                    <FaTimesCircle /> Otkazano
                                   </Pill>
                                 )}
                               </div>
@@ -670,7 +682,7 @@ export default function SingleEvent({ event }) {
 
                   {/* Lokacija */}
                   <MetaItem>
-                    <Fa.FaMapMarkerAlt size={26} style={{ marginTop: 2, color: BRAND }} />
+                    <FaMapMarkerAlt size={26} style={{ marginTop: 2, color: BRAND }} />
                     <div>
                       <Label>Lokacija</Label>
                       <Strong>{event?.lokacija?.naziv || '—'}</Strong>
@@ -680,7 +692,7 @@ export default function SingleEvent({ event }) {
                   {event?.description !== '' && (
                     <div>
                       <OpisItem>
-                        <Fa.FaRegFileAlt size={26} style={{ marginTop: 2, color: BRAND }} />
+                        <FaRegFileAlt size={26} style={{ marginTop: 2, color: BRAND }} />
                         <Strong>Opis</Strong>
                       </OpisItem>
                       <span>{event?.description || '—'}</span>
@@ -719,7 +731,7 @@ export default function SingleEvent({ event }) {
                         color: BRAND,
                       }}
                     >
-                      <Fa.FaBuilding size={20} />
+                      <FaBuilding size={20} />
                     </div>
                   )}
                   <div>
@@ -736,7 +748,7 @@ export default function SingleEvent({ event }) {
                   {/* Globalni GCal samo ako nema više termina */}
                   {!hasMulti && globalGcalHref && (
                     <Button onClick={() => window.open(globalGcalHref, '_blank')}>
-                      <Fa.FaGoogle />
+                      <FaGoogle />
                       Dodaj u Google kalendar
                     </Button>
                   )}
@@ -764,11 +776,11 @@ export default function SingleEvent({ event }) {
           <MapTitle>Mapa događaja</MapTitle>
           {hasCoords ? (
             <Pill color={TEXT} $bg={'#fff'}>
-              <Fa.FaLocationArrow /> {lat.toFixed(6)}, {lng.toFixed(6)}
+              <FaLocationArrow /> {lat.toFixed(6)}, {lng.toFixed(6)}
             </Pill>
           ) : (
             <Pill color={MUTED} $bg={'#fff'}>
-              <Fa.FaInfoCircle /> Lokacija nije definirana
+              <FaInfoCircle /> Lokacija nije definirana
             </Pill>
           )}
         </MapHeader>

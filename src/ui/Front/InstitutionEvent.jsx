@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import * as FaIcons from 'react-icons/fa';
+import { FaRegClock } from 'react-icons/fa';
 import { HiBuildingLibrary, HiMapPin, HiCalendarDateRange } from 'react-icons/hi2';
 import { URL } from '../../utils/constants';
 
@@ -351,7 +351,7 @@ export default function InstitutionEvent({ event }) {
           {ima_vise_termina && upcomingTerms.length > 0 && (
             <TermsWrap>
               <TermsHeader>
-                <FaIcons.FaRegClock /> Termini
+                <FaRegClock /> Termini
               </TermsHeader>
               <TermsPills>
                 {shownTerms.map((t, idx) => (
