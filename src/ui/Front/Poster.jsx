@@ -27,6 +27,7 @@ const FullscreenImg = styled.img`
 
 const StyledPoster = styled.div`
   grid-area: poster;
+  height: 100%;
 
   @media (max-width: 980px) {
     position: static;
